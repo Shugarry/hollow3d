@@ -6,11 +6,11 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 17:54:34 by joshapir          #+#    #+#             */
-/*   Updated: 2025/03/04 17:57:33 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/23 18:31:34 by frey-gal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "../cub3d.h"
 
 int	allocs(t_game **game, t_map **map)
 {

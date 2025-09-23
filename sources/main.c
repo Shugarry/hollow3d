@@ -6,14 +6,11 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 20:39:28 by joshapir          #+#    #+#             */
-/*   Updated: 2025/03/04 21:44:23 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/23 18:33:02 by frey-gal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include <stdbool.h>
-#include "so_long.h"
+#include "../cub3d.h"
 
 void	init_window(t_game *game)
 {

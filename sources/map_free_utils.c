@@ -6,11 +6,11 @@
 /*   By: joshapir <joshapir@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 18:31:18 by joshapir          #+#    #+#             */
-/*   Updated: 2025/03/04 18:31:47 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/23 18:33:02 by frey-gal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "../cub3d.h"
 
 void	free_grid(char **grid)
 {

@@ -6,21 +6,11 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 21:12:20 by joshapir          #+#    #+#             */
-/*   Updated: 2025/03/04 20:58:10 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/23 18:32:14 by frey-gal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
-
-int	ft_strlen(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
-}
+#include "../cub3d.h"
 
 void	flood_fill(t_map *map, char **grid, int x, int y)
 {

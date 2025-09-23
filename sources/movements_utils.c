@@ -6,11 +6,11 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 17:57:56 by joshapir          #+#    #+#             */
-/*   Updated: 2025/03/04 21:47:45 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/23 18:33:02 by frey-gal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "../cub3d.h"
 
 void	update_moves(t_game *game)
 {

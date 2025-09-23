@@ -6,11 +6,11 @@
 /*   By: joshapir <joshapir@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 18:32:06 by joshapir          #+#    #+#             */
-/*   Updated: 2025/03/04 18:35:59 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/23 18:33:02 by frey-gal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "../cub3d.h"
 
 int	init_map(char *filename, t_map **map)
 {
@@ -72,7 +72,7 @@ int	is_rectangle(t_map *map)
 	map->width = ft_strlen(map-> grid[i]);
 	while (grid[i])
 	{
-		if (strlen(grid[i]) == strlen(grid[0]))
+		if (ft_strlen(grid[i]) == ft_strlen(grid[0]))
 			i++;
 		else
 			return (write (2, "Error\nIn grid format\n", 21), 0);

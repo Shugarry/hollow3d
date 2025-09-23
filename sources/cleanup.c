@@ -6,11 +6,11 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 18:12:35 by joshapir          #+#    #+#             */
-/*   Updated: 2025/03/04 20:57:30 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/23 18:33:02 by frey-gal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "../cub3d.h"
 
 void	free_collectibles(t_collectible **collectibles)
 {

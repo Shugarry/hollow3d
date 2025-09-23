@@ -6,13 +6,11 @@
 /*   By: joshapir <joshapir@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 18:25:18 by joshapir          #+#    #+#             */
-/*   Updated: 2025/03/04 18:27:13 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/23 18:34:07 by frey-gal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
-#include "mlx_linux/include/MLX42/MLX42.h"
-#include "MLX42_Int.h"
+#include "../cub3d.h"
 
 void	init_textures(t_game *game, mlx_image_t **img, char *path)
 {
