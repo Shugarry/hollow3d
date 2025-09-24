@@ -86,6 +86,92 @@ int is_map_line(char *line)
     return 1;
 }
 
+void	is_element()
+{
+	if (strncmp(grid[*i], "NO ", 3) == 0)
+	else if (strncmp(grid[*i], "SO ", 3) == 0)
+	else if (strncmp(grid[*i], "WE ", 3) == 0)
+	else if (strncmp(grid[*i], "EA ", 3) == 0)
+	else if (strncmp(grid[*i], "F ", 2) == 0)
+	else if (strncmp(grid[*i], "C ", 2) == 0)
+}
+
+void parse_texture(char *line, char **dest, char *id)
+{
+    while (*line == ' ')
+        line++;
+
+    if (*dest != NULL)
+        error("Duplicate texture found");
+    *dest = ft_strdup(line);
+    if (!*dest)
+        error("Malloc failed");
+    int fd = open(*dest, O_RDONLY);
+    if (fd < 0)
+        error("Texture file not found");
+    close(fd);
+}
+
+void parse_color(char *line, int rgb[3], const char *id)
+{
+    char **split;
+    int i;
+	int j;
+
+	i = 0;
+	j = 0;
+    while (*line == ' ')
+        line++;
+    if (rgb[0] != -1)
+        error("Duplicate colour identifier");
+
+    split = ft_split(line, ',');
+    if (!split)
+        error("Malloc failed for split");
+    while (split[i])
+		i++;
+    if (i != 3 || i != 4)
+        error("Invalid RGB format");
+    while (j < i)
+    {
+        rgb[j] = ft_atoi(split[j]);
+        if (rgb[j] < 0 || rgb[j] > 255)
+            error("RGB value out of range (0-255)");
+		j++;
+    }
+    free_split(split);
+}
+// TODO make init funtion and set colours to -1 to check for duplicates
+void init_values(t_map *map)
+{
+    int i = 0;
+    char *line;
+
+    while (map->grid[i])
+    {
+        line = map->grid[i];
+        while (*line == ' ')
+            line++;
+        if (strncmp(line, "NO ", 3) == 0)
+            parse_texture(line + 3, &map->texture->n_tex, "NO");
+        else if (strncmp(line, "SO ", 3) == 0)
+            parse_texture(line + 3, &map->texture->s_tex, "SO");
+        else if (strncmp(line, "WE ", 3) == 0)
+            parse_texture(line + 3, &map->texture->w_tex, "WE");
+        else if (strncmp(line, "EA ", 3) == 0)
+            parse_texture(line + 3, &map->texture->e_tex, "EA");
+        else if (strncmp(line, "F ", 2) == 0)
+            parse_color(line + 2, map->texture->f_colour, "F");
+        else if (strncmp(line, "C ", 2) == 0)
+            parse_color(line + 2, map->texture->c_colour, "C");
+        else if (is_map_line(line))
+            break;
+        else if (*line != '\0')
+            error("Invalid identifier");
+        i++;
+    }
+}
+
 // 6 identifiers (NO, SO, WE, EA, F, C).
 void find_elements(int *i, t_map *map)
 {
@@ -109,6 +195,9 @@ void find_elements(int *i, t_map *map)
             error("Invalid identifier");
         (*i)++;
     }
+	//check_if_found
+
+	//init_values();
 }
 
 
