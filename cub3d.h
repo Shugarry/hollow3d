@@ -23,9 +23,59 @@
 # include <stdbool.h>
 # include <stdio.h>
 
+# define PI 3.14159265358979323846
+# define WIN_WIDTH 1280
+# define WIN_HEIGHT 720
+
+typedef struct s_player
+{
+	int		start_x;
+	int		start_y;
+	double	curr_x;
+	double	curr_y;
+	char	direction;
+}	t_player;
+
+typedef struct s_paths
+{
+	char	*ceiling;
+	char	*floor;
+	char	*north;
+	char	*south;
+	char	*east;
+	char	*west;
+}	t_paths;
+
+typedef struct s_textures
+{
+	mlx_texture_t	*ceiling;
+	mlx_texture_t	*floor;
+	mlx_texture_t	*north;
+	mlx_texture_t	*south;
+	mlx_texture_t	*east;
+	mlx_texture_t	*west;
+}	t_textures;
+
+typedef struct s_images
+{
+	mlx_image_t	*ceiling;
+	mlx_image_t	*floor;
+	mlx_image_t	*north;
+	mlx_image_t	*south;
+	mlx_image_t	*east;
+	mlx_image_t	*west;
+}	t_images;
+
 typedef struct s_data
 {
-	t_list	*memlist;
+	t_player	player;
+	t_paths		paths;
+	t_textures	textures;
+	t_images	images;
+	mlx_t		*mlx;
+	mlx_image_t	*canvas;
+
+	t_list		*memlist;
 }	t_data;
 
 //memory.c - Better memory management functions
