@@ -17,15 +17,22 @@
 # include "libraries/libft/ft_printf.h"
 # include "libraries/libft/get_next_line.h"
 # include "libraries/MLX42/include/MLX42/MLX42.h"
+# include <math.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <limits.h>
 # include <stdbool.h>
 # include <stdio.h>
+# include <sys/stat.h>
+# include <fcntl.h>
 
 # define PI 3.14159265358979323846
 # define WIN_WIDTH 1280
 # define WIN_HEIGHT 720
+# define NORTH 90
+# define SOUTH 270
+# define EAST 0
+# define WEST 180 
 
 typedef struct s_player
 {
@@ -72,6 +79,7 @@ typedef struct s_data
 	t_paths		paths;
 	t_textures	textures;
 	t_images	images;
+	char		**map;
 	mlx_t		*mlx;
 	mlx_image_t	*canvas;
 
