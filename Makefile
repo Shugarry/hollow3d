@@ -62,7 +62,7 @@ $(NAME): $(OBJECTS) $(LIBFT) $(MLX42)
 	@echo "\n==> Linking $(NAME)..."
 	@$(CC) $(CFLAGS) $(OBJECTS) $(LIBFT) $(MLX42) $(MLXFLAGS) -o $(NAME)
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(HEADER) $(LIB_HDR) Makefile | $(OBJDIR)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(HEADER) $(LIB_HDR) Makefile | $(OBJ_DIR)
 	@echo " -> Compiling hollow3d (HUMANITY RESTORED) $<"
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
@@ -75,8 +75,8 @@ $(MLX42):
 	@cmake $(MLX42_DIR) -B build
 	@cmake --build build -j4
 
-$(OBJDIR):
-	mkdir -p $(OBJDIR)
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
 
 clean:
 	@echo "\n==> Cleaning project..."
