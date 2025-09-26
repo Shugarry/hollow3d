@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 17:17:24 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/26 18:41:49 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/26 18:59:21 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,5 +102,6 @@ int	main(int argc, char **argv)
 	init_map(argv[1], &map);
 	map->elements_grid = ft_strdup_double(map->grid);
 	check_map(map);
+	cleanup(map);
 	return (0);
 }
