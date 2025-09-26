@@ -49,6 +49,7 @@ void	init_map_vars(t_map **map)
 	t_texture *tex;
 	*map = malloc(sizeof(t_map));
 	(*map)->texture = malloc(sizeof(t_texture));
+	(*map)->player = malloc(sizeof(t_player));
 	if (!(*map)->texture)
 		error_and_free("struct malloc failed", *map);
 	tex = (*map)->texture;
@@ -67,6 +68,7 @@ void	init_map_vars(t_map **map)
 	tex->s_tex = NULL;
 	tex->w_tex = NULL;
 	tex->map = *map;
+
 }
 
 int	count_lines(char *filename)
@@ -120,26 +122,46 @@ int	init_map(char *filename, t_map **map)
 	//printf("map line 1 = %s\n", (*map)->grid[0]);
 	return (1);
 }
+int	is_player(char c)
+{
+	if (c == 'N' || c == 'S' || c == 'E' || c == 'W')
+		return (1);
+	return (0);
+}
 
-// void	find_player(int *i, int *j, char **grid)
-// {
-// 	while (grid[(*i)])
-// 	{
-// 		while (grid[(*i)][(*j)])
-// 		{
-// 			if (grid[(*i)][(*j)] == 'P')
-// 				return ;
-// 			(*j)++;
-// 		}
-// 		(*i)++;
-// 		(*j) = 0;
-// 	}
-// }
+void	find_player(int *i, int *j, t_map *map)
+{
+	char **grid;
+
+	*i = 0;
+	//printf("line = %s\n", map->grid[0]);
+	grid = map->grid;
+	printf("i = %d\n", *i);
+	while (grid[(*i)])
+	{
+		while (grid[(*i)][(*j)])
+		{
+			if (is_player(grid[(*i)][(*j)]))
+			{
+				printf("player_found\n");
+				map->player_found = 1;
+				map->player->x = *i;
+				map->player->y = *j;
+				return ;
+			}
+			(*j)++;
+		}
+		(*i)++;
+		(*j) = 0;
+	}
+}
 
 
 int is_map_line(char *line)
 {
-    int i = 0;
+	int i;
+
+	i = 0;
     while (line[i] == ' ')
         i++;
     if (line[i] == '\0')
@@ -147,14 +169,15 @@ int is_map_line(char *line)
 
     while (line[i])
     {
+		//printf("i in is_map_line = %d\n", i);
         if (line[i] != '0' && line[i] != '1' &&
             line[i] != 'N' && line[i] != 'S' &&
             line[i] != 'E' && line[i] != 'W' &&
             line[i] != ' ')
-            return 0;
+            return (0);
         i++;
     }
-    return 1;
+    return (1);
 }
 
 // void	is_element(char *grid, int *i)
@@ -213,35 +236,41 @@ void parse_color(char *line, int rgb[3], char *id, t_map *map)
     free_double_array(split);
 }
 // TODO make init funtion and set colours to -1 to check for duplicates
-void init_values(t_map *map)
+void init_values(t_map *map, int start)
 {
-    int i = 0;
+    int i;
     char *line;
 
+	i = start;
     while (map->grid[i])
     {
-        line = map->grid[i];
-        while (*line == ' ')
-            line++;
+        line = trim_line(map->grid[i]);
+        if (*line == '\0')
+        {
+            i++;
+            continue;
+        }
+
         if (strncmp(line, "NO ", 3) == 0)
-            parse_texture(line + 3, &map->texture->n_tex, "N", map);
-        else if (ft_strncmp(line, "SO ", 3) == 0)
+            parse_texture(line + 3, &map->texture->n_tex, "NO", map);
+        else if (strncmp(line, "SO ", 3) == 0)
             parse_texture(line + 3, &map->texture->s_tex, "SO", map);
-        else if (ft_strncmp(line, "WE ", 3) == 0)
+        else if (strncmp(line, "WE ", 3) == 0)
             parse_texture(line + 3, &map->texture->w_tex, "WE", map);
-        else if (ft_strncmp(line, "EA ", 3) == 0)
+        else if (strncmp(line, "EA ", 3) == 0)
             parse_texture(line + 3, &map->texture->e_tex, "EA", map);
-        else if (ft_strncmp(line, "F ", 2) == 0)
+        else if (strncmp(line, "F ", 2) == 0)
             parse_color(line + 2, map->texture->f_colour, "F", map);
-        else if (ft_strncmp(line, "C ", 2) == 0)
+        else if (strncmp(line, "C ", 2) == 0)
             parse_color(line + 2, map->texture->c_colour, "C", map);
         else if (is_map_line(line))
             break;
-        else if (*line != '\0')
+        else
             error_and_free("Invalid identifier", map);
         i++;
     }
 }
+
 void	check_if_found(t_map *map)
 {
 	if (map->EA_found == 0 || map->F_found == 0 || map->NO_found == 0 || map->SO_found == 0 || map->WE_found == 0)
@@ -251,26 +280,47 @@ void	check_if_found(t_map *map)
 	}
 }
 
-char *trim_newline(char *line)
+char *trim_line(char *line)
 {
-    int len = strlen(line);
-    if (len > 0 && line[len - 1] == '\n')
-        line[len - 1] = '\0';
-    return line;
+    int i;
+    int j;
+    int len;
+ 	int k;
+
+	i = 0;
+	k = 0;
+	len = strlen(line);
+    while (line[i] == ' ')
+        i++;
+    j = len - 1;
+    while (j >= i && (line[j] == ' ' || line[j] == '\n' || line[j] == '\r'))
+        j--;
+    while (i <= j)
+        line[k++] = line[i++];
+    line[k] = '\0';
+    return (line);
 }
+
+
 
 // 6 identifiers (NO, SO, WE, EA, F, C).
 
 void find_elements(int *i, t_map *map)
 {
+    char *line;
     char **grid = map->grid;
+
     *i = 0;
-    while (grid[*i] && !is_map_line(grid[*i]))
+    while (grid[*i] && !is_map_line(trim_line(grid[*i])))
     {
-        char *line = trim_newline(grid[*i]); // remove trailing \n
-        while (*line == ' ') // skip leading spaces
-            line++;
-	//printf("LINE: [%s]\n", line);
+        line = trim_line(grid[*i]);
+
+        if (*line == '\0')
+        {
+            (*i)++;
+            continue;
+        }
+
         if (strncmp(line, "NO ", 3) == 0)
             map->NO_found = 1;
         else if (strncmp(line, "SO ", 3) == 0)
@@ -283,15 +333,16 @@ void find_elements(int *i, t_map *map)
             map->F_found = 1;
         else if (strncmp(line, "C ", 2) == 0)
             map->C_found = 1;
-        else if (strlen(line) > 0)
+        else
             error_and_free("Invalid identifier", map);
 
         (*i)++;
     }
-
+    printf("i at end of find_elements = %d\n", *i);
     check_if_found(map);
-    init_values(map);
+    init_values(map, *i);
 }
+
 
 // void find_elements(int *i, t_map *map)
 // {
@@ -318,6 +369,119 @@ void find_elements(int *i, t_map *map)
 // 	check_if_found(map);
 // 	init_values(map);
 // }
+void	calculate_height(t_map *map, int start)
+{
+    int i;
+	char **grid;
+
+	grid = map->grid;
+	i = 0;
+	start = 0;
+	printf("start = %d\n", start);
+	printf("line[i] = %s\n", grid[start]);
+    while (grid[i] && is_map_line(grid[i]))
+    {
+        i++;
+    }
+    while (grid[i])
+    {
+        if (is_map_line(grid[i]))
+        {
+            error_and_free("Map must not be seperated", map);
+        }
+        i++;
+    }
+    map->height = i;
+}
+
+void	remove_elements(t_map **map, int i)
+{
+	int j;
+
+	j = 0;
+	while ((*map)->grid[i + j])
+	{
+    	(*map)->grid[j] = (*map)->grid[i + j];
+    	j++;
+	}
+	(*map)->grid[j] = NULL;
+}
+// 1, 0 space, v, N, S, E, W
+int	is_valid(char c)
+{
+	if (c == '1' || c == '0' || c == ' ' || c == 'v' || c == 'N' || c == 'S' || c == 'E' || c == 'W')
+		return (1);
+	return (0);
+}
+
+char set_map_char(char **map, int x, int y, int height)
+{
+	int len;
+
+    if (x < 0 || x >= height)
+        return ' ';
+    len = strlen(map[x]);
+    if (x < 0 || x >= len)
+        return ' ';
+    return map[x][y];
+}
+
+int flood_fill(t_map *map, int x, int y)
+{
+    char c;
+
+	// printf(" player x = %d player y = %d\n", x, y);
+	// printf("height = %d\n", map->height);
+	// c = set_map_char(map->grid, x, y, map->height);
+    // if (c == ' ')
+	// {
+	// 	printf("here\n");
+    //     return 0;
+	// }
+    // if (c == '1' || c == 'v')
+    //     return 1;
+    // if (!is_valid(c))
+	// {
+    //     return 0;
+	// }
+    // c = map->grid[x][y];
+
+	// char c;
+
+    c = set_map_char(map->grid, x, y, map->height);
+
+    if (c == ' ')
+	{
+		printf("here\n");
+        return 0;
+	}
+    if (c == '1' || c == 'v')
+        return 1;
+    if (!is_valid(c))
+        return (0);
+	 map->grid[x][y] = 'v';
+    if (!flood_fill(map, x + 1, y))
+	{
+
+		return 0;
+	}
+    if (!flood_fill(map, x - 1, y))
+	{
+
+		return 0;
+	}
+    if (!flood_fill(map, x, y + 1))
+	{
+		return (0);
+	}
+    if (!flood_fill(map, x, y - 1))
+	{
+		printf("here\n");
+		return (0);
+	}
+
+    return (1);
+}
 
 
 int	valid_path(t_map *map)
@@ -329,8 +493,16 @@ int	valid_path(t_map *map)
 	j = 0;
 	//map->exit_found = 0;
 	find_elements(&i, map);
-	//find_player(&i, &j, map-> grid);
-	//flood_fill(map, map->grid, j, i);
+	remove_elements(&map, i);
+	calculate_height(map, i);
+
+	find_player(&i, &j, map);
+
+	if (!map->player_found)
+		error_and_free("Player not found", map);
+	if (!flood_fill(map, map->player->x, map->player->y))
+		error_and_free("Map_invalid", map);
+
 	// if (!map->exit_found)
 	// 	return (ft_printf("error\nexit not found\n"), 0);
 	// if (!map->player_found)

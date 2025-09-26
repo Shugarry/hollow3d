@@ -5,6 +5,13 @@
 #include <stdio.h>
 
 typedef struct s_texture	t_texture;
+
+typedef struct s_player
+{
+	int		x;
+	int		y;
+	int		player_found;
+}	t_player;
 typedef struct s_map
 {
 	char		**grid;
@@ -20,6 +27,7 @@ typedef struct s_map
 	int			F_found;
 	int			C_found;
 	t_texture	*texture;
+	t_player	*player;
 }	t_map;
 
 typedef struct s_texture
@@ -40,4 +48,5 @@ char	*get_next_line(int fd);
 char	*ft_strdup(const char *s);
 char	*ft_strchr(const char *s, int c);
 size_t	ft_strlen(const char	*s);
+char *trim_line(char *line);
 //char	*ft_strjoin(char const *s1, char const *s2);
