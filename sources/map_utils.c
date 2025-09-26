@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 18:07:45 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/26 18:09:39 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/26 18:21:10 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,4 +87,27 @@ char	*trim_line(char *line)
 		line[k++] = line[i++];
 	line[k] = '\0';
 	return (line);
+}
+
+char	**ft_strdup_double(char **str)
+{
+	char	**dup;
+	int		i;
+	int		j;
+
+	if (!str)
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (str[i])
+		i++;
+	dup = malloc(sizeof(char *) * (i + 1));
+	i = 0;
+	while (str[i])
+	{
+		dup[i] = ft_strdup(str[i]);
+		i++;
+	}
+	dup[i] = NULL;
+	return (dup);
 }

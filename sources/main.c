@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 17:17:24 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/26 18:05:59 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/26 18:41:49 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,8 @@ int	check_map(t_map *map)
 	i = 1;
 	j = 0;
 	find_elements(&i, map);
-	remove_elements(&map, i);
+	remove_elements(&map->grid, i);
+	remove_elements(&map->map, i);
 	calculate_height(map, i);
 	find_player(&j, map);
 	if (!map->player_found)
@@ -72,6 +73,20 @@ int	check_map(t_map *map)
 	if (!flood_fill(map, map->player->x, map->player->y))
 		error_and_free("Map_invalid", map);
 	return (1);
+}
+
+void	print_grid(char **grid)
+{
+	int	i;
+
+	i = 0;
+	if (!grid)
+		return ;
+	while (grid[i])
+	{
+		printf("%s", grid[i]);
+		i++;
+	}
 }
 
 int	main(int argc, char **argv)
@@ -85,6 +100,7 @@ int	main(int argc, char **argv)
 		return (printf("ERROR\n"), 0);
 	init_map_vars(&map);
 	init_map(argv[1], &map);
+	map->elements_grid = ft_strdup_double(map->grid);
 	check_map(map);
 	return (0);
 }

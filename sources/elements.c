@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 18:06:58 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/26 18:09:28 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/26 18:37:27 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	find_elements(int *i, t_map *map)
 	char	*line;
 	char	**grid;
 
-	grid = map->grid;
+	grid = map->elements_grid;
 	*i = 0;
 	while (grid[*i] && !is_map_line(trim_line(grid[*i])))
 	{
@@ -35,17 +35,17 @@ void	find_elements(int *i, t_map *map)
 	init_values(map, *i);
 }
 
-void	remove_elements(t_map **map, int i)
+void	remove_elements(char ***grid, int i)
 {
 	int	j;
 
 	j = 0;
-	while ((*map)->grid[i + j])
+	while ((*grid)[i + j])
 	{
-		(*map)->grid[j] = (*map)->grid[i + j];
+		(*grid)[j] = (*grid)[i + j];
 		j++;
 	}
-	(*map)->grid[j] = NULL;
+	(*grid)[j] = NULL;
 }
 
 void	check_if_found(t_map *map)
