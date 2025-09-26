@@ -102,8 +102,8 @@ void	provisional_map(t_data *data)
 			{
 				data->player.start_x = j;
 				data->player.start_y = i;
-				data->player.curr_x = data->player.start_x;
-				data->player.curr_y = data->player.start_y;
+				data->player.curr_x = data->player.start_x + 0.5;
+				data->player.curr_y = data->player.start_y + 0.5;
 			}
 		}
 	}
@@ -117,12 +117,19 @@ void	cast_rays(t_data *data)
 
 	for (int x = 0; x < WIN_WIDTH; x++)
 	{
+		// for (int height = 0; data->map[height]; height++)
+		// {
+		// 	printf("row %d, cols %ld\n", height, ft_strlen(data->map[height]));
+		// }
+
 		double camera_x = 2 * x / (double)WIN_WIDTH - 1;	// camera x is the xcoord on the camera plane that the current
 															// xcoord on the screen represents so that left, middle and right
 															// are -1, 0 and 1 respectively.
 
+		printf("camera_x %f\n", camera_x);
 		double ray_dir_x = dir_x + plane_x * camera_x;	// direction vector for xcoords
 		double ray_dir_y = dir_y + plane_y * camera_x;	// direction vector for ycoords
+		printf("ray_dir_x %f, ray_dir_y %f\n", ray_dir_x, ray_dir_y);
 
 		int map_x = (int)data->player.curr_x;	// Current x and y positions of the ray on the map array 
 		int map_y = (int)data->player.curr_y;
@@ -135,10 +142,13 @@ void	cast_rays(t_data *data)
 
 		double perp_wall_dist; // total length of the ray
 		int step_x, step_y; // direction to step towards (+1 or -1 depending on cardinal direction)
-		int hit = 0; // was a wall hit?
+		bool hit = false; // was a wall hit?
 		int side;
 
 		// need to calculate step x y and side dist x y
+		printf("delta_dist_x %f, delta_dist_y %f\n", delta_dist_x, delta_dist_y);
+		//printf("side_dist_x %f, side_dist_y %f\n", side_dist_x, side_dist_y);
+		//printf("map_x %i, map_y %i\n", map_x, map_y);
 		if (ray_dir_x < 0)
 		{
 			step_x = -1;
@@ -159,7 +169,7 @@ void	cast_rays(t_data *data)
 			step_y = 1;
 			side_dist_y = (map_y + 1.0 - data->player.curr_y) * delta_dist_y;
 		}
-		while(hit == 0)
+		while(hit == false)
 		{
 			//jump to next map square, either in x-direction, or in y-direction
 			if(side_dist_x < side_dist_y)
@@ -174,8 +184,8 @@ void	cast_rays(t_data *data)
 				map_y += step_y;
 				side = 1;
 			}
-			if(data->map[map_x][map_y] > 0)
-				hit = 1;
+			if(data->map[map_x][map_y] == '1')
+				hit = true;
 		}
 		if (side == 0)
 			perp_wall_dist = (side_dist_x - delta_dist_x);
@@ -194,7 +204,10 @@ void	cast_rays(t_data *data)
 
 		uint32_t color = (side == 1) ? rgba(255, 0, 0, 255) : rgba(0, 0, 255, 255);
 		
+		printf("perp_wall_dist %f\n", perp_wall_dist);
+		printf("line_height %i\n", line_height);
 		printf("draw_start %i, draw_end %i\n", draw_start, draw_end);
+		printf("\n");
 		for (int l = draw_start; l <= draw_end; l++)
 			mlx_put_pixel(data->canvas, l, x, color);
 	}
