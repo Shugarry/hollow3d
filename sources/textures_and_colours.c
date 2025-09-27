@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 18:08:09 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/26 18:08:45 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/27 20:18:46 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,20 @@ int	parse_values(t_map *map, char *line)
 	return (1);
 }
 
+int	check_if_digit(char *str)
+{
+	int i;
+
+	i = 0;
+	while(str[i])
+	{
+		if (ft_isdigit(str[i]))
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
 void	parse_color(char *line, int rgb[3], char *id, t_map *map)
 {
 	char	**split;
@@ -50,7 +64,14 @@ void	parse_color(char *line, int rgb[3], char *id, t_map *map)
 	if (!split)
 		error_and_free("Split Malloc failed", map);
 	while (split[i])
+	{
+		if (!check_if_digit(split[i]))
+		{
+			free_double_array(split);
+			error_and_free("Error: RGB value is not a number", map);
+		}
 		i++;
+	}
 	if (i != 3 && i != 4)
 		error_and_free("Invalid RGB format", map);
 	while (j < i)

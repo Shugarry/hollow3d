@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 18:07:34 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/26 18:54:32 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/27 20:28:58 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	init_map(char *filename, t_map **map)
 	{
 		(*map)->grid[i] = get_next_line(fd);
 		if (!(*map)->grid[i])
-			return (cleanup(*map), 0);
+			error_and_free("error with gnl", *map);
 		i++;
 	}
 	(*map)->grid[i] = NULL;

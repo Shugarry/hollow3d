@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 18:07:45 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/26 18:21:10 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/27 20:44:04 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,13 @@ void	find_player(int *j, t_map *map)
 		{
 			if (is_player(grid[i][(*j)]))
 			{
+				if (map->player_found)
+					error_and_free("Error: Multiple players found", map);
 				printf("player_found\n");
 				map->player_found = 1;
 				map->player->x = i;
 				map->player->y = *j;
-				return ;
+				//return ;
 			}
 			(*j)++;
 		}

@@ -6,7 +6,7 @@
 #    By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/23 17:17:45 by frey-gal          #+#    #+#              #
-#    Updated: 2025/09/26 19:53:22 by joshapir         ###   ########.fr        #
+#    Updated: 2025/09/27 19:45:05 by joshapir         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@
 
 NAME		= cub3d
 CC			= gcc
-CFLAGS		= #-fsanitize=address -O3 -ffast-math -pipe \
+CFLAGS		=  -g#-fsanitize=address -O3 -ffast-math -pipe \
 			  -march=native -flto -g
 
 SRC_DIR		= sources

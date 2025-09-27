@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 17:17:24 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/26 18:59:21 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/27 20:19:14 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	is_map_line(char *line)
 	int	i;
 
 	i = 0;
-	while (line[i] == ' ')
+	while (line && line[i] == ' ')
 		i++;
 	if (line[i] == '\0')
 		return (0);
@@ -43,6 +43,7 @@ void	calculate_height(t_map *map, int start)
 	grid = map->grid;
 	i = 0;
 	start = 0;
+	//printf("grid[i] = %s\n", grid[i]);
 	while (grid[i] && is_map_line(grid[i]))
 		i++;
 	while (grid[i])
@@ -61,11 +62,11 @@ int	check_map(t_map *map)
 	int	i;
 	int	j;
 
-	i = 1;
+	i = 0;
 	j = 0;
-	find_elements(&i, map);
+	find_elements(map);
 	remove_elements(&map->grid, i);
-	remove_elements(&map->map, i);
+	remove_elements(&map->map, 0);
 	calculate_height(map, i);
 	find_player(&j, map);
 	if (!map->player_found)
@@ -100,6 +101,7 @@ int	main(int argc, char **argv)
 		return (printf("ERROR\n"), 0);
 	init_map_vars(&map);
 	init_map(argv[1], &map);
+	map->map = ft_strdup_double(map->grid);
 	map->elements_grid = ft_strdup_double(map->grid);
 	check_map(map);
 	cleanup(map);

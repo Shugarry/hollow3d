@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 17:46:29 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/26 18:36:38 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/27 19:28:56 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	cleanup(t_map *map);
 void	free_double_array(char **arr);
 void	remove_elements(char ***grid, int i);
 void	calculate_height(t_map *map, int start);
-void	find_elements(int *i, t_map *map);
+void	find_elements(t_map *map);
 void	check_element(t_map *map, char *line);
 void	check_if_found(t_map *map);
 void	init_values(t_map *map, int start);
@@ -85,3 +85,4 @@ char	set_map_char(char **map, int x, int y, int height);
 char	*trim_line(char *line);
 char	**ft_strdup_double(char **str);
 void print_grid(char **grid);
+void	check_dup_element(t_map *map, char *line);
