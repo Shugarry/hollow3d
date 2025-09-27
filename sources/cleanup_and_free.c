@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 18:06:50 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/27 20:29:52 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/27 20:48:39 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,6 @@ void	cleanup(t_map *map)
 		free(tex->n_tex);
 	if (tex->s_tex)
 		free(tex->s_tex);
-	// if (tex->e_tex)
-	// 	free(tex->e_tex);
 	if (tex)
 		free(tex);
 	if (map->player)
@@ -55,9 +53,10 @@ void	cleanup(t_map *map)
 	free(map);
 }
 
+//TODO add free for e_tex (caused seg)
 void	error_and_free(char *str, t_map *map)
 {
 	printf("%s\n", str);
-	//cleanup(map);
+	cleanup(map);
 	exit(0);
 }

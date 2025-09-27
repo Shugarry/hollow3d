@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 18:06:58 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/27 19:52:26 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/27 20:59:40 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	find_elements(t_map *map)
 {
 	char	*line;
 	char	**grid;
-	int i;
+	int		i;
 
 	grid = map->elements_grid;
 	i = 0;
@@ -63,25 +63,6 @@ void	check_if_found(t_map *map)
 }
 
 // TODO make init funtion and set colours to -1 to check for duplicates
-void	init_values(t_map *map, int start)
-{
-	int		i;
-	char	*line;
-
-	i = start;
-	while (map->grid[i])
-	{
-		line = trim_line(map->grid[i]);
-		if (*line == '\0')
-		{
-			i++;
-			continue ;
-		}
-		if (!parse_values(map, line))
-			break ;
-		i++;
-	}
-}
 
 void	check_element(t_map *map, char *line)
 {
@@ -101,18 +82,14 @@ void	check_element(t_map *map, char *line)
 	else
 		error_and_free("Invalid identifier", map);
 }
+
 void	check_dup_element(t_map *map, char *line)
 {
-	int dup;
-
-	dup = 0;
-
 	if ((ft_strncmp(line, "NO ", 3) == 0 && map->no_found) \
 		|| (ft_strncmp(line, "SO ", 3) == 0 && map->so_found) \
 		|| (ft_strncmp(line, "WE ", 3) == 0 && map->we_found) \
 		|| (ft_strncmp(line, "EA ", 3) == 0 && map->ea_found) \
 		|| (ft_strncmp(line, "F ", 2) == 0 && map->f_found) \
 		|| (ft_strncmp(line, "C ", 2) == 0 && map->c_found))
-	error_and_free("Error, dupliate element found", map);
-
+		error_and_free("Error, dupliate element found", map);
 }

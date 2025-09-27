@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 17:17:24 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/27 20:19:14 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/27 20:50:21 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ void	calculate_height(t_map *map, int start)
 	grid = map->grid;
 	i = 0;
 	start = 0;
-	//printf("grid[i] = %s\n", grid[i]);
 	while (grid[i] && is_map_line(grid[i]))
 		i++;
 	while (grid[i])

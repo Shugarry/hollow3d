@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 18:07:34 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/27 20:28:58 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/27 20:59:55 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,4 +69,24 @@ void	init_map_vars(t_map **map)
 	tex->s_tex = NULL;
 	tex->w_tex = NULL;
 	tex->map = *map;
+}
+
+void	init_values(t_map *map, int start)
+{
+	int		i;
+	char	*line;
+
+	i = start;
+	while (map->grid[i])
+	{
+		line = trim_line(map->grid[i]);
+		if (*line == '\0')
+		{
+			i++;
+			continue ;
+		}
+		if (!parse_values(map, line))
+			break ;
+		i++;
+	}
 }

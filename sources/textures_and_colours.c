@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 18:08:09 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/27 20:18:46 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/27 20:57:00 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,31 @@ int	parse_values(t_map *map, char *line)
 
 int	check_if_digit(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while(str[i])
+	while (str[i])
 	{
 		if (ft_isdigit(str[i]))
 			return (1);
 		i++;
 	}
 	return (0);
+}
+
+void	check_values(char **split, t_map *map, int i)
+{
+	while (split[i])
+	{
+		if (!check_if_digit(split[i]))
+		{
+			free_double_array(split);
+			error_and_free("Error: RGB value is not a number", map);
+		}
+		i++;
+	}
+	if (i != 3 && i != 4)
+		error_and_free("Invalid RGB format", map);
 }
 
 void	parse_color(char *line, int rgb[3], char *id, t_map *map)
@@ -63,17 +78,7 @@ void	parse_color(char *line, int rgb[3], char *id, t_map *map)
 	split = ft_split(line, ',');
 	if (!split)
 		error_and_free("Split Malloc failed", map);
-	while (split[i])
-	{
-		if (!check_if_digit(split[i]))
-		{
-			free_double_array(split);
-			error_and_free("Error: RGB value is not a number", map);
-		}
-		i++;
-	}
-	if (i != 3 && i != 4)
-		error_and_free("Invalid RGB format", map);
+	check_values(split, map, i);
 	while (j < i)
 	{
 		rgb[j] = ft_atoi(split[j]);

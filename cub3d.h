@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 17:46:29 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/27 19:28:56 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/27 20:58:10 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,3 +86,4 @@ char	*trim_line(char *line);
 char	**ft_strdup_double(char **str);
 void print_grid(char **grid);
 void	check_dup_element(t_map *map, char *line);
+void	check_values(char **split, t_map *map, int i);

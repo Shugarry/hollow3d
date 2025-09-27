@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 18:07:45 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/27 20:44:04 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/27 20:46:58 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ void	find_player(int *j, t_map *map)
 				map->player_found = 1;
 				map->player->x = i;
 				map->player->y = *j;
-				//return ;
 			}
 			(*j)++;
 		}
