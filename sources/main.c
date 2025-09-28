@@ -209,7 +209,7 @@ void	cast_rays(t_data *data)
 		printf("draw_start %i, draw_end %i\n", draw_start, draw_end);
 		printf("\n");
 		for (int l = draw_start; l <= draw_end; l++)
-			mlx_put_pixel(data->canvas, l, x, color);
+			mlx_put_pixel(data->canvas, x, l, color);
 	}
 }
 
