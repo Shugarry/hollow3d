@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 20:39:28 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/23 18:33:02 by frey-gal         ###   ########.fr       */
+/*   Updated: 2025/09/29 19:06:16 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,24 +30,24 @@ void	main_hook(void *param) // loops this to detect key presses
 		mlx_close_window(data->mlx);
 		clean_exit(data, NULL, 0);
 	}
-	if (mlx_is_key_down(data->mlx, MLX_KEY_W))
-	{
-      if(data->map[int(info.pos_x + info.dir_x * MS)][int(info.pos_y)] == false) info.pos_x += info.dir_x * MS;
-      if(data->map[int(info.pos_x)][int(info.pos_y + info.dir_y * MS)] == false) info.pos_y += info.dir_y * MS;
-	}
-	if (mlx_is_key_down(data->mlx, MLX_KEY_A))
-	{
+	// if (mlx_is_key_down(data->mlx, MLX_KEY_W))
+	// {
+    //   if(data->map[int(info.pos_x + info.dir_x * MS)][int(info.pos_y)] == false) info.pos_x += info.dir_x * MS;
+    //   if(data->map[int(info.pos_x)][int(info.pos_y + info.dir_y * MS)] == false) info.pos_y += info.dir_y * MS;
+	// }
+	// if (mlx_is_key_down(data->mlx, MLX_KEY_A))
+	// {
 
-	}
-	if (mlx_is_key_down(data->mlx, MLX_KEY_S))
-	{
+	// }
+	// if (mlx_is_key_down(data->mlx, MLX_KEY_S))
+	// {
 
-	}
-	if (mlx_is_key_down(data->mlx, MLX_KEY_D))
-	{
-		if(worldMap[int(info.pos_x - info.dir_x * MS)][int(info.pos_y)] == false) info.pos_x -= info.dir_x * MS;
-		if(worldMap[int(info.pos_x)][int(info.pos_y - info.dir_y * MS)] == false) info.pos_y -= info.dir_y * MS;
-	}
+	// }
+	// if (mlx_is_key_down(data->mlx, MLX_KEY_D))
+	// {
+	// 	if(worldMap[int(info.pos_x - info.dir_x * MS)][int(info.pos_y)] == false) info.pos_x -= info.dir_x * MS;
+	// 	if(worldMap[int(info.pos_x)][int(info.pos_y - info.dir_y * MS)] == false) info.pos_y -= info.dir_y * MS;
+	// }
 }
 
 void	draw_floor(t_data *data)
@@ -94,40 +94,40 @@ void	draw_canvas(t_data *data)
 	draw_floor(data);
 }
 
-void	provisional_map(t_data *data)
-{
-	char	*tmp;
-	int		fd;
-	int		i;
+// void	provisional_map(t_data *data)
+// {
+// 	char	*tmp;
+// 	int		fd;
+// 	int		i;
 
-	i = 0;
-	fd = open("maps/FELIX_TESTMAP", O_RDONLY);
-	if (fd == -1)
-		clean_exit(data, "open() failure at provisional_map()", 1);
-	while ((tmp = get_next_line(fd)) != NULL)
-	{
-		data->map = realloc(data->map, sizeof(char *) * (i + 2));
-		data->map[i] = tmp;
-		i++;
-	}
-	data->map[i] = NULL;
-	for (int i = 0; data->map[i]; i++)
-		printf("map: %s", data->map[i]);
-	for (int i = 0; data->map[i]; i++)
-	{
-		for (int j = 0; data->map[i][j]; j++)
-		{
-			if (data->map[i][j] == 'N')
-			{
-				data->player.start_x = j;
-				data->player.start_y = i;
-				data->player.curr_x = data->player.start_x + 0.5;
-				data->player.curr_y = data->player.start_y + 0.5;
-			}
-		}
-	}
-	close(fd);
-}
+// 	i = 0;
+// 	fd = open("maps/FELIX_TESTMAP", O_RDONLY);
+// 	if (fd == -1)
+// 		clean_exit(data, "open() failure at provisional_map()", 1);
+// 	while ((tmp = get_next_line(fd)) != NULL)
+// 	{
+// 		data->map = realloc(data->map, sizeof(char *) * (i + 2));
+// 		data->map[i] = tmp;
+// 		i++;
+// 	}
+// 	data->map[i] = NULL;
+// 	for (int i = 0; data->map[i]; i++)
+// 		printf("map: %s", data->map[i]);
+// 	for (int i = 0; data->map[i]; i++)
+// 	{
+// 		for (int j = 0; data->map[i][j]; j++)
+// 		{
+// 			if (data->map[i][j] == 'N')
+// 			{
+// 				data->player.x = j;
+// 				data->player.y = i;
+// 				data->player.curr_x = data->player.x + 0.5;
+// 				data->player.curr_y = data->player.y + 0.5;
+// 			}
+// 		}
+// 	}
+// 	close(fd);
+// }
 
 void	loop_vars(t_data *data, t_raycast *info, int x)
 {
@@ -138,7 +138,7 @@ void	loop_vars(t_data *data, t_raycast *info, int x)
 	info->ray_dir_x = info->dir_x + info->plane_x * info->camera_x;	// direction vector for xcoords
 	info->ray_dir_y = info->dir_y + info->plane_y * info->camera_x;	// direction vector for ycoords
 
-	info->map_x = (int)data->player.curr_x;	// Current x and y positions of the ray on the map array 
+	info->map_x = (int)data->player.curr_x;	// Current x and y positions of the ray on the map array
 	info->map_y = (int)data->player.curr_y;
 
 	info->delta_dist_x = (info->ray_dir_x == 0) ? 1e30 : fabs(1 / info->ray_dir_x); // pythagoras hypotenuse for the ray,
@@ -234,7 +234,7 @@ void	raycast_start_vars(t_data *data)
 void	draw_walls(t_data *data)
 {
 	raycast_start_vars(data);
-	provisional_map(data);
+	//provisional_map(data);
 	cast_rays(data);
 }
 
@@ -251,16 +251,112 @@ void	start_mlx(t_data *data)
 	mlx_loop(data->mlx);
 }
 
-int	main(/* int ac, char **av */)
+#include "cub3d.h"
+#include "libraries/libft/libft.h"
+#include <stdlib.h>
+
+int	is_map_line(char *line)
+{
+	int	i;
+
+	i = 0;
+	while (line && line[i] == ' ')
+		i++;
+	if (line[i] == '\0')
+		return (0);
+	while (line[i])
+	{
+		if (line[i] != '0' && line[i] != '1' && \
+				line[i] != 'N' && line[i] != 'S' && \
+				line[i] != 'E' && line[i] != 'W' && \
+				line[i] != ' ')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+void	calculate_height(t_map *map, int start)
+{
+	int		i;
+	char	**grid;
+
+	grid = map->grid;
+	i = 0;
+	start = 0;
+	while (grid[i] && is_map_line(grid[i]))
+		i++;
+	while (grid[i])
+	{
+		if (is_map_line(grid[i]))
+		{
+			error_and_free("Map must not be seperated", map);
+		}
+		i++;
+	}
+	map->height = i;
+}
+
+int	check_map(t_map *map)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	find_elements(map);
+	remove_elements(&map->grid, i);
+	remove_elements(&map->map, 0);
+	calculate_height(map, i);
+	find_player(&j, map);
+	if (!map->player_found)
+		error_and_free("Player not found", map);
+	if (!flood_fill(map, map->player->x, map->player->y))
+		error_and_free("Map_invalid", map);
+	return (1);
+}
+
+void	print_grid(char **grid)
+{
+	int	i;
+
+	i = 0;
+	if (!grid)
+		return ;
+	while (grid[i])
+	{
+		printf("%s", grid[i]);
+		i++;
+	}
+}
+
+void	parsing(t_data *data, char **argv, int argc)
+{
+	t_map	*map;
+	int		fd;
+
+	(void) map;
+	fd = open(argv[1], O_RDONLY);
+	if (fd == -1 || argc != 2)
+		error_and_free("ERROR", NULL);
+	init_map_vars(&map);
+	init_map(argv[1], &map);
+	map->map = ft_strdup_double(map->grid);
+	map->elements_grid = ft_strdup_double(map->grid);
+	check_map(map);
+	data->parsing = *map;
+}
+
+int	main(int argc, char **argv)
 {
 	t_data	data;
 
 	ft_bzero(&data, sizeof(t_data));
 	ft_bzero(&data.player, sizeof(t_player));
 	ft_bzero(&data.textures, sizeof(t_textures));
-	ft_bzero(&data.images, sizeof(t_images));
-	//parsing
-	//if (!data->)
+	ft_bzero(&data.images, sizeof(t_images)); // NOTE: Make init function
+	parsing(&data, argv, argc);
+	data.map = data.parsing.map;
 	start_mlx(&data);
 	clean_exit(&data, NULL, 0);
 	return (0);

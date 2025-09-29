@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: frey-gal <frey-gal@student.42barcelona.co  +#+  +:+       +#+         #
+#    By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/23 17:17:45 by frey-gal          #+#    #+#              #
-#    Updated: 2025/09/23 18:29:36 by frey-gal         ###   ########.fr        #
+#    Updated: 2025/09/29 18:58:26 by joshapir         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@
 
 NAME		= cub3d
 CC			= gcc
-CFLAGS		= -Wall -Wextra -Werror -fsanitize=address -g #-O3 -ffast-math -pipe \
+CFLAGS		= #-Wall -Wextra -Werror #-fsanitize=address -g #-O3 -ffast-math -pipe \
 			  -march=native -flto
 
 SRC_DIR		= sources
@@ -52,7 +52,7 @@ LIB_SRC		= $(addprefix $(LIBFT_DIR)/ft_, atoi.c bzero.c calloc.c isalnum.c \
 			  get_next_line_utils_bonus.c print_base.c print_char.c \
 			  print_ptr.c print_str.c print_uns.c)
 
-LIB_DEP = $(LIB_SRC) $(LIB_HDR) $(LIBFT_DIR)/Makefile 
+LIB_DEP = $(LIB_SRC) $(LIB_HDR) $(LIBFT_DIR)/Makefile
 
 # ================================== RULES =================================== #
 
