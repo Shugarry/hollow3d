@@ -20,15 +20,34 @@ uint32_t rgba(int r, int g, int b, int a)
 
 void	main_hook(void *param) // loops this to detect key presses
 {
-	t_data	*data;
+	t_data		*data;
+	t_raycast	info;
 
 	data = param;
+	info = data->raycast;
 	if (mlx_is_key_down(data->mlx, MLX_KEY_ESCAPE))
 	{
 		mlx_close_window(data->mlx);
 		clean_exit(data, NULL, 0);
 	}
-	// need to go into function which redraws map
+	if (mlx_is_key_down(data->mlx, MLX_KEY_W))
+	{
+      if(data->map[int(info.pos_x + info.dir_x * MS)][int(info.pos_y)] == false) info.pos_x += info.dir_x * MS;
+      if(data->map[int(info.pos_x)][int(info.pos_y + info.dir_y * MS)] == false) info.pos_y += info.dir_y * MS;
+	}
+	if (mlx_is_key_down(data->mlx, MLX_KEY_A))
+	{
+
+	}
+	if (mlx_is_key_down(data->mlx, MLX_KEY_S))
+	{
+
+	}
+	if (mlx_is_key_down(data->mlx, MLX_KEY_D))
+	{
+		if(worldMap[int(info.pos_x - info.dir_x * MS)][int(info.pos_y)] == false) info.pos_x -= info.dir_x * MS;
+		if(worldMap[int(info.pos_x)][int(info.pos_y - info.dir_y * MS)] == false) info.pos_y -= info.dir_y * MS;
+	}
 }
 
 void	draw_floor(t_data *data)
@@ -110,111 +129,111 @@ void	provisional_map(t_data *data)
 	close(fd);
 }
 
+void	loop_vars(t_data *data, t_raycast *info, int x)
+{
+	info->camera_x = 2 * x / (double)WIN_WIDTH - 1;	// camera x is the xcoord on the camera plane that the current
+	// xcoord on the screen represents so that left, middle and right
+	// are -1, 0 and 1 respectively.
+
+	info->ray_dir_x = info->dir_x + info->plane_x * info->camera_x;	// direction vector for xcoords
+	info->ray_dir_y = info->dir_y + info->plane_y * info->camera_x;	// direction vector for ycoords
+
+	info->map_x = (int)data->player.curr_x;	// Current x and y positions of the ray on the map array 
+	info->map_y = (int)data->player.curr_y;
+
+	info->delta_dist_x = (info->ray_dir_x == 0) ? 1e30 : fabs(1 / info->ray_dir_x); // pythagoras hypotenuse for the ray,
+	info->delta_dist_y = (info->ray_dir_y == 0) ? 1e30 : fabs(1 / info->ray_dir_y); // this calculates the length
+
+	//info->perp_wall_dist; total length of the ray
+	//int info->step_x, info->step_y; // direction to step towards (+1 or -1 depending on cardinal direction)
+	info->hit = false; // was a wall info->hit?
+}
+
+void	choose_step_dir(t_data *data, t_raycast *info)
+{
+	// need to calculate step x y and info.side dist x y
+	if (info->ray_dir_x < 0)
+	{
+		info->step_x = -1;
+		info->side_dist_x = (data->player.curr_x - info->map_x) * info->delta_dist_x;
+	}
+	else
+	{
+		info->step_x = 1;
+		info->side_dist_x = (info->map_x + 1.0 - data->player.curr_x) * info->delta_dist_x;
+	}
+	if (info->ray_dir_y < 0)
+	{
+		info->step_y = -1;
+		info->side_dist_y = (data->player.curr_y - info->map_y) * info->delta_dist_y;
+	}
+	else
+	{
+		info->step_y = 1;
+		info->side_dist_y = (info->map_y + 1.0 - data->player.curr_y) * info->delta_dist_y;
+	}
+}
+
+void	find_wall(t_data *data, t_raycast *info)
+{
+	while(info->hit == false)
+	{
+		//jump to next map square, either in x-direction, or in y-direction
+		if(info->side_dist_x < info->side_dist_y)
+		{
+			info->side_dist_x += info->delta_dist_x;
+			info->map_x += info->step_x;
+			info->side = 0;
+		}
+		else
+		{
+			info->side_dist_y += info->delta_dist_y;
+			info->map_y += info->step_y;
+			info->side = 1;
+		}
+		if(data->map[info->map_x][info->map_y] == '1')
+			info->hit = true;
+	}
+}
+
 void	cast_rays(t_data *data)
 {
-	double	dir_x = -1, dir_y = 0; // PLAYER FACING POSITION
-	double	plane_x = 0, plane_y = 0.66; // RAY ANGLES (FOV OF 66ishDEG)
+	t_raycast	info;
 
+	info = data->raycast;
 	for (int x = 0; x < WIN_WIDTH; x++)
 	{
-		// for (int height = 0; data->map[height]; height++)
-		// {
-		// 	printf("row %d, cols %ld\n", height, ft_strlen(data->map[height]));
-		// }
-
-		double camera_x = 2 * x / (double)WIN_WIDTH - 1;	// camera x is the xcoord on the camera plane that the current
-															// xcoord on the screen represents so that left, middle and right
-															// are -1, 0 and 1 respectively.
-
-		printf("camera_x %f\n", camera_x);
-		double ray_dir_x = dir_x + plane_x * camera_x;	// direction vector for xcoords
-		double ray_dir_y = dir_y + plane_y * camera_x;	// direction vector for ycoords
-		printf("ray_dir_x %f, ray_dir_y %f\n", ray_dir_x, ray_dir_y);
-
-		int map_x = (int)data->player.curr_x;	// Current x and y positions of the ray on the map array 
-		int map_y = (int)data->player.curr_y;
-
-		double	side_dist_x;
-		double	side_dist_y;
-
-		double delta_dist_x = (ray_dir_x == 0) ? 1e30 : fabs(1 / ray_dir_x); // pythagoras hypotenuse for the ray,
-		double delta_dist_y = (ray_dir_y == 0) ? 1e30 : fabs(1 / ray_dir_y); // this calculates the length
-
-		double perp_wall_dist; // total length of the ray
-		int step_x, step_y; // direction to step towards (+1 or -1 depending on cardinal direction)
-		bool hit = false; // was a wall hit?
-		int side;
-
-		// need to calculate step x y and side dist x y
-		printf("delta_dist_x %f, delta_dist_y %f\n", delta_dist_x, delta_dist_y);
-		//printf("side_dist_x %f, side_dist_y %f\n", side_dist_x, side_dist_y);
-		//printf("map_x %i, map_y %i\n", map_x, map_y);
-		if (ray_dir_x < 0)
-		{
-			step_x = -1;
-			side_dist_x = (data->player.curr_x - map_x) * delta_dist_x;
-		}
+		loop_vars(data, &info, x);
+		choose_step_dir(data, &info);
+		find_wall(data, &info);
+		if (info.side == 0)
+			info.perp_wall_dist = (info.side_dist_x - info.delta_dist_x);
 		else
-		{
-			step_x = 1;
-			side_dist_x = (map_x + 1.0 - data->player.curr_x) * delta_dist_x;
-		}
-		if (ray_dir_y < 0)
-		{
-			step_y = -1;
-			side_dist_y = (data->player.curr_y - map_y) * delta_dist_y;
-		}
-		else
-		{
-			step_y = 1;
-			side_dist_y = (map_y + 1.0 - data->player.curr_y) * delta_dist_y;
-		}
-		while(hit == false)
-		{
-			//jump to next map square, either in x-direction, or in y-direction
-			if(side_dist_x < side_dist_y)
-			{
-				side_dist_x += delta_dist_x;
-				map_x += step_x;
-				side = 0;
-			}
-			else
-			{
-				side_dist_y += delta_dist_y;
-				map_y += step_y;
-				side = 1;
-			}
-			if(data->map[map_x][map_y] == '1')
-				hit = true;
-		}
-		if (side == 0)
-			perp_wall_dist = (side_dist_x - delta_dist_x);
-		else
-			perp_wall_dist = (side_dist_y - delta_dist_y);
-		
-		int line_height = (int)(WIN_HEIGHT / perp_wall_dist);
-
-		int	draw_start = -line_height / 2 + WIN_HEIGHT / 2;
-		if (draw_start < 0)
-			draw_start = 0;
-
-		int	draw_end = line_height / 2 + WIN_HEIGHT / 2;
-		if (draw_end < 0)
-			draw_end = 0;
-
-		uint32_t color = (side == 1) ? rgba(255, 0, 0, 255) : rgba(0, 0, 255, 255);
-		
-		printf("perp_wall_dist %f\n", perp_wall_dist);
-		printf("line_height %i\n", line_height);
-		printf("draw_start %i, draw_end %i\n", draw_start, draw_end);
-		printf("\n");
-		for (int l = draw_start; l <= draw_end; l++)
+			info.perp_wall_dist = (info.side_dist_y - info.delta_dist_y);
+		info.line_height = (int)(WIN_HEIGHT / info.perp_wall_dist);
+		info.draw_start = -info.line_height / 2 + WIN_HEIGHT / 2;
+		if (info.draw_start < 0)
+			info.draw_start = 0;
+		info.draw_end = info.line_height / 2 + WIN_HEIGHT / 2;
+		if (info.draw_end < 0)
+			info.draw_end = 0;
+		uint32_t color = (info.side == 1) ? rgba(255, 0, 0, 255) : rgba(0, 0, 255, 255);
+		for (int l = info.draw_start; l <= info.draw_end; l++)
 			mlx_put_pixel(data->canvas, x, l, color);
 	}
 }
 
+void	raycast_start_vars(t_data *data)
+{
+	data->raycast.dir_x = -1;
+	data->raycast.dir_y = 0;
+	data->raycast.plane_x = 0; // RAY ANGLES (FOV OF 66ishDEG)
+	data->raycast.plane_y = 0.66;
+}
+
 void	draw_walls(t_data *data)
 {
+	raycast_start_vars(data);
 	provisional_map(data);
 	cast_rays(data);
 }
