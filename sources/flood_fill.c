@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   flood_fill.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joshapir <joshapir@student.42barcelon      +#+  +:+       +#+        */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 18:07:17 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/26 18:07:18 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/29 18:18:53 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ char	set_map_char(char **map, int x, int y, int height)
 
 	if (x < 0 || x >= height)
 		return (' ');
-	len = strlen(map[x]);
+	len = ft_strlen(map[x]);
 	if (x < 0 || x >= len)
 		return (' ');
 	return (map[x][y]);
