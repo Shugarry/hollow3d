@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 18:06:50 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/27 20:48:39 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/29 19:05:16 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ void	cleanup(t_map *map)
 void	error_and_free(char *str, t_map *map)
 {
 	printf("%s\n", str);
-	cleanup(map);
+	if (map)
+		cleanup(map);
 	exit(0);
 }

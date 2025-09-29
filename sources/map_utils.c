@@ -6,12 +6,11 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 18:07:45 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/27 20:46:58 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/29 19:00:59 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-#include "libraries/libft/libft.h"
 
 int	count_lines(char *filename)
 {
@@ -78,7 +77,7 @@ char	*trim_line(char *line)
 
 	i = 0;
 	k = 0;
-	len = strlen(line);
+	len = ft_strlen(line);
 	while (line[i] == ' ')
 		i++;
 	j = len - 1;

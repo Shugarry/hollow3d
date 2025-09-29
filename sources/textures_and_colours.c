@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 18:08:09 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/29 18:14:02 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/29 19:00:14 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	check_values(char **split, t_map *map, int i)
 		if (!check_if_digit(split[i]))
 		{
 			free_double_array(split);
-			errr_and_free("Error: RGB value is not a number", map);
+			error_and_free("Error: RGB value is not a number", map);
 		}
 		i++;
 	}

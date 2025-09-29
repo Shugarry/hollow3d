@@ -1,29 +1,36 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   cub3d.h                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/26 17:46:29 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/27 20:58:10 by joshapir         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#ifndef CUB3D_H
+# define CUB3D_H
 
-#include <stdlib.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <string.h>
-#include <stdio.h>
+# include "libraries/libft/libft.h"
+# include "libraries/libft/ft_printf.h"
+# include "libraries/libft/get_next_line.h"
+# include "libraries/MLX42/include/MLX42/MLX42.h"
+# include <math.h>
+# include <unistd.h>
+# include <stdlib.h>
+# include <limits.h>
+# include <stdbool.h>
+# include <stdio.h>
+# include <sys/stat.h>
+# include <fcntl.h>
+
+# define WIN_WIDTH 1280
+# define WIN_HEIGHT 720
+
+// NOTE: FIX STRUCTS
 
 typedef struct s_texture	t_texture;
 
 typedef struct s_player
 {
+	int		player_found;
 	int		x;
 	int		y;
-	int		player_found;
+	double	curr_x;
+	double	curr_y;
+	char	direction;
 }	t_player;
+
 typedef struct s_map
 {
 	char		**grid;
@@ -54,6 +61,83 @@ typedef struct s_texture
 	t_map	*map;
 }					t_texture;
 
+typedef struct s_paths
+{
+	char	*ceiling;
+	char	*floor;
+	char	*north;
+	char	*south;
+	char	*east;
+	char	*west;
+}	t_paths;
+
+typedef struct s_textures
+{
+	mlx_texture_t	*ceiling;
+	mlx_texture_t	*floor;
+	mlx_texture_t	*north;
+	mlx_texture_t	*south;
+	mlx_texture_t	*east;
+	mlx_texture_t	*west;
+}	t_textures;
+
+typedef struct s_images
+{
+	mlx_image_t	*ceiling;
+	mlx_image_t	*floor;
+	mlx_image_t	*north;
+	mlx_image_t	*south;
+	mlx_image_t	*east;
+	mlx_image_t	*west;
+}	t_images;
+
+typedef struct s_raycast
+{
+	double	dir_x;
+	double	dir_y;
+	double	plane_x;
+	double	plane_y;
+	double	camera_x;
+	double	ray_dir_x;
+	double	ray_dir_y;
+	int		map_x;
+	int		map_y;
+	double	side_dist_x;
+	double	side_dist_y;
+	double	delta_dist_x;
+	double	delta_dist_y;
+	double	perp_wall_dist;
+	int		step_x;
+	int		step_y;
+	bool	hit;
+	int		side;
+	int		line_height;
+	int		draw_start;
+	int		draw_end;
+}	t_raycast;
+
+typedef struct s_data
+{
+	t_player	player;
+	t_paths		paths;
+	t_textures	textures;
+	t_images	images;
+	t_raycast	raycast;
+	t_map		parsing;
+	char		**map;
+	mlx_t		*mlx;
+	mlx_image_t	*canvas;
+
+	t_list		*memlist;
+}	t_data;
+
+//memory.c - Better memory management functions
+void	*memlist_alloc(t_data *data, size_t size);
+void	*memlist_add(t_data *data, void *ptr);
+void	memlist_free_ptr(t_data *data, void *ptr);
+void	clean_exit(t_data *data, char *error_str, int error_num);
+
+//joes functions
 void	init_map_vars(t_map **map);
 void	error_and_free(char *str, t_map *map);
 void	cleanup(t_map *map);
@@ -76,14 +160,12 @@ int		is_map_line(char *line);
 int		is_player(char c);
 int		init_map(char *filename, t_map **map);
 int		count_lines(char *filename);
-char	**ft_split(char const *s, char c);
-char	*get_next_line(int fd);
-char	*ft_strdup(const char *s);
-char	*ft_strchr(const char *s, int c);
 char	*trim_line(char *line);
 char	set_map_char(char **map, int x, int y, int height);
 char	*trim_line(char *line);
 char	**ft_strdup_double(char **str);
-void print_grid(char **grid);
+void	print_grid(char **grid);
 void	check_dup_element(t_map *map, char *line);
 void	check_values(char **split, t_map *map, int i);
+
+#endif
