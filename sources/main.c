@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 20:39:28 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/29 19:06:16 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/30 17:31:50 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -311,7 +311,7 @@ int	check_map(t_map *map)
 	find_player(&j, map);
 	if (!map->player_found)
 		error_and_free("Player not found", map);
-	if (!flood_fill(map, map->player->x, map->player->y))
+	if (!flood_fill(map, map->player.x, map->player.y))
 		error_and_free("Map_invalid", map);
 	return (1);
 }
@@ -332,32 +332,33 @@ void	print_grid(char **grid)
 
 void	parsing(t_data *data, char **argv, int argc)
 {
-	t_map	*map;
+	t_map	map;
 	int		fd;
 
-	(void) map;
+	//(void) map;
 	fd = open(argv[1], O_RDONLY);
 	if (fd == -1 || argc != 2)
 		error_and_free("ERROR", NULL);
 	init_map_vars(&map);
 	init_map(argv[1], &map);
-	map->map = ft_strdup_double(map->grid);
-	map->elements_grid = ft_strdup_double(map->grid);
-	check_map(map);
-	data->parsing = *map;
+	map.map = ft_strdup_double(map.grid);
+	map.elements_grid = ft_strdup_double(map.grid);
+	check_map(&map);
+	data->parsing = map;
+	cleanup(&map);
 }
 
 int	main(int argc, char **argv)
 {
 	t_data	data;
 
-	ft_bzero(&data, sizeof(t_data));
-	ft_bzero(&data.player, sizeof(t_player));
-	ft_bzero(&data.textures, sizeof(t_textures));
-	ft_bzero(&data.images, sizeof(t_images)); // NOTE: Make init function
+	//ft_bzero(&data, sizeof(t_data));
+	//ft_bzero(&data.player, sizeof(t_player));
+	//ft_bzero(&data.textures, sizeof(t_textures));
+	//ft_bzero(&data.images, sizeof(t_images)); // NOTE: Make init function
 	parsing(&data, argv, argc);
 	data.map = data.parsing.map;
-	start_mlx(&data);
-	clean_exit(&data, NULL, 0);
+	//start_mlx(&data);
+	//clean_exit(&data, NULL, 0);
 	return (0);
 }

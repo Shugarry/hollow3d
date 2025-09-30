@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 18:07:45 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/29 19:00:59 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/30 17:02:37 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,8 @@ void	find_player(int *j, t_map *map)
 					error_and_free("Error: Multiple players found", map);
 				printf("player_found\n");
 				map->player_found = 1;
-				map->player->x = i;
-				map->player->y = *j;
+				map->player.x = i;
+				map->player.y = *j;
 			}
 			(*j)++;
 		}

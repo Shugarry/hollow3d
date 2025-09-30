@@ -31,6 +31,16 @@ typedef struct s_player
 	char	direction;
 }	t_player;
 
+typedef struct s_texture
+{
+	char	*n_tex;
+	char	*s_tex;
+	char	*e_tex;
+	char	*w_tex;
+	int		f_colour[4];
+	int		c_colour[4];
+}	t_texture;
+
 typedef struct s_map
 {
 	char		**grid;
@@ -46,20 +56,9 @@ typedef struct s_map
 	int			we_found;
 	int			f_found;
 	int			c_found;
-	t_texture	*texture;
-	t_player	*player;
+	t_texture	texture;
+	t_player	player;
 }						t_map;
-
-typedef struct s_texture
-{
-	char	*n_tex;
-	char	*s_tex;
-	char	*e_tex;
-	char	*w_tex;
-	int		f_colour[4];
-	int		c_colour[4];
-	t_map	*map;
-}					t_texture;
 
 typedef struct s_paths
 {
@@ -138,7 +137,7 @@ void	memlist_free_ptr(t_data *data, void *ptr);
 void	clean_exit(t_data *data, char *error_str, int error_num);
 
 //joes functions
-void	init_map_vars(t_map **map);
+void	init_map_vars(t_map *map);
 void	error_and_free(char *str, t_map *map);
 void	cleanup(t_map *map);
 void	free_double_array(char **arr);
@@ -149,7 +148,7 @@ void	check_element(t_map *map, char *line);
 void	check_if_found(t_map *map);
 void	init_values(t_map *map, int start);
 void	parse_color(char *line, int rgb[3], char *id, t_map *map);
-void	parse_texture(char *line, char **dest, char *id, t_map *map);
+void	parse_texture(char *line, char *dest, char *id, t_map *map);
 void	find_player(int *j, t_map *map);
 void	error_and_free(char *str, t_map *map);
 int		check_map(t_map *map);
@@ -158,7 +157,7 @@ int		is_valid(char c);
 int		parse_values(t_map *map, char *line);
 int		is_map_line(char *line);
 int		is_player(char c);
-int		init_map(char *filename, t_map **map);
+int		init_map(char *filename, t_map *map);
 int		count_lines(char *filename);
 char	*trim_line(char *line);
 char	set_map_char(char **map, int x, int y, int height);
