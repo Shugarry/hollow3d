@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 18:08:09 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/29 19:00:14 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/30 17:34:57 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,17 @@
 int	parse_values(t_map *map, char *line)
 {
 	if (ft_strncmp(line, "NO ", 3) == 0)
-		parse_texture(line + 3, &map->texture->n_tex, "NO", map);
+		parse_texture(line + 3, map->texture.n_tex, "NO", map);
 	else if (ft_strncmp(line, "SO ", 3) == 0)
-		parse_texture(line + 3, &map->texture->s_tex, "SO", map);
+		parse_texture(line + 3, map->texture.s_tex, "SO", map);
 	else if (ft_strncmp(line, "WE ", 3) == 0)
-		parse_texture(line + 3, &map->texture->w_tex, "WE", map);
+		parse_texture(line + 3, map->texture.w_tex, "WE", map);
 	else if (ft_strncmp(line, "EA ", 3) == 0)
-		parse_texture(line + 3, &map->texture->e_tex, "EA", map);
+		parse_texture(line + 3, map->texture.e_tex, "EA", map);
 	else if (ft_strncmp(line, "F ", 2) == 0)
-		parse_color(line + 2, map->texture->f_colour, "F", map);
+		parse_color(line + 2, map->texture.f_colour, "F", map);
 	else if (ft_strncmp(line, "C ", 2) == 0)
-		parse_color(line + 2, map->texture->c_colour, "C", map);
+		parse_color(line + 2, map->texture.c_colour, "C", map);
 	else if (is_map_line(line))
 		return (0);
 	else
@@ -89,18 +89,18 @@ void	parse_color(char *line, int rgb[3], char *id, t_map *map)
 	free_double_array(split);
 }
 
-void	parse_texture(char *line, char **dest, char *id, t_map *map)
+void	parse_texture(char *line, char *dest, char *id, t_map *map)
 {
 	int	fd;
-
+	
 	while (*line == ' ')
 		line++;
-	if (*dest != NULL)
+	if (dest != NULL)
 		error_and_free("Duplicate texture found", map);
-	*dest = ft_strdup(line);
-	if (!*dest)
+	dest = ft_strdup(line);
+	if (!dest)
 		error_and_free("Malloc failed", map);
-	fd = open(*dest, O_RDONLY);
+	fd = open(dest, O_RDONLY);
 	if (fd < 0)
 		error_and_free("Texture file not found", map);
 	close(fd);
