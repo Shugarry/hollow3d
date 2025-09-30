@@ -1,5 +1,0 @@
-Parsing:
-	- make it so it detects .cub instead of .ber as filename
-	- instead of P (for player) its indicated by NSEW, north east south west to indicate the direction where player is facing
-	-the map should be surrouned by walls, this differs from the way its detected by so_long because the maps aren't square anymore
-	- check attributes at start (color north east south west and their texture files)
