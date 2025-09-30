@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
-#include "libraries/libft/libft.h"
+#include "../cub3d.h"
 
 // 1, 0 space, v, N, S, E, W
 int	is_valid(char c)

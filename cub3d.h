@@ -17,8 +17,6 @@
 # define WIN_WIDTH 1280
 # define WIN_HEIGHT 720
 
-// NOTE: FIX STRUCTS
-
 typedef struct s_texture	t_texture;
 
 typedef struct s_player
@@ -142,13 +140,13 @@ void	error_and_free(char *str, t_map *map);
 void	cleanup(t_map *map);
 void	free_double_array(char **arr);
 void	remove_elements(char ***grid, int i);
-void	calculate_height(t_map *map, int start);
+void	calculate_height(t_map *map);
 void	find_elements(t_map *map);
 void	check_element(t_map *map, char *line);
 void	check_if_found(t_map *map);
 void	init_values(t_map *map, int start);
-void	parse_color(char *line, int rgb[3], char *id, t_map *map);
-void	parse_texture(char *line, char *dest, char *id, t_map *map);
+void	parse_color(char *line, int rgb[3], t_map *map);
+void	parse_texture(char *line, char *dest, t_map *map);
 void	find_player(int *j, t_map *map);
 void	error_and_free(char *str, t_map *map);
 int		check_map(t_map *map);

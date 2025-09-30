@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "../cub3d.h"
-#include <stdint.h>
 
 uint32_t rgba(int r, int g, int b, int a)
 {
@@ -21,10 +20,8 @@ uint32_t rgba(int r, int g, int b, int a)
 void	main_hook(void *param) // loops this to detect key presses
 {
 	t_data		*data;
-	t_raycast	info;
 
 	data = param;
-	info = data->raycast;
 	if (mlx_is_key_down(data->mlx, MLX_KEY_ESCAPE))
 	{
 		mlx_close_window(data->mlx);
@@ -99,7 +96,7 @@ void	draw_canvas(t_data *data)
 // 	char	*tmp;
 // 	int		fd;
 // 	int		i;
-
+//
 // 	i = 0;
 // 	fd = open("maps/FELIX_TESTMAP", O_RDONLY);
 // 	if (fd == -1)
@@ -129,111 +126,101 @@ void	draw_canvas(t_data *data)
 // 	close(fd);
 // }
 
-void	loop_vars(t_data *data, t_raycast *info, int x)
-{
-	info->camera_x = 2 * x / (double)WIN_WIDTH - 1;	// camera x is the xcoord on the camera plane that the current
-	// xcoord on the screen represents so that left, middle and right
-	// are -1, 0 and 1 respectively.
-
-	info->ray_dir_x = info->dir_x + info->plane_x * info->camera_x;	// direction vector for xcoords
-	info->ray_dir_y = info->dir_y + info->plane_y * info->camera_x;	// direction vector for ycoords
-
-	info->map_x = (int)data->player.curr_x;	// Current x and y positions of the ray on the map array
-	info->map_y = (int)data->player.curr_y;
-
-	info->delta_dist_x = (info->ray_dir_x == 0) ? 1e30 : fabs(1 / info->ray_dir_x); // pythagoras hypotenuse for the ray,
-	info->delta_dist_y = (info->ray_dir_y == 0) ? 1e30 : fabs(1 / info->ray_dir_y); // this calculates the length
-
-	//info->perp_wall_dist; total length of the ray
-	//int info->step_x, info->step_y; // direction to step towards (+1 or -1 depending on cardinal direction)
-	info->hit = false; // was a wall info->hit?
-}
-
-void	choose_step_dir(t_data *data, t_raycast *info)
-{
-	// need to calculate step x y and info.side dist x y
-	if (info->ray_dir_x < 0)
-	{
-		info->step_x = -1;
-		info->side_dist_x = (data->player.curr_x - info->map_x) * info->delta_dist_x;
-	}
-	else
-	{
-		info->step_x = 1;
-		info->side_dist_x = (info->map_x + 1.0 - data->player.curr_x) * info->delta_dist_x;
-	}
-	if (info->ray_dir_y < 0)
-	{
-		info->step_y = -1;
-		info->side_dist_y = (data->player.curr_y - info->map_y) * info->delta_dist_y;
-	}
-	else
-	{
-		info->step_y = 1;
-		info->side_dist_y = (info->map_y + 1.0 - data->player.curr_y) * info->delta_dist_y;
-	}
-}
-
-void	find_wall(t_data *data, t_raycast *info)
-{
-	while(info->hit == false)
-	{
-		//jump to next map square, either in x-direction, or in y-direction
-		if(info->side_dist_x < info->side_dist_y)
-		{
-			info->side_dist_x += info->delta_dist_x;
-			info->map_x += info->step_x;
-			info->side = 0;
-		}
-		else
-		{
-			info->side_dist_y += info->delta_dist_y;
-			info->map_y += info->step_y;
-			info->side = 1;
-		}
-		if(data->map[info->map_x][info->map_y] == '1')
-			info->hit = true;
-	}
-}
-
 void	cast_rays(t_data *data)
 {
-	t_raycast	info;
+	double	dir_x = -1, dir_y = 0; // PLAYER FACING POSITION
+	double	plane_x = 0, plane_y = -0.66; // RAY ANGLES (FOV OF 66ishDEG)
 
-	info = data->raycast;
 	for (int x = 0; x < WIN_WIDTH; x++)
 	{
-		loop_vars(data, &info, x);
-		choose_step_dir(data, &info);
-		find_wall(data, &info);
-		if (info.side == 0)
-			info.perp_wall_dist = (info.side_dist_x - info.delta_dist_x);
+		double camera_x = 2 * x / (double)WIN_WIDTH - 1;	// camera x is the xcoord on the camera plane that the current
+															// xcoord on the screen represents so that left, middle and right
+															// are -1, 0 and 1 respectively.
+
+		double ray_dir_x = dir_x + plane_x * camera_x;	// direction vector for xcoords
+		double ray_dir_y = dir_y + plane_y * camera_x;	// direction vector for ycoords
+
+		int map_x = (int)data->player.curr_x;	// Current x and y positions of the ray on the map array 
+		int map_y = (int)data->player.curr_y;
+
+		double	side_dist_x;
+		double	side_dist_y;
+
+		double delta_dist_x = (ray_dir_x == 0) ? INFINITY : fabs(1 / ray_dir_x); // pythagoras hypotenuse for the ray,
+		double delta_dist_y = (ray_dir_y == 0) ? INFINITY : fabs(1 / ray_dir_y); // this calculates the length
+
+		double perp_wall_dist; // total length of the ray
+		int step_x, step_y; // direction to step towards (+1 or -1 depending on cardinal direction)
+		bool hit = false; // was a wall hit?
+		int side;
+
+		if (ray_dir_x < 0)
+		{
+			step_x = -1;
+			side_dist_x = (data->player.curr_x - map_x) * delta_dist_x;
+		}
 		else
-			info.perp_wall_dist = (info.side_dist_y - info.delta_dist_y);
-		info.line_height = (int)(WIN_HEIGHT / info.perp_wall_dist);
-		info.draw_start = -info.line_height / 2 + WIN_HEIGHT / 2;
-		if (info.draw_start < 0)
-			info.draw_start = 0;
-		info.draw_end = info.line_height / 2 + WIN_HEIGHT / 2;
-		if (info.draw_end < 0)
-			info.draw_end = 0;
-		uint32_t color = (info.side == 1) ? rgba(255, 0, 0, 255) : rgba(0, 0, 255, 255);
-		for (int l = info.draw_start; l <= info.draw_end; l++)
+		{
+			step_x = 1;
+			side_dist_x = (map_x + 1.0 - data->player.curr_x) * delta_dist_x;
+		}
+		if (ray_dir_y < 0)
+		{
+			step_y = -1;
+			side_dist_y = (data->player.curr_y - map_y) * delta_dist_y;
+		}
+		else
+		{
+			step_y = 1;
+			side_dist_y = (map_y + 1.0 - data->player.curr_y) * delta_dist_y;
+		}
+		while(hit == false)
+		{
+			//jump to next map square, either in x-direction, or in y-direction
+			if(side_dist_x < side_dist_y)
+			{
+				side_dist_x += delta_dist_x;
+				map_x += step_x;
+				side = 0;
+			}
+			else
+			{
+				side_dist_y += delta_dist_y;
+				map_y += step_y;
+				side = 1;
+			}
+			if(data->map[map_y][map_x] == '1')
+				hit = true;
+		}
+		if (side == 0)
+			perp_wall_dist = (side_dist_x - delta_dist_x);
+		else
+			perp_wall_dist = (side_dist_y - delta_dist_y);
+		
+		int line_height = (int)(WIN_HEIGHT / perp_wall_dist);
+
+		int	draw_start = -line_height / 2 + WIN_HEIGHT / 2;
+		if (draw_start < 0)
+			draw_start = 0;//WIN_HEIGHT - 1; // might be 0
+		int	draw_end = line_height / 2 + WIN_HEIGHT / 2;
+		if (draw_end < 0)
+			draw_end = 0;
+		if (draw_end >= WIN_HEIGHT) draw_end = WIN_HEIGHT - 1;
+
+		uint32_t color = (side == 1) ? rgba(255, 0, 0, 255) : rgba(0, 0, 255, 255);
+		
+		printf("perp_wall_dist %f\n", perp_wall_dist);
+		printf("line_height %i\n", line_height);
+		printf("draw_start %i, draw_end %i\n", draw_start, draw_end);
+		printf("map_x %d, map_y %d\n", map_x, map_y);
+		printf("\n");
+		for (int l = draw_start; l <= draw_end; l++)
 			mlx_put_pixel(data->canvas, x, l, color);
 	}
 }
 
-void	raycast_start_vars(t_data *data)
-{
-	data->raycast.dir_x = -1;
-	data->raycast.dir_y = 0;
-	data->raycast.plane_x = 0; // RAY ANGLES (FOV OF 66ishDEG)
-	data->raycast.plane_y = 0.66;
-}
-
 void	draw_walls(t_data *data)
 {
-	raycast_start_vars(data);
 	//provisional_map(data);
 	cast_rays(data);
 }
@@ -250,10 +237,6 @@ void	start_mlx(t_data *data)
 	mlx_loop_hook(data->mlx, &main_hook, data);
 	mlx_loop(data->mlx);
 }
-
-#include "cub3d.h"
-#include "libraries/libft/libft.h"
-#include <stdlib.h>
 
 int	is_map_line(char *line)
 {
@@ -276,14 +259,13 @@ int	is_map_line(char *line)
 	return (1);
 }
 
-void	calculate_height(t_map *map, int start)
+void	calculate_height(t_map *map)
 {
 	int		i;
 	char	**grid;
 
 	grid = map->grid;
 	i = 0;
-	start = 0;
 	while (grid[i] && is_map_line(grid[i]))
 		i++;
 	while (grid[i])
@@ -307,7 +289,7 @@ int	check_map(t_map *map)
 	find_elements(map);
 	remove_elements(&map->grid, i);
 	remove_elements(&map->map, 0);
-	calculate_height(map, i);
+	calculate_height(map);
 	find_player(&j, map);
 	if (!map->player_found)
 		error_and_free("Player not found", map);
@@ -332,32 +314,34 @@ void	print_grid(char **grid)
 
 void	parsing(t_data *data, char **argv, int argc)
 {
-	t_map	map;
 	int		fd;
 
 	//(void) map;
 	fd = open(argv[1], O_RDONLY);
 	if (fd == -1 || argc != 2)
 		error_and_free("ERROR", NULL);
-	init_map_vars(&map);
-	init_map(argv[1], &map);
-	map.map = ft_strdup_double(map.grid);
-	map.elements_grid = ft_strdup_double(map.grid);
-	check_map(&map);
-	data->parsing = map;
-	cleanup(&map);
+	init_map_vars(&data->parsing);
+	init_map(argv[1], &data->parsing);
+	data->parsing.map = ft_strdup_double(data->parsing.grid);
+	data->parsing.elements_grid = ft_strdup_double(data->parsing.grid);
+	check_map(&data->parsing);
+	//cleanup(&map);
 }
 
 int	main(int argc, char **argv)
 {
 	t_data	data;
 
-	//ft_bzero(&data, sizeof(t_data));
-	//ft_bzero(&data.player, sizeof(t_player));
-	//ft_bzero(&data.textures, sizeof(t_textures));
-	//ft_bzero(&data.images, sizeof(t_images)); // NOTE: Make init function
+	ft_bzero(&data, sizeof(t_data));
+	ft_bzero(&data.player, sizeof(t_player));
+	ft_bzero(&data.textures, sizeof(t_textures));
+	ft_bzero(&data.images, sizeof(t_images)); // NOTE: Make init function
 	parsing(&data, argv, argc);
 	data.map = data.parsing.map;
+	for (int i = 0; data.map[i]; i++)
+	{
+		printf("%s\n", data.map[i]);
+	}
 	//start_mlx(&data);
 	//clean_exit(&data, NULL, 0);
 	return (0);

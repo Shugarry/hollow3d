@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
-#include "libraries/libft/libft.h"
+#include "../cub3d.h"
 
 void	find_elements(t_map *map)
 {
@@ -85,11 +84,13 @@ void	check_element(t_map *map, char *line)
 
 void	check_dup_element(t_map *map, char *line)
 {
+	int i = 0;
+
 	if ((ft_strncmp(line, "NO ", 3) == 0 && map->no_found) \
 		|| (ft_strncmp(line, "SO ", 3) == 0 && map->so_found) \
 		|| (ft_strncmp(line, "WE ", 3) == 0 && map->we_found) \
 		|| (ft_strncmp(line, "EA ", 3) == 0 && map->ea_found) \
 		|| (ft_strncmp(line, "F ", 2) == 0 && map->f_found) \
 		|| (ft_strncmp(line, "C ", 2) == 0 && map->c_found))
-		error_and_free("Error, dupliate element found", map);
+		i += 1; //error_and_free("Error, duplicate element found", map);
 }

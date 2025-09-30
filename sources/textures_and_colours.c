@@ -10,23 +10,22 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
-#include "libraries/libft/libft.h"
+#include "../cub3d.h"
 
 int	parse_values(t_map *map, char *line)
 {
 	if (ft_strncmp(line, "NO ", 3) == 0)
-		parse_texture(line + 3, map->texture.n_tex, "NO", map);
+		parse_texture(line + 3, map->texture.n_tex, map);
 	else if (ft_strncmp(line, "SO ", 3) == 0)
-		parse_texture(line + 3, map->texture.s_tex, "SO", map);
+		parse_texture(line + 3, map->texture.s_tex, map);
 	else if (ft_strncmp(line, "WE ", 3) == 0)
-		parse_texture(line + 3, map->texture.w_tex, "WE", map);
+		parse_texture(line + 3, map->texture.w_tex, map);
 	else if (ft_strncmp(line, "EA ", 3) == 0)
-		parse_texture(line + 3, map->texture.e_tex, "EA", map);
+		parse_texture(line + 3, map->texture.e_tex, map);
 	else if (ft_strncmp(line, "F ", 2) == 0)
-		parse_color(line + 2, map->texture.f_colour, "F", map);
+		parse_color(line + 2, map->texture.f_colour, map);
 	else if (ft_strncmp(line, "C ", 2) == 0)
-		parse_color(line + 2, map->texture.c_colour, "C", map);
+		parse_color(line + 2, map->texture.c_colour, map);
 	else if (is_map_line(line))
 		return (0);
 	else
@@ -63,7 +62,7 @@ void	check_values(char **split, t_map *map, int i)
 		error_and_free("Invalid RGB format", map);
 }
 
-void	parse_color(char *line, int rgb[3], char *id, t_map *map)
+void	parse_color(char *line, int rgb[3], t_map *map)
 {
 	char	**split;
 	int		i;
@@ -89,7 +88,7 @@ void	parse_color(char *line, int rgb[3], char *id, t_map *map)
 	free_double_array(split);
 }
 
-void	parse_texture(char *line, char *dest, char *id, t_map *map)
+void	parse_texture(char *line, char *dest, t_map *map)
 {
 	int	fd;
 	

@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
-#include "libraries/libft/libft.h"
+#include "../cub3d.h"
 
 void	free_double_array(char **arr)
 {
@@ -30,7 +29,6 @@ void	free_double_array(char **arr)
 
 void	cleanup(t_map *map)
 {
-	int			i;
 	t_texture	tex;
 
 	tex = map->texture;

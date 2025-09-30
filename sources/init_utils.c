@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
-#include "libraries/libft/libft.h"
+#include "../cub3d.h"
 
 int	init_map(char *filename, t_map *map)
 {

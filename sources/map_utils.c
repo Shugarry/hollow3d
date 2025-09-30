@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../cub3d.h"
 
 int	count_lines(char *filename)
 {
@@ -89,16 +89,14 @@ char	*trim_line(char *line)
 	return (line);
 }
 
-char	**ft_strdup_double(char **str)
+char	**ft_strdup_double(char **str) // NOTE: not safe
 {
 	char	**dup;
 	int		i;
-	int		j;
 
 	if (!str)
 		return (NULL);
 	i = 0;
-	j = 0;
 	while (str[i])
 		i++;
 	dup = malloc(sizeof(char *) * (i + 1));
