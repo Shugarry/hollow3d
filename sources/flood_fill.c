@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
-#include "libraries/libft/libft.h"
+#include "../cub3d.h"
 
 // 1, 0 space, v, N, S, E, W
 int	is_valid(char c)
@@ -35,7 +34,7 @@ char	set_map_char(char **map, int x, int y, int height)
 	return (map[x][y]);
 }
 
-int	flood_fill(t_map *map, int x, int y)
+int	flood_fill(t_parsing *map, int x, int y)
 {
 	char	c;
 

@@ -6,11 +6,11 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 18:07:45 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/29 19:00:59 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/30 17:02:37 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../cub3d.h"
 
 int	count_lines(char *filename)
 {
@@ -41,7 +41,7 @@ int	is_player(char c)
 	return (0);
 }
 
-void	find_player(int *j, t_map *map)
+void	find_player(int *j, t_parsing *map)
 {
 	char	**grid;
 	int		i;
@@ -58,8 +58,8 @@ void	find_player(int *j, t_map *map)
 					error_and_free("Error: Multiple players found", map);
 				printf("player_found\n");
 				map->player_found = 1;
-				map->player->x = i;
-				map->player->y = *j;
+				map->player.x = i;
+				map->player.y = *j;
 			}
 			(*j)++;
 		}
@@ -89,16 +89,14 @@ char	*trim_line(char *line)
 	return (line);
 }
 
-char	**ft_strdup_double(char **str)
+char	**ft_strdup_double(char **str) // NOTE: not safe
 {
 	char	**dup;
 	int		i;
-	int		j;
 
 	if (!str)
 		return (NULL);
 	i = 0;
-	j = 0;
 	while (str[i])
 		i++;
 	dup = malloc(sizeof(char *) * (i + 1));
