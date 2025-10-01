@@ -12,7 +12,7 @@
 
 #include "../cub3d.h"
 
-int	init_map(char *filename, t_map *map)
+int	init_map(char *filename, t_parsing *map)
 {
 	int	i;
 	int	line_count;
@@ -41,7 +41,7 @@ int	init_map(char *filename, t_map *map)
 	return (1);
 }
 
-void	init_map_vars(t_map *map)
+void	init_map_vars(t_parsing *map)
 {
 	int			i;
 	t_texture	tex;
@@ -71,7 +71,7 @@ void	init_map_vars(t_map *map)
 	map->player_found = 0;
 }
 
-void	init_values(t_map *map, int start)
+void	init_values(t_parsing *map, int start)
 {
 	int		i;
 	char	*line;

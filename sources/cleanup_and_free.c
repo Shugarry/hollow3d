@@ -27,7 +27,7 @@ void	free_double_array(char **arr)
 	free(arr);
 }
 
-void	cleanup(t_map *map)
+void	cleanup(t_parsing *map)
 {
 	t_texture	tex;
 
@@ -50,7 +50,7 @@ void	cleanup(t_map *map)
 }
 
 //TODO add free for e_tex (caused seg)
-void	error_and_free(char *str, t_map *map)
+void	error_and_free(char *str, t_parsing *map)
 {
 	printf("%s\n", str);
 	if (map)

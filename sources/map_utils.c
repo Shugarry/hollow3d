@@ -41,7 +41,7 @@ int	is_player(char c)
 	return (0);
 }
 
-void	find_player(int *j, t_map *map)
+void	find_player(int *j, t_parsing *map)
 {
 	char	**grid;
 	int		i;

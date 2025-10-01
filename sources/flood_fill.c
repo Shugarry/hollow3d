@@ -34,7 +34,7 @@ char	set_map_char(char **map, int x, int y, int height)
 	return (map[x][y]);
 }
 
-int	flood_fill(t_map *map, int x, int y)
+int	flood_fill(t_parsing *map, int x, int y)
 {
 	char	c;
 

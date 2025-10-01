@@ -12,7 +12,7 @@
 
 #include "../cub3d.h"
 
-void	find_elements(t_map *map)
+void	find_elements(t_parsing *map)
 {
 	char	*line;
 	char	**grid;
@@ -51,7 +51,7 @@ void	remove_elements(char ***grid, int i)
 	(*grid)[j] = NULL;
 }
 
-void	check_if_found(t_map *map)
+void	check_if_found(t_parsing *map)
 {
 	if (map->ea_found == 0 || map->f_found == 0 || \
 		map->no_found == 0 || map->so_found == 0 || \
@@ -63,7 +63,7 @@ void	check_if_found(t_map *map)
 
 // TODO make init funtion and set colours to -1 to check for duplicates
 
-void	check_element(t_map *map, char *line)
+void	check_element(t_parsing *map, char *line)
 {
 	check_dup_element(map, line);
 	if (ft_strncmp(line, "NO ", 3) == 0)
@@ -82,7 +82,7 @@ void	check_element(t_map *map, char *line)
 		error_and_free("Invalid identifier", map);
 }
 
-void	check_dup_element(t_map *map, char *line)
+void	check_dup_element(t_parsing *map, char *line)
 {
 	int i = 0;
 

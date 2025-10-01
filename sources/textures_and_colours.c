@@ -12,7 +12,7 @@
 
 #include "../cub3d.h"
 
-int	parse_values(t_map *map, char *line)
+int	parse_values(t_parsing *map, char *line)
 {
 	if (ft_strncmp(line, "NO ", 3) == 0)
 		parse_texture(line + 3, map->texture.n_tex, map);
@@ -47,7 +47,7 @@ int	check_if_digit(char *str)
 	return (0);
 }
 
-void	check_values(char **split, t_map *map, int i)
+void	check_values(char **split, t_parsing *map, int i)
 {
 	while (split[i])
 	{
@@ -62,7 +62,7 @@ void	check_values(char **split, t_map *map, int i)
 		error_and_free("Invalid RGB format", map);
 }
 
-void	parse_color(char *line, int rgb[3], t_map *map)
+void	parse_color(char *line, int rgb[3], t_parsing *map)
 {
 	char	**split;
 	int		i;
@@ -88,7 +88,7 @@ void	parse_color(char *line, int rgb[3], t_map *map)
 	free_double_array(split);
 }
 
-void	parse_texture(char *line, char *dest, t_map *map)
+void	parse_texture(char *line, char *dest, t_parsing *map)
 {
 	int	fd;
 	

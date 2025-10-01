@@ -130,6 +130,8 @@ void	cast_rays(t_data *data)
 {
 	double	dir_x = -1, dir_y = 0; // PLAYER FACING POSITION
 	double	plane_x = 0, plane_y = -0.66; // RAY ANGLES (FOV OF 66ishDEG)
+	data->player.curr_x = data->parsing.player.y + 0.5;
+	data->player.curr_y = data->parsing.player.x + 0.5;
 
 	for (int x = 0; x < WIN_WIDTH; x++)
 	{
@@ -201,11 +203,14 @@ void	cast_rays(t_data *data)
 
 		int	draw_start = -line_height / 2 + WIN_HEIGHT / 2;
 		if (draw_start < 0)
-			draw_start = 0;//WIN_HEIGHT - 1; // might be 0
+			draw_start = 0;
+		if (draw_start >= WIN_HEIGHT)
+			draw_start = WIN_HEIGHT - 1;
 		int	draw_end = line_height / 2 + WIN_HEIGHT / 2;
 		if (draw_end < 0)
 			draw_end = 0;
-		if (draw_end >= WIN_HEIGHT) draw_end = WIN_HEIGHT - 1;
+		if (draw_end >= WIN_HEIGHT)
+			draw_end = WIN_HEIGHT - 1;
 
 		uint32_t color = (side == 1) ? rgba(255, 0, 0, 255) : rgba(0, 0, 255, 255);
 		
@@ -213,6 +218,7 @@ void	cast_rays(t_data *data)
 		printf("line_height %i\n", line_height);
 		printf("draw_start %i, draw_end %i\n", draw_start, draw_end);
 		printf("map_x %d, map_y %d\n", map_x, map_y);
+		printf("player_x %f, player_y %f\n", data->player.curr_x, data->player.curr_y);
 		printf("\n");
 		for (int l = draw_start; l <= draw_end; l++)
 			mlx_put_pixel(data->canvas, x, l, color);
@@ -259,7 +265,7 @@ int	is_map_line(char *line)
 	return (1);
 }
 
-void	calculate_height(t_map *map)
+void	calculate_height(t_parsing *map)
 {
 	int		i;
 	char	**grid;
@@ -279,7 +285,7 @@ void	calculate_height(t_map *map)
 	map->height = i;
 }
 
-int	check_map(t_map *map)
+int	check_map(t_parsing *map)
 {
 	int	i;
 	int	j;
@@ -288,7 +294,8 @@ int	check_map(t_map *map)
 	j = 0;
 	find_elements(map);
 	remove_elements(&map->grid, i);
-	remove_elements(&map->map, 0);
+	map->map = ft_strdup_double(map->grid);
+	print_grid(map->map);
 	calculate_height(map);
 	find_player(&j, map);
 	if (!map->player_found)
@@ -316,7 +323,6 @@ void	parsing(t_data *data, char **argv, int argc)
 {
 	int		fd;
 
-	//(void) map;
 	fd = open(argv[1], O_RDONLY);
 	if (fd == -1 || argc != 2)
 		error_and_free("ERROR", NULL);
@@ -338,11 +344,7 @@ int	main(int argc, char **argv)
 	ft_bzero(&data.images, sizeof(t_images)); // NOTE: Make init function
 	parsing(&data, argv, argc);
 	data.map = data.parsing.map;
-	for (int i = 0; data.map[i]; i++)
-	{
-		printf("%s\n", data.map[i]);
-	}
-	//start_mlx(&data);
-	//clean_exit(&data, NULL, 0);
+	start_mlx(&data);
+	clean_exit(&data, NULL, 0);
 	return (0);
 }
