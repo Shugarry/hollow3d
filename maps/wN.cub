@@ -1,10 +1,10 @@
-NO ./assets/crystal.xpm
-SO ./assets/crystal_imac.xpm
-WE 	./assets/crystal_box.xpm
+NO ./resources/crystal.xpm
+SO ./resources/crystal_imac.xpm
+WE 	./resources/crystal_box.xpm
 
 F 		79, 0,           45
 
-EA ./assets/crystal_sign.xpm
+EA ./resources/crystal_sign.xpm
 C    45,0,0
 
 111 1111111111111111111
