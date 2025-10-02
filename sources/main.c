@@ -130,8 +130,8 @@ void	cast_rays(t_data *data)
 {
 	double	dir_x = -1, dir_y = 0; // PLAYER FACING POSITION
 	double	plane_x = 0, plane_y = -0.66; // RAY ANGLES (FOV OF 66ishDEG)
-	data->player.curr_x = data->parsing.player.y + 0.5;
-	data->player.curr_y = data->parsing.player.x + 0.5;
+	data->player.curr_x = data->player.y + 0.5;
+	data->player.curr_y = data->player.x + 0.5;
 
 	for (int x = 0; x < WIN_WIDTH; x++)
 	{
@@ -227,7 +227,6 @@ void	cast_rays(t_data *data)
 
 void	draw_walls(t_data *data)
 {
-	//provisional_map(data);
 	cast_rays(data);
 }
 
@@ -244,7 +243,7 @@ void	start_mlx(t_data *data)
 	mlx_loop(data->mlx);
 }
 
-int	is_map_line(char *line)
+bool	is_map_line(char *line)
 {
 	int	i;
 
@@ -252,71 +251,54 @@ int	is_map_line(char *line)
 	while (line && line[i] == ' ')
 		i++;
 	if (line[i] == '\0')
-		return (0);
+		return (false);
 	while (line[i])
 	{
 		if (line[i] != '0' && line[i] != '1' && \
 				line[i] != 'N' && line[i] != 'S' && \
 				line[i] != 'E' && line[i] != 'W' && \
 				line[i] != ' ')
-			return (0);
+			return (false);
 		i++;
 	}
-	return (1);
+	return (true);
 }
 
-void	calculate_height(t_parsing *map)
+void	calculate_height(t_data *data)
 {
 	int		i;
 	char	**grid;
 
-	grid = map->grid;
+	grid = data->parsing.grid;
 	i = 0;
 	while (grid[i] && is_map_line(grid[i]))
 		i++;
 	while (grid[i])
 	{
 		if (is_map_line(grid[i]))
-		{
-			error_and_free("Map must not be seperated", map);
-		}
+			clean_exit(data, "Map must not be seperated", 1);
 		i++;
 	}
-	map->height = i;
+	data->parsing.height = i;
 }
 
-int	check_map(t_parsing *map)
+int	check_map(t_data *data)
 {
 	int	i;
 	int	j;
 
 	i = 0;
 	j = 0;
-	find_elements(map);
-	remove_elements(&map->grid, i);
-	map->map = ft_strdup_double(map->grid);
-	print_grid(map->map);
-	calculate_height(map);
-	find_player(&j, map);
-	if (!map->player_found)
-		error_and_free("Player not found", map);
-	if (!flood_fill(map, map->player.x, map->player.y))
-		error_and_free("Map_invalid", map);
+	find_elements(data);
+	remove_elements(&data->parsing.grid, i);
+	data->parsing.map = ft_strdup_double(data, data->parsing.grid);
+	calculate_height(data);
+	find_player(data, &j);
+	if (!data->parsing.player_found)
+		clean_exit(data, "Error: Player not found", 1);
+	if (!flood_fill(data, data->player.x, data->player.y))
+		clean_exit(data, "Error: Invalid map", 1);
 	return (1);
-}
-
-void	print_grid(char **grid)
-{
-	int	i;
-
-	i = 0;
-	if (!grid)
-		return ;
-	while (grid[i])
-	{
-		printf("%s", grid[i]);
-		i++;
-	}
 }
 
 void	parsing(t_data *data, char **argv, int argc)
@@ -325,26 +307,41 @@ void	parsing(t_data *data, char **argv, int argc)
 
 	fd = open(argv[1], O_RDONLY);
 	if (fd == -1 || argc != 2)
-		error_and_free("ERROR", NULL);
-	init_map_vars(&data->parsing);
-	init_map(argv[1], &data->parsing);
-	data->parsing.map = ft_strdup_double(data->parsing.grid);
-	data->parsing.elements_grid = ft_strdup_double(data->parsing.grid);
-	check_map(&data->parsing);
-	//cleanup(&map);
+		clean_exit(data, "Incorrect argument count", 1);
+	init_map(data, argv[1]);
+	data->parsing.map = ft_strdup_double(data, data->parsing.grid);
+	data->parsing.elements_grid = ft_strdup_double(data, data->parsing.grid);
+	check_map(data);
+}
+
+void	init_structs(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	ft_bzero(data, sizeof(t_data));
+	ft_bzero(&data->player, sizeof(t_player));
+	ft_bzero(&data->textures, sizeof(t_textures));
+	ft_bzero(&data->images, sizeof(t_images));
+	ft_bzero(&data->parsing, sizeof(t_parsing));
+	ft_bzero(&data->parsing.paths, sizeof(t_paths));
+	while (i < 3)
+	{
+		data->parsing.paths.c_colour[i] = -1;
+		data->parsing.paths.f_colour[i] = -1;
+		i++;
+	}
 }
 
 int	main(int argc, char **argv)
 {
 	t_data	data;
 
-	ft_bzero(&data, sizeof(t_data));
-	ft_bzero(&data.player, sizeof(t_player));
-	ft_bzero(&data.textures, sizeof(t_textures));
-	ft_bzero(&data.images, sizeof(t_images)); // NOTE: Make init function
+	init_structs(&data);
 	parsing(&data, argv, argc);
+	check_parsed_values(&data);
 	data.map = data.parsing.map;
-	start_mlx(&data);
+	//start_mlx(&data);
 	clean_exit(&data, NULL, 0);
 	return (0);
 }

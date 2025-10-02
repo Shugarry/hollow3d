@@ -12,14 +12,13 @@
 
 #include "../cub3d.h"
 
-// 1, 0 space, v, N, S, E, W
-int	is_valid(char c)
+bool	is_valid(char c)
 {
 	if (c == '1' || c == '0' || c == ' ' \
 		|| c == 'v' || c == 'N' || c == 'S' \
 		|| c == 'E' || c == 'W')
-		return (1);
-	return (0);
+		return (true);
+	return (false);
 }
 
 char	set_map_char(char **map, int x, int y, int height)
@@ -34,27 +33,25 @@ char	set_map_char(char **map, int x, int y, int height)
 	return (map[x][y]);
 }
 
-int	flood_fill(t_parsing *map, int x, int y)
+int	flood_fill(t_data *data, int x, int y)
 {
 	char	c;
 
-	c = set_map_char(map->grid, x, y, map->height);
+	c = set_map_char(data->parsing.grid, x, y, data->parsing.height);
 	if (c == ' ')
-	{
 		return (0);
-	}
 	if (c == '1' || c == 'v')
 		return (1);
 	if (!is_valid(c))
 		return (0);
-	map->grid[x][y] = 'v';
-	if (!flood_fill(map, x + 1, y))
+	data->parsing.grid[x][y] = 'v';
+	if (!flood_fill(data, x + 1, y))
 		return (0);
-	if (!flood_fill(map, x - 1, y))
+	if (!flood_fill(data, x - 1, y))
 		return (0);
-	if (!flood_fill(map, x, y + 1))
+	if (!flood_fill(data, x, y + 1))
 		return (0);
-	if (!flood_fill(map, x, y - 1))
+	if (!flood_fill(data, x, y - 1))
 		return (0);
 	return (1);
 }
