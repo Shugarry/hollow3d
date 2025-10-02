@@ -12,7 +12,7 @@
 
 #include "../cub3d.h"
 
-uint32_t rgba(int r, int g, int b, int a)
+uint32_t	rgba(int r, int g, int b, int a)
 {
     return (r << 24 | g << 16 | b << 8 | a);
 }
@@ -29,16 +29,16 @@ void	main_hook(void *param) // loops this to detect key presses
 	}
 	// if (mlx_is_key_down(data->mlx, MLX_KEY_W))
 	// {
-    //   if(data->map[int(info.pos_x + info.dir_x * MS)][int(info.pos_y)] == false) info.pos_x += info.dir_x * MS;
-    //   if(data->map[int(info.pos_x)][int(info.pos_y + info.dir_y * MS)] == false) info.pos_y += info.dir_y * MS;
+ //      if(data->map[int(info.pos_x + info.dir_x * MS)][int(info.pos_y)] == false) info.pos_x += info.dir_x * MS;
+ //      if(data->map[int(info.pos_x)][int(info.pos_y + info.dir_y * MS)] == false) info.pos_y += info.dir_y * MS;
 	// }
 	// if (mlx_is_key_down(data->mlx, MLX_KEY_A))
 	// {
-
+	//
 	// }
 	// if (mlx_is_key_down(data->mlx, MLX_KEY_S))
 	// {
-
+	//
 	// }
 	// if (mlx_is_key_down(data->mlx, MLX_KEY_D))
 	// {
@@ -84,150 +84,149 @@ void	draw_ceiling(t_data *data)
 	}
 }
 
-void	draw_canvas(t_data *data)
+void	make_canvas(t_data *data)
 {
 	data->canvas = mlx_new_image(data->mlx, 1280, 720);
 	draw_ceiling(data);
 	draw_floor(data);
 }
 
-// void	provisional_map(t_data *data)
-// {
-// 	char	*tmp;
-// 	int		fd;
-// 	int		i;
-//
-// 	i = 0;
-// 	fd = open("maps/FELIX_TESTMAP", O_RDONLY);
-// 	if (fd == -1)
-// 		clean_exit(data, "open() failure at provisional_map()", 1);
-// 	while ((tmp = get_next_line(fd)) != NULL)
-// 	{
-// 		data->map = realloc(data->map, sizeof(char *) * (i + 2));
-// 		data->map[i] = tmp;
-// 		i++;
-// 	}
-// 	data->map[i] = NULL;
-// 	for (int i = 0; data->map[i]; i++)
-// 		printf("map: %s", data->map[i]);
-// 	for (int i = 0; data->map[i]; i++)
-// 	{
-// 		for (int j = 0; data->map[i][j]; j++)
-// 		{
-// 			if (data->map[i][j] == 'N')
-// 			{
-// 				data->player.x = j;
-// 				data->player.y = i;
-// 				data->player.curr_x = data->player.x + 0.5;
-// 				data->player.curr_y = data->player.y + 0.5;
-// 			}
-// 		}
-// 	}
-// 	close(fd);
-// }
-
-void	cast_rays(t_data *data)
+void	starting_vars(t_data *data)
 {
-	double	dir_x = -1, dir_y = 0; // PLAYER FACING POSITION
-	double	plane_x = 0, plane_y = -0.66; // RAY ANGLES (FOV OF 66ishDEG)
-	data->player.curr_x = data->player.y + 0.5;
-	data->player.curr_y = data->player.x + 0.5;
+	t_raycast	*rcast;
 
-	for (int x = 0; x < WIN_WIDTH; x++)
+	rcast = &data->raycast;
+	rcast->dir_x = -1;
+	rcast->dir_y = -0; // Direction of vectors on x y axis
+	rcast->plane_x = 0;
+	rcast->plane_y = -0.66; // RAY ANGLES (FOV OF 66ishDEG)
+}
+
+void	cast_rays(t_data *data, int x)
+{
+	t_raycast	*rcast;
+
+	rcast = &data->raycast;
+	rcast->camera_x = 2 * x / (double)WIN_WIDTH - 1;	// camera x is the xcoord on the camera plane that the current
+														// xcoord on the screen represents so that left, middle and right
+														// are -1, 0 and 1 respectively.
+	rcast->ray_dir_x = rcast->dir_x + rcast->plane_x * rcast->camera_x; // direction vector for xcoords
+	rcast->ray_dir_y = rcast->dir_y + rcast->plane_y * rcast->camera_x; // direction vector for ycoords
+	rcast->map_x = (int)data->player.curr_x;	// Current x and y positions of the ray on the map array 
+	rcast->map_y = (int)data->player.curr_y;
+	rcast->delta_dist_x = (rcast->ray_dir_x == 0) ? INFINITY : fabs(1 / rcast->ray_dir_x); // pythagoras hypotenuse for the ray,
+	rcast->delta_dist_y = (rcast->ray_dir_y == 0) ? INFINITY : fabs(1 / rcast->ray_dir_y); // this calculates the length
+
+	rcast->hit = false; // was a wall hit?
+}
+
+void	step_in_dir(t_data *data)
+{
+	t_raycast	*rcast;
+
+	rcast = &data->raycast;
+	if (rcast->ray_dir_x < 0)
 	{
-		double camera_x = 2 * x / (double)WIN_WIDTH - 1;	// camera x is the xcoord on the camera plane that the current
-															// xcoord on the screen represents so that left, middle and right
-															// are -1, 0 and 1 respectively.
-
-		double ray_dir_x = dir_x + plane_x * camera_x;	// direction vector for xcoords
-		double ray_dir_y = dir_y + plane_y * camera_x;	// direction vector for ycoords
-
-		int map_x = (int)data->player.curr_x;	// Current x and y positions of the ray on the map array 
-		int map_y = (int)data->player.curr_y;
-
-		double	side_dist_x;
-		double	side_dist_y;
-
-		double delta_dist_x = (ray_dir_x == 0) ? INFINITY : fabs(1 / ray_dir_x); // pythagoras hypotenuse for the ray,
-		double delta_dist_y = (ray_dir_y == 0) ? INFINITY : fabs(1 / ray_dir_y); // this calculates the length
-
-		double perp_wall_dist; // total length of the ray
-		int step_x, step_y; // direction to step towards (+1 or -1 depending on cardinal direction)
-		bool hit = false; // was a wall hit?
-		int side;
-
-		if (ray_dir_x < 0)
-		{
-			step_x = -1;
-			side_dist_x = (data->player.curr_x - map_x) * delta_dist_x;
-		}
-		else
-		{
-			step_x = 1;
-			side_dist_x = (map_x + 1.0 - data->player.curr_x) * delta_dist_x;
-		}
-		if (ray_dir_y < 0)
-		{
-			step_y = -1;
-			side_dist_y = (data->player.curr_y - map_y) * delta_dist_y;
-		}
-		else
-		{
-			step_y = 1;
-			side_dist_y = (map_y + 1.0 - data->player.curr_y) * delta_dist_y;
-		}
-		while(hit == false)
-		{
-			//jump to next map square, either in x-direction, or in y-direction
-			if(side_dist_x < side_dist_y)
-			{
-				side_dist_x += delta_dist_x;
-				map_x += step_x;
-				side = 0;
-			}
-			else
-			{
-				side_dist_y += delta_dist_y;
-				map_y += step_y;
-				side = 1;
-			}
-			if(data->map[map_y][map_x] == '1')
-				hit = true;
-		}
-		if (side == 0)
-			perp_wall_dist = (side_dist_x - delta_dist_x);
-		else
-			perp_wall_dist = (side_dist_y - delta_dist_y);
-		
-		int line_height = (int)(WIN_HEIGHT / perp_wall_dist);
-
-		int	draw_start = -line_height / 2 + WIN_HEIGHT / 2;
-		if (draw_start < 0)
-			draw_start = 0;
-		if (draw_start >= WIN_HEIGHT)
-			draw_start = WIN_HEIGHT - 1;
-		int	draw_end = line_height / 2 + WIN_HEIGHT / 2;
-		if (draw_end < 0)
-			draw_end = 0;
-		if (draw_end >= WIN_HEIGHT)
-			draw_end = WIN_HEIGHT - 1;
-
-		uint32_t color = (side == 1) ? rgba(255, 0, 0, 255) : rgba(0, 0, 255, 255);
-		
-		printf("perp_wall_dist %f\n", perp_wall_dist);
-		printf("line_height %i\n", line_height);
-		printf("draw_start %i, draw_end %i\n", draw_start, draw_end);
-		printf("map_x %d, map_y %d\n", map_x, map_y);
-		printf("player_x %f, player_y %f\n", data->player.curr_x, data->player.curr_y);
-		printf("\n");
-		for (int l = draw_start; l <= draw_end; l++)
-			mlx_put_pixel(data->canvas, x, l, color);
+		rcast->step_x = -1;
+		rcast->side_dist_x = (data->player.curr_x - rcast->map_x) * rcast->delta_dist_x;
+	}
+	else
+	{
+		rcast->step_x = 1;
+		rcast->side_dist_x = (rcast->map_x + 1.0 - data->player.curr_x) * rcast->delta_dist_x;
+	}
+	if (rcast->ray_dir_y < 0)
+	{
+		rcast->step_y = -1;
+		rcast->side_dist_y = (data->player.curr_y - rcast->map_y) * rcast->delta_dist_y;
+	}
+	else
+	{
+		rcast->step_y = 1;
+		rcast->side_dist_y = (rcast->map_y + 1.0 - data->player.curr_y) * rcast->delta_dist_y;
 	}
 }
 
-void	draw_walls(t_data *data)
+void	ray_find_wall(t_data *data)
 {
-	cast_rays(data);
+	t_raycast *rcast;
+
+	rcast = &data->raycast;
+	while(rcast->hit == false)
+	{
+		//jump to next map square, either in x-direction, or in y-direction
+		if(rcast->side_dist_x < rcast->side_dist_y)
+		{
+			rcast->side_dist_x += rcast->delta_dist_x;
+			rcast->map_x += rcast->step_x;
+			rcast->side = 0;
+		}
+		else
+		{
+			rcast->side_dist_y += rcast->delta_dist_y;
+			rcast->map_y += rcast->step_y;
+			rcast->side = 1;
+		}
+		if(data->map[rcast->map_y][rcast->map_x] == '1')
+			rcast->hit = true;
+	}
+	if (rcast->side == 0)
+		rcast->perp_wall_dist = (rcast->side_dist_x - rcast->delta_dist_x);
+	else
+		rcast->perp_wall_dist = (rcast->side_dist_y - rcast->delta_dist_y);
+}
+
+uint32_t	get_color(int side)
+{
+	uint32_t color;
+	
+	if (side == 1)
+		color = rgba(255, 0, 0, 255);
+	else
+		color = rgba(0, 0, 255, 255);
+	return (color);
+}
+
+void	draw_walls(t_data *data, int x)
+{
+	t_raycast *rcast;
+
+	rcast = &data->raycast;
+	rcast->line_height = (int)(WIN_HEIGHT / rcast->perp_wall_dist);
+	rcast->draw_start = -rcast->line_height / 2 + WIN_HEIGHT / 2;
+	if (rcast->draw_start < 0)
+		rcast->draw_start = 0;
+	if (rcast->draw_start >= WIN_HEIGHT)
+		rcast->draw_start = WIN_HEIGHT - 1;
+	rcast->draw_end = rcast->line_height / 2 + WIN_HEIGHT / 2;
+	if (rcast->draw_end < 0)
+		rcast->draw_end = 0;
+	if (rcast->draw_end >= WIN_HEIGHT)
+		rcast->draw_end = WIN_HEIGHT - 1;
+	for (int l = rcast->draw_start; l <= rcast->draw_end; l++)
+		mlx_put_pixel(data->canvas, x, l, get_color(rcast->side));
+}
+
+void	raycaster(t_data *data)
+{
+	t_raycast	*rcast;
+
+	rcast = &data->raycast;
+	starting_vars(data);
+	// implement movement through function parameters
+	for (int x = 0; x < WIN_WIDTH; x++)
+	{
+		cast_rays(data, x);
+		step_in_dir(data);
+		ray_find_wall(data);
+		draw_walls(data, x);
+		printf("rcast->perp_wall_dist %f\n", rcast->perp_wall_dist);
+		printf("rcast->line_height %i\n", rcast->line_height);
+		printf("rcast->draw_start %i, rcast->draw_end %i\n", rcast->draw_start, rcast->draw_end);
+		printf("map_x %d, map_y %d\n", rcast->map_x, rcast->map_y);
+		printf("player_x %f, player_y %f\n", data->player.curr_x, data->player.curr_y);
+		printf("\n");
+	}
 }
 
 void	start_mlx(t_data *data)
@@ -235,9 +234,9 @@ void	start_mlx(t_data *data)
 	data->mlx = mlx_init(1280, 720, "cub3d", false);
 	if (!data->mlx)
 		clean_exit(data, (char *)mlx_strerror(mlx_errno), EXIT_FAILURE);
-	//data->resources = init_resources(data);
-	draw_canvas(data);
-	draw_walls(data);
+	//data->resources = init_resources(data); NOTE: do later
+	make_canvas(data);
+	raycaster(data);
 	mlx_image_to_window(data->mlx, data->canvas, 0, 0);
 	mlx_loop_hook(data->mlx, &main_hook, data);
 	mlx_loop(data->mlx);
@@ -341,7 +340,9 @@ int	main(int argc, char **argv)
 	parsing(&data, argv, argc);
 	check_parsed_values(&data);
 	data.map = data.parsing.map;
-	//start_mlx(&data);
+	data.player.curr_x = data.player.y + 0.5;
+	data.player.curr_y = data.player.x + 0.5;
+	start_mlx(&data);
 	clean_exit(&data, NULL, 0);
 	return (0);
 }
