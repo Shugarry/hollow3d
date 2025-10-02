@@ -119,10 +119,11 @@ void	*memlist_add(t_data *data, void *ptr);
 void	memlist_free_ptr(t_data *data, void *ptr);
 void	clean_exit(t_data *data, char *error_str, int error_num);
 
-// helpers_and_utils.c
+// helpers.c
 void	print_grid(char **grid);
 void	free_double_array(char **arr);
 void	check_parsed_values(t_data *data);
+int		ft_isspace(int c);
 
 // elements.c
 void	find_elements(t_data *data);
@@ -149,7 +150,7 @@ void	check_values(t_data *data, char **split);
 void	parse_color(t_data *data, char *line, int rgb[3]);
 void	parse_texture(t_data *data, char *line, char **dest);
 
-// flood_fill.c 
+// flood_fill.c
 bool	is_valid(char c);
 char	set_map_char(char **map, int x, int y, int height);
 int		flood_fill(t_data *data, int x, int y);

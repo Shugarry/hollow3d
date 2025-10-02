@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 18:08:09 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/30 17:34:57 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/10/02 19:19:51 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,17 @@
 
 int	parse_values(t_data *data, char *line)
 {
-	if (ft_strncmp(line, "NO ", 3) == 0)
+	if (ft_strncmp(line, "NO", 2) == 0 && ft_isspace(line[2]))
 		parse_texture(data, line + 3, &data->parsing.paths.n_tex);
-	else if (ft_strncmp(line, "SO ", 3) == 0)
+	else if (ft_strncmp(line, "SO", 2) == 0 && ft_isspace(line[2]))
 		parse_texture(data, line + 3, &data->parsing.paths.s_tex);
-	else if (ft_strncmp(line, "WE ", 3) == 0)
+	else if (ft_strncmp(line, "WE", 2) == 0 && ft_isspace(line[2]))
 		parse_texture(data, line + 3, &data->parsing.paths.w_tex);
-	else if (ft_strncmp(line, "EA ", 3) == 0)
+	else if (ft_strncmp(line, "EA", 2) == 0 && ft_isspace(line[2]))
 		parse_texture(data, line + 3, &data->parsing.paths.e_tex);
-	else if (ft_strncmp(line, "F ", 2) == 0)
+	else if (ft_strncmp(line, "F", 1) == 0 && ft_isspace(line[1]))
 		parse_color(data, line + 2, data->parsing.paths.f_colour);
-	else if (ft_strncmp(line, "C ", 2) == 0)
+	else if (ft_strncmp(line, "C", 1) == 0 && ft_isspace(line[1]))
 		parse_color(data, line + 2, data->parsing.paths.c_colour);
 	else if (is_map_line(line))
 		return (0);
@@ -73,7 +73,7 @@ void	parse_color(t_data *data, char *line, int rgb[3])
 
 	i = 0;
 	j = 0;
-	while (*line == ' ')
+	while (ft_isspace(*line))
 		line++;
 	if (rgb[0] != -1)
 		clean_exit(data, "Duplicate colour identifier", 1);
@@ -94,8 +94,8 @@ void	parse_color(t_data *data, char *line, int rgb[3])
 void	parse_texture(t_data *data, char *line, char **dest)
 {
 	int	fd;
-	
-	while (*line == ' ')
+
+	while (ft_isspace(*line))
 		line++;
 	if (*dest != NULL)
 		clean_exit(data, "Duplicate texture found", 1);
