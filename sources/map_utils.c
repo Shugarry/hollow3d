@@ -34,32 +34,32 @@ int	count_lines(char *filename)
 	return (lines);
 }
 
-int	is_player(char c)
+bool	is_player(char c)
 {
 	if (c == 'N' || c == 'S' || c == 'E' || c == 'W')
-		return (1);
-	return (0);
+		return (true);
+	return (false);
 }
 
-void	find_player(int *j, t_parsing *map)
+void	find_player(t_data *data, int *j)
 {
 	char	**grid;
 	int		i;
 
 	i = 0;
-	grid = map->grid;
+	grid = data->parsing.grid;
 	while (grid[i])
 	{
 		while (grid[i][(*j)])
 		{
 			if (is_player(grid[i][(*j)]))
 			{
-				if (map->player_found)
-					error_and_free("Error: Multiple players found", map);
-				printf("player_found\n");
-				map->player_found = 1;
-				map->player.x = i;
-				map->player.y = *j;
+				if (data->parsing.player_found)
+					clean_exit(data, "Error: Multiple players found", 1);
+				data->parsing.player_found = 1;
+				data->player.x = i;
+				data->player.y = *j;
+				data->player.direction = grid[i][(*j)];
 			}
 			(*j)++;
 		}
@@ -89,7 +89,7 @@ char	*trim_line(char *line)
 	return (line);
 }
 
-char	**ft_strdup_double(char **str) // NOTE: not safe
+char	**ft_strdup_double(t_data *data, char **str)
 {
 	char	**dup;
 	int		i;
@@ -99,11 +99,11 @@ char	**ft_strdup_double(char **str) // NOTE: not safe
 	i = 0;
 	while (str[i])
 		i++;
-	dup = malloc(sizeof(char *) * (i + 1));
+	dup = memlist_alloc(data, sizeof(char *) * (i + 1));
 	i = 0;
 	while (str[i])
 	{
-		dup[i] = ft_strdup(str[i]);
+		dup[i] = memlist_add(data, ft_strdup(str[i]));
 		i++;
 	}
 	dup[i] = NULL;

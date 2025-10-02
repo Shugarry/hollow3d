@@ -84,6 +84,7 @@ void	clean_exit(t_data *data, char *error_str, int error_num)
 	ft_lstclear(&data->memlist, free);
 	if (error_num && error_str)
 		perror(error_str);
-	mlx_terminate(data->mlx);
+	if (data->mlx)
+		mlx_terminate(data->mlx);
 	exit(error_num);
 }

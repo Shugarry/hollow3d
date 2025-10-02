@@ -17,11 +17,8 @@
 # define WIN_WIDTH 1280
 # define WIN_HEIGHT 720
 
-typedef struct s_texture	t_texture;
-
 typedef struct s_player
 {
-	int		player_found;
 	int		x;
 	int		y;
 	double	curr_x;
@@ -29,7 +26,7 @@ typedef struct s_player
 	char	direction;
 }	t_player;
 
-typedef struct s_texture
+typedef struct s_paths
 {
 	char	*n_tex;
 	char	*s_tex;
@@ -37,7 +34,7 @@ typedef struct s_texture
 	char	*w_tex;
 	int		f_colour[4];
 	int		c_colour[4];
-}	t_texture;
+}	t_paths;
 
 typedef struct s_parsing
 {
@@ -46,7 +43,6 @@ typedef struct s_parsing
 	char		**map;
 	int			width;
 	int			height;
-	int			exit_found;
 	int			player_found;
 	int			no_found;
 	int			so_found;
@@ -54,19 +50,8 @@ typedef struct s_parsing
 	int			we_found;
 	int			f_found;
 	int			c_found;
-	t_texture	texture;
-	t_player	player;
+	t_paths		paths;
 }	t_parsing;
-
-typedef struct s_paths
-{
-	char	*ceiling;
-	char	*floor;
-	char	*north;
-	char	*south;
-	char	*east;
-	char	*west;
-}	t_paths;
 
 typedef struct s_textures
 {
@@ -116,11 +101,10 @@ typedef struct s_raycast
 typedef struct s_data
 {
 	t_player	player;
-	t_paths		paths;
 	t_textures	textures;
 	t_images	images;
 	t_raycast	raycast;
-	t_parsing		parsing;
+	t_parsing	parsing;
 	char		**map;
 	mlx_t		*mlx;
 	mlx_image_t	*canvas;
@@ -128,41 +112,51 @@ typedef struct s_data
 	t_list		*memlist;
 }	t_data;
 
-//memory.c - Better memory management functions
+//memory.c
 void	*memlist_alloc(t_data *data, size_t size);
 void	*memlist_add(t_data *data, void *ptr);
 void	memlist_free_ptr(t_data *data, void *ptr);
 void	clean_exit(t_data *data, char *error_str, int error_num);
 
-//joes functions
-void	init_map_vars(t_parsing *map);
-void	error_and_free(char *str, t_parsing *map);
-void	cleanup(t_parsing *map);
+// helpers_and_utils.c
+void	print_grid(char **grid);
 void	free_double_array(char **arr);
+void	check_parsed_values(t_data *data);
+
+// elements.c
+void	find_elements(t_data *data);
+void	check_element(t_data *data, char *line);
+void	check_if_found(t_data *data);
 void	remove_elements(char ***grid, int i);
-void	calculate_height(t_parsing *map);
-void	find_elements(t_parsing *map);
-void	check_element(t_parsing *map, char *line);
-void	check_if_found(t_parsing *map);
-void	init_values(t_parsing *map, int start);
-void	parse_color(char *line, int rgb[3], t_parsing *map);
-void	parse_texture(char *line, char *dest, t_parsing *map);
-void	find_player(int *j, t_parsing *map);
-void	error_and_free(char *str, t_parsing *map);
-int		check_map(t_parsing *map);
-int		flood_fill(t_parsing *map, int x, int y);
-int		is_valid(char c);
-int		parse_values(t_parsing *map, char *line);
-int		is_map_line(char *line);
-int		is_player(char c);
-int		init_map(char *filename, t_parsing *map);
+
+// init_utils.c
+void	init_values(t_data *data);
+int		init_map(t_data *data, char *filename);
+
+// map_utils.c
 int		count_lines(char *filename);
 char	*trim_line(char *line);
+bool	is_player(char c);
+void	find_player(t_data *data, int *j);
+char	**ft_strdup_double(t_data *data, char **str);
+
+
+// textures_and_colours.c
+int		parse_values(t_data *data, char *line);
+int		check_if_digit(char *str);
+void	check_values(t_data *data, char **split);
+void	parse_color(t_data *data, char *line, int rgb[3]);
+void	parse_texture(t_data *data, char *line, char **dest);
+
+// flood_fill.c 
+bool	is_valid(char c);
 char	set_map_char(char **map, int x, int y, int height);
-char	*trim_line(char *line);
-char	**ft_strdup_double(char **str);
-void	print_grid(char **grid);
-void	check_dup_element(t_parsing *map, char *line);
-void	check_values(char **split, t_parsing *map, int i);
+int		flood_fill(t_data *data, int x, int y);
+
+// parsing.c
+void	calculate_height(t_data *data);
+int		check_map(t_data *data);
+bool	is_map_line(char *line);
+void	check_dup_element(t_data *data, char *line);
 
 #endif
