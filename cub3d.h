@@ -16,7 +16,7 @@
 
 # define WIN_WIDTH 1280
 # define WIN_HEIGHT 720
-# define MS 1
+# define MS 0.1
 
 typedef struct s_player
 {

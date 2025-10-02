@@ -17,6 +17,21 @@ uint32_t	rgba(int r, int g, int b, int a)
     return (r << 24 | g << 16 | b << 8 | a);
 }
 
+bool	in_bounds(t_data *data, char dir)
+{
+	t_raycast	*rc;
+
+	rc = &data->raycast;
+	if (dir == 'W')
+	{
+		if (data->player.curr_x + rc->dir_x * MS < data->parsing.width || )
+		{
+
+		}
+	}
+
+}
+
 void	main_hook(void *param)
 {
 	t_data		*data;
@@ -33,16 +48,16 @@ void	main_hook(void *param)
 	}
 	if (mlx_is_key_down(data->mlx, MLX_KEY_W))
 	{
-		printf("curr_x %f", data->player.curr_x);
-		printf("curr_y %f", data->player.curr_y);
-		printf("dir_x %f", rc->dir_x);
-		printf("dir_y %f", rc->dir_y);
-		printf("curr_x + dir_x %f", rc->dir_x + data->player.curr_x);
-		printf("curr_y + dir_y %f", rc->dir_y + data->player.curr_y);
-		sleep(1/1e6);
-		if(data->map[(int)(data->player.curr_x + rc->dir_x * MS)][(int)(data->player.curr_y)] == false)
+		// printf("curr_x %f", data->player.curr_x);
+		// printf("curr_y %f", data->player.curr_y);
+		// printf("dir_x %f", rc->dir_x);
+		// printf("dir_y %f", rc->dir_y);
+		// printf("curr_x + dir_x %f", rc->dir_x + data->player.curr_x);
+		// printf("curr_y + dir_y %f", rc->dir_y + data->player.curr_y);
+		printf("%f\n", data->player.curr_x * MS);
+		if(data->map[(int)(data->player.curr_x + rc->dir_x * MS)][(int)(data->player.curr_y)])
 			data->player.curr_x += rc->dir_x * MS;
-		if(data->map[(int)(data->player.curr_x)][(int)(data->player.curr_y + rc->dir_y * MS)] == false)
+		if(data->map[(int)(data->player.curr_x)][(int)(data->player.curr_y + rc->dir_y * MS)])
 			data->player.curr_y += rc->dir_y * MS;
 		keypress = true;
 	}
@@ -348,7 +363,7 @@ int	main(int argc, char **argv)
 
 	init_structs(&data);
 	parsing(&data, argv, argc);
-	check_parsed_values(&data);
+	//check_parsed_values(&data);
 	data.map = data.parsing.map;
 	data.player.curr_x = data.player.y + 0.5;
 	data.player.curr_y = data.player.x + 0.5;
