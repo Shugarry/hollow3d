@@ -16,7 +16,7 @@
 
 # define WIN_WIDTH 1280
 # define WIN_HEIGHT 720
-# define MS 10
+# define MS 1
 
 typedef struct s_player
 {
@@ -161,6 +161,7 @@ bool	is_map_line(char *line);
 void	check_dup_element(t_data *data, char *line);
 
 // raycasting
+void	raycaster(t_data *data, bool first_call);
 uint32_t	rgba(int r, int g, int b, int a);
 
 #endif

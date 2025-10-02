@@ -17,34 +17,46 @@ uint32_t	rgba(int r, int g, int b, int a)
     return (r << 24 | g << 16 | b << 8 | a);
 }
 
-void	main_hook(void *param) // loops this to detect key presses
+void	main_hook(void *param)
 {
 	t_data		*data;
+	t_raycast	*rc;
+	bool		keypress;
 
 	data = param;
+	rc = &data->raycast;
+	keypress = false;
 	if (mlx_is_key_down(data->mlx, MLX_KEY_ESCAPE))
 	{
 		mlx_close_window(data->mlx);
 		clean_exit(data, NULL, 0);
 	}
-	// if (mlx_is_key_down(data->mlx, MLX_KEY_W))
-	// {
- //      if(data->map[int(info.pos_x + info.dir_x * MS)][int(info.pos_y)] == false) info.pos_x += info.dir_x * MS;
- //      if(data->map[int(info.pos_x)][int(info.pos_y + info.dir_y * MS)] == false) info.pos_y += info.dir_y * MS;
-	// }
-	// if (mlx_is_key_down(data->mlx, MLX_KEY_A))
-	// {
-	//
-	// }
-	// if (mlx_is_key_down(data->mlx, MLX_KEY_S))
-	// {
-	//
-	// }
-	// if (mlx_is_key_down(data->mlx, MLX_KEY_D))
-	// {
-	// 	if(worldMap[int(info.pos_x - info.dir_x * MS)][int(info.pos_y)] == false) info.pos_x -= info.dir_x * MS;
-	// 	if(worldMap[int(info.pos_x)][int(info.pos_y - info.dir_y * MS)] == false) info.pos_y -= info.dir_y * MS;
-	// }
+	if (mlx_is_key_down(data->mlx, MLX_KEY_W))
+	{
+		printf("curr_x %f", data->player.curr_x);
+		printf("curr_y %f", data->player.curr_y);
+		printf("dir_x %f", rc->dir_x);
+		printf("dir_y %f", rc->dir_y);
+		printf("curr_x + dir_x %f", rc->dir_x + data->player.curr_x);
+		printf("curr_y + dir_y %f", rc->dir_y + data->player.curr_y);
+		sleep(1/1e6);
+		if(data->map[(int)(data->player.curr_x + rc->dir_x * MS)][(int)(data->player.curr_y)] == false)
+			data->player.curr_x += rc->dir_x * MS;
+		if(data->map[(int)(data->player.curr_x)][(int)(data->player.curr_y + rc->dir_y * MS)] == false)
+			data->player.curr_y += rc->dir_y * MS;
+		keypress = true;
+	}
+	if (mlx_is_key_down(data->mlx, MLX_KEY_A))
+	{
+	}
+	if (mlx_is_key_down(data->mlx, MLX_KEY_S))
+	{
+	}
+	if (mlx_is_key_down(data->mlx, MLX_KEY_D))
+	{
+	}
+	if (keypress)
+		raycaster(data, false);
 }
 
 void	draw_floor(t_data *data)
@@ -181,9 +193,9 @@ uint32_t	get_color(int side)
 	uint32_t color;
 	
 	if (side == 1)
-		color = rgba(255, 0, 0, 255);
+		color = rgba(128, 128, 128, 128);
 	else
-		color = rgba(0, 0, 255, 255);
+		color = rgba(128, 128, 128, 255);
 	return (color);
 }
 
@@ -207,12 +219,10 @@ void	draw_walls(t_data *data, int x)
 		mlx_put_pixel(data->canvas, x, l, get_color(rcast->side));
 }
 
-void	raycaster(t_data *data)
+void	raycaster(t_data *data, bool first_call)
 {
-	t_raycast	*rcast;
-
-	rcast = &data->raycast;
-	starting_vars(data);
+	if (first_call)
+		starting_vars(data);
 	// implement movement through function parameters
 	for (int x = 0; x < WIN_WIDTH; x++)
 	{
@@ -220,12 +230,12 @@ void	raycaster(t_data *data)
 		step_in_dir(data);
 		ray_find_wall(data);
 		draw_walls(data, x);
-		printf("rcast->perp_wall_dist %f\n", rcast->perp_wall_dist);
-		printf("rcast->line_height %i\n", rcast->line_height);
-		printf("rcast->draw_start %i, rcast->draw_end %i\n", rcast->draw_start, rcast->draw_end);
-		printf("map_x %d, map_y %d\n", rcast->map_x, rcast->map_y);
-		printf("player_x %f, player_y %f\n", data->player.curr_x, data->player.curr_y);
-		printf("\n");
+		// printf("rcast->perp_wall_dist %f\n", rcast->perp_wall_dist);
+		// printf("rcast->line_height %i\n", rcast->line_height);
+		// printf("rcast->draw_start %i, rcast->draw_end %i\n", rcast->draw_start, rcast->draw_end);
+		// printf("map_x %d, map_y %d\n", rcast->map_x, rcast->map_y);
+		// printf("player_x %f, player_y %f\n", data->player.curr_x, data->player.curr_y);
+		// printf("\n");
 	}
 }
 
@@ -236,7 +246,7 @@ void	start_mlx(t_data *data)
 		clean_exit(data, (char *)mlx_strerror(mlx_errno), EXIT_FAILURE);
 	//data->resources = init_resources(data); NOTE: do later
 	make_canvas(data);
-	raycaster(data);
+	raycaster(data, true);
 	mlx_image_to_window(data->mlx, data->canvas, 0, 0);
 	mlx_loop_hook(data->mlx, &main_hook, data);
 	mlx_loop(data->mlx);
