@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 20:39:28 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/30 17:31:50 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/10/04 18:10:10 by frey-gal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,7 @@ uint32_t	rgba(int r, int g, int b, int a)
     return (r << 24 | g << 16 | b << 8 | a);
 }
 
-bool	in_bounds(t_data *data, char dir)
-{
-	t_raycast	*rc;
-
-	rc = &data->raycast;
-	if (dir == 'W')
-	{
-		if (data->player.curr_x + rc->dir_x * MS < data->parsing.width || )
-		{
-
-		}
-	}
-
-}
+# define MS 0.05
 
 void	main_hook(void *param)
 {
@@ -48,30 +35,72 @@ void	main_hook(void *param)
 	}
 	if (mlx_is_key_down(data->mlx, MLX_KEY_W))
 	{
-		// printf("curr_x %f", data->player.curr_x);
-		// printf("curr_y %f", data->player.curr_y);
-		// printf("dir_x %f", rc->dir_x);
-		// printf("dir_y %f", rc->dir_y);
-		// printf("curr_x + dir_x %f", rc->dir_x + data->player.curr_x);
-		// printf("curr_y + dir_y %f", rc->dir_y + data->player.curr_y);
-		printf("%f\n", data->player.curr_x * MS);
-		if(data->map[(int)(data->player.curr_x + rc->dir_x * MS)][(int)(data->player.curr_y)])
-			data->player.curr_x += rc->dir_x * MS;
-		if(data->map[(int)(data->player.curr_x)][(int)(data->player.curr_y + rc->dir_y * MS)])
-			data->player.curr_y += rc->dir_y * MS;
+		double	new_x = data->player.curr_x + rc->dir_x * MS;
+		double	new_y = data->player.curr_y + rc->dir_y * MS;
+
+		if (new_x >= 0 && (int)new_x < ft_strlen(data->map[(int)new_y]) &&
+			data->player.curr_y >= 0 && (int)data->player.curr_y < data->parsing.height)
+			if (data->map[(int)new_x][(int)data->player.curr_y] != '1')
+				data->player.curr_x = new_x;
+		if (data->player.curr_x >= 0 && (int)data->player.curr_x < ft_strlen(data->map[(int)new_y]) &&
+			new_y >= 0 && (int)new_y < data->parsing.height)
+			if (data->map[(int)data->player.curr_x][(int)new_y] != '1')
+				data->player.curr_y = new_y;
 		keypress = true;
 	}
 	if (mlx_is_key_down(data->mlx, MLX_KEY_A))
 	{
+		{
+			// Strafe left: perpendicular to direction vector (rotate direction 90° left)
+			double new_x = data->player.curr_x - rc->plane_x * MS;
+			double new_y = data->player.curr_y - rc->plane_y * MS;
+
+			if (new_x >= 0 && (int)new_x < ft_strlen(data->map[(int)new_y]) &&
+				data->player.curr_y >= 0 && (int)data->player.curr_y < data->parsing.height)
+				if (data->map[(int)(new_x + 0.3)][(int)(data->player.curr_y + 0.3)] != '1')
+					data->player.curr_x = new_x;
+			if (data->player.curr_x >= 0 && (int)data->player.curr_x < ft_strlen(data->map[(int)new_y]) &&
+				new_y >= 0 && (int)new_y < data->parsing.height)
+				if (data->map[(int)data->player.curr_x][(int)new_y] != '1')
+					data->player.curr_y = new_y;
+			keypress = true;
+		}
 	}
 	if (mlx_is_key_down(data->mlx, MLX_KEY_S))
 	{
+		double	new_x = data->player.curr_x - rc->dir_x * MS;
+		double	new_y = data->player.curr_y - rc->dir_y * MS;
+
+		if (new_x >= 0 && (int)new_x < ft_strlen(data->map[(int)new_y]) &&
+			data->player.curr_y >= 0 && (int)data->player.curr_y < data->parsing.height)
+			if (data->map[(int)new_x][(int)data->player.curr_y] != '1')
+				data->player.curr_x = new_x;
+		if (data->player.curr_x >= 0 && (int)data->player.curr_x < ft_strlen(data->map[(int)new_y]) &&
+			new_y >= 0 && (int)new_y < data->parsing.height)
+			if (data->map[(int)data->player.curr_x][(int)new_y] != '1')
+				data->player.curr_y = new_y;
+		keypress = true;
 	}
 	if (mlx_is_key_down(data->mlx, MLX_KEY_D))
 	{
+		// Strafe right: perpendicular to direction vector (rotate direction 90° right)
+		double new_x = data->player.curr_x + rc->plane_x * MS;
+		double new_y = data->player.curr_y + rc->plane_y * MS;
+
+		if (new_x >= 0 && (int)new_x < ft_strlen(data->map[(int)new_y]) &&
+			data->player.curr_y >= 0 && (int)data->player.curr_y < data->parsing.height)
+			if (data->map[(int)new_x][(int)data->player.curr_y] != '1')
+				data->player.curr_x = new_x;
+		if (data->player.curr_x >= 0 && (int)data->player.curr_x < ft_strlen(data->map[(int)new_y]) &&
+			new_y >= 0 && (int)new_y < data->parsing.height)
+			if (data->map[(int)data->player.curr_x][(int)new_y] != '1')
+				data->player.curr_y = new_y;
+		keypress = true;
 	}
 	if (keypress)
+	{
 		raycaster(data, false);
+	}
 }
 
 void	draw_floor(t_data *data)
@@ -109,13 +138,6 @@ void	draw_ceiling(t_data *data)
 		}
 		i++;
 	}
-}
-
-void	make_canvas(t_data *data)
-{
-	data->canvas = mlx_new_image(data->mlx, 1280, 720);
-	draw_ceiling(data);
-	draw_floor(data);
 }
 
 void	starting_vars(t_data *data)
@@ -230,8 +252,12 @@ void	draw_walls(t_data *data, int x)
 		rcast->draw_end = 0;
 	if (rcast->draw_end >= WIN_HEIGHT)
 		rcast->draw_end = WIN_HEIGHT - 1;
+	for (int l = 0; l <= rcast->draw_start; l++)
+		mlx_put_pixel(data->canvas, x, l, rgba(0, 0, 0, 255));
 	for (int l = rcast->draw_start; l <= rcast->draw_end; l++)
 		mlx_put_pixel(data->canvas, x, l, get_color(rcast->side));
+	for (int l = rcast->draw_end; l <= WIN_HEIGHT; l++)
+		mlx_put_pixel(data->canvas, x, l, rgba(0, 0, 0, 255));
 }
 
 void	raycaster(t_data *data, bool first_call)
@@ -239,6 +265,7 @@ void	raycaster(t_data *data, bool first_call)
 	if (first_call)
 		starting_vars(data);
 	// implement movement through function parameters
+	printf("player pos: x %f y %f\n", data->player.curr_x, data->player.curr_y);
 	for (int x = 0; x < WIN_WIDTH; x++)
 	{
 		cast_rays(data, x);
@@ -260,7 +287,7 @@ void	start_mlx(t_data *data)
 	if (!data->mlx)
 		clean_exit(data, (char *)mlx_strerror(mlx_errno), EXIT_FAILURE);
 	//data->resources = init_resources(data); NOTE: do later
-	make_canvas(data);
+	data->canvas = mlx_new_image(data->mlx, 1280, 720);
 	raycaster(data, true);
 	mlx_image_to_window(data->mlx, data->canvas, 0, 0);
 	mlx_loop_hook(data->mlx, &main_hook, data);
