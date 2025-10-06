@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 20:39:28 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/30 17:31:50 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/10/06 18:52:04 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,29 +66,98 @@ void	draw_floor(t_data *data)
 
 }
 
-void	draw_ceiling(t_data *data)
+void draw_3d_ceiling(t_data *data)
 {
-	int	i;
-	int	j;
+    int x;
+	int y;
+	int tex_x;
+	int tex_y;
+	int colour;
+	int *pixels;
+	int tex_width;
+	int tex_height;
+	//TODO put vars into struct
+	x = 0;
+	y = 0;
+    mlx_image_t *img   = data->images.ceiling;
+    pixels = (int *)data->textures.ceiling->pixels;
+    tex_width = data->textures.ceiling->width;
+    tex_height = data->textures.ceiling->height;
 
-	i = 0;
-	while (i < WIN_HEIGHT / 2)
-	{
-		j = 0;
-		while (j < WIN_WIDTH)
-		{
-			mlx_put_pixel(data->canvas, j, i, rgba(0, 0, 0, 255));
-			j++;
-		}
-		i++;
-	}
+    while (y < WIN_HEIGHT / 2)
+    {
+		x = 0;
+        while (x < WIN_WIDTH)
+        {
+            tex_x = (x * tex_width) / WIN_WIDTH;
+            tex_y = (y * tex_height) / (WIN_HEIGHT / 2);
+
+            colour = pixels[tex_y * tex_width + tex_x];
+            mlx_put_pixel(img, x, y, colour);
+			x++;
+        }
+		y++;
+    }
+    mlx_image_to_window(data->mlx, img, 0, 0);
 }
+
+void draw_3d_floor(t_data *data)
+{
+    int x, y, tex_x, tex_y, colour;
+    int *pixels;
+    int tex_width, tex_height;
+
+    mlx_image_t *img = data->images.floor;
+    pixels = (int *)data->textures.floor->pixels;
+    tex_width = data->textures.floor->width;
+    tex_height = data->textures.floor->height;
+
+    y = 0;
+    while (y < WIN_HEIGHT / 2)
+    {
+        x = 0;
+        while (x < WIN_WIDTH)
+        {
+            tex_x = (x * tex_width) / WIN_WIDTH;
+            tex_y = (y * tex_height) / (WIN_HEIGHT / 2);
+
+            colour = pixels[tex_y * tex_width + tex_x];
+            mlx_put_pixel(img, x, y, colour);
+            x++;
+        }
+        y++;
+    }
+
+    // draw the floor image LOWER on the window
+    mlx_image_to_window(data->mlx, img, 0, WIN_HEIGHT / 2);
+}
+
+
+
+
+void load_textures(t_data *data)
+{
+    data->textures.ceiling = mlx_load_png("resources/sky_texture.png");
+    data->textures.floor   = mlx_load_png("resources/stone_2.png");
+    if (!data->textures.ceiling || !data->textures.floor)
+        clean_exit(data, "Error loading textures\n", 1);
+
+    data->images.ceiling = mlx_new_image(data->mlx, WIN_WIDTH, WIN_HEIGHT / 2);
+    data->images.floor   = mlx_new_image(data->mlx, WIN_WIDTH, WIN_HEIGHT / 2);
+
+    if (!data->images.ceiling || !data->images.floor)
+        clean_exit(data, "Error creating texture images\n", 1);
+
+    draw_3d_ceiling(data);
+    draw_3d_floor(data);
+}
+
 
 void	draw_canvas(t_data *data)
 {
 	data->canvas = mlx_new_image(data->mlx, 1280, 720);
-	draw_ceiling(data);
-	draw_floor(data);
+	load_textures(data);
+	//draw_floor(data);
 }
 
 // void	provisional_map(t_data *data)
@@ -142,7 +211,7 @@ void	cast_rays(t_data *data)
 		double ray_dir_x = dir_x + plane_x * camera_x;	// direction vector for xcoords
 		double ray_dir_y = dir_y + plane_y * camera_x;	// direction vector for ycoords
 
-		int map_x = (int)data->player.curr_x;	// Current x and y positions of the ray on the map array 
+		int map_x = (int)data->player.curr_x;	// Current x and y positions of the ray on the map array
 		int map_y = (int)data->player.curr_y;
 
 		double	side_dist_x;
@@ -198,7 +267,7 @@ void	cast_rays(t_data *data)
 			perp_wall_dist = (side_dist_x - delta_dist_x);
 		else
 			perp_wall_dist = (side_dist_y - delta_dist_y);
-		
+
 		int line_height = (int)(WIN_HEIGHT / perp_wall_dist);
 
 		int	draw_start = -line_height / 2 + WIN_HEIGHT / 2;
@@ -213,13 +282,13 @@ void	cast_rays(t_data *data)
 			draw_end = WIN_HEIGHT - 1;
 
 		uint32_t color = (side == 1) ? rgba(255, 0, 0, 255) : rgba(0, 0, 255, 255);
-		
-		printf("perp_wall_dist %f\n", perp_wall_dist);
-		printf("line_height %i\n", line_height);
-		printf("draw_start %i, draw_end %i\n", draw_start, draw_end);
-		printf("map_x %d, map_y %d\n", map_x, map_y);
-		printf("player_x %f, player_y %f\n", data->player.curr_x, data->player.curr_y);
-		printf("\n");
+
+		// printf("perp_wall_dist %f\n", perp_wall_dist);
+		// printf("line_height %i\n", line_height);
+		// printf("draw_start %i, draw_end %i\n", draw_start, draw_end);
+		// printf("map_x %d, map_y %d\n", map_x, map_y);
+		// printf("player_x %f, player_y %f\n", data->player.curr_x, data->player.curr_y);
+		// printf("\n");
 		for (int l = draw_start; l <= draw_end; l++)
 			mlx_put_pixel(data->canvas, x, l, color);
 	}
@@ -236,6 +305,7 @@ void	start_mlx(t_data *data)
 	if (!data->mlx)
 		clean_exit(data, (char *)mlx_strerror(mlx_errno), EXIT_FAILURE);
 	//data->resources = init_resources(data);
+	//load_textures(data);
 	draw_canvas(data);
 	draw_walls(data);
 	mlx_image_to_window(data->mlx, data->canvas, 0, 0);
@@ -341,7 +411,7 @@ int	main(int argc, char **argv)
 	parsing(&data, argv, argc);
 	check_parsed_values(&data);
 	data.map = data.parsing.map;
-	//start_mlx(&data);
+	start_mlx(&data);
 	clean_exit(&data, NULL, 0);
 	return (0);
 }

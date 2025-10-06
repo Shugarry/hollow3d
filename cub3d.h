@@ -13,9 +13,12 @@
 # include <stdio.h>
 # include <sys/stat.h>
 # include <fcntl.h>
+#include <stdint.h>
 
 # define WIN_WIDTH 1280
 # define WIN_HEIGHT 720
+#define CEILING_COLOR 0x87CEEBFF
+#define TILE_SIZE 64
 
 typedef struct s_player
 {
