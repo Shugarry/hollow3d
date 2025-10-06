@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 20:39:28 by joshapir          #+#    #+#             */
-/*   Updated: 2025/10/06 18:52:04 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/10/06 19:03:57 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,8 +127,6 @@ void draw_3d_floor(t_data *data)
         }
         y++;
     }
-
-    // draw the floor image LOWER on the window
     mlx_image_to_window(data->mlx, img, 0, WIN_HEIGHT / 2);
 }
 
