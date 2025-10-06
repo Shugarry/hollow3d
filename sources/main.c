@@ -133,25 +133,6 @@ void	main_hook(void *param)
 	movement(data);
 }
 
-void	draw_floor(t_data *data)
-{
-	int	i;
-	int	j;
-
-	i = WIN_HEIGHT / 2;
-	while (i < WIN_HEIGHT)
-	{
-		j = 0;
-		while (j < WIN_WIDTH)
-		{
-			mlx_put_pixel(data->canvas, j, i, rgba(0, 0, 0, 255));
-			j++;
-		}
-		i++;
-	}
-
-}
-
 void draw_3d_ceiling(t_data *data)
 {
     int x;
@@ -216,9 +197,6 @@ void draw_3d_floor(t_data *data)
     mlx_image_to_window(data->mlx, img, 0, WIN_HEIGHT / 2);
 }
 
-
-
-
 void load_textures(t_data *data)
 {
     data->textures.ceiling = mlx_load_png("resources/sky_texture.png");
@@ -259,9 +237,14 @@ void	cast_rays(t_data *data, int x)
 	rcast->ray_dir_y = rcast->dir_y + rcast->plane_y * rcast->camera_x; // direction vector for ycoords
 	rcast->map_x = (int)data->player.curr_x;	// Current x and y positions of the ray on the map array 
 	rcast->map_y = (int)data->player.curr_y;
-	rcast->delta_dist_x = (rcast->ray_dir_x == 0) ? INFINITY : fabs(1 / rcast->ray_dir_x); // pythagoras hypotenuse for the ray,
-	rcast->delta_dist_y = (rcast->ray_dir_y == 0) ? INFINITY : fabs(1 / rcast->ray_dir_y); // this calculates the length
-
+	if (rcast->ray_dir_x == 0)
+		rcast->delta_dist_x = INFINITY;
+	else
+		rcast->delta_dist_x = fabs(1 / rcast->ray_dir_x);
+	if (rcast->ray_dir_y == 0)
+		rcast->delta_dist_y = INFINITY;
+	else
+		rcast->delta_dist_y = fabs(1 / rcast->ray_dir_y);
 	rcast->hit = false; // was a wall hit?
 }
 
@@ -360,8 +343,6 @@ void	raycaster(t_data *data, bool first_call)
 {
 	if (first_call)
 		starting_vars(data);
-	// implement movement through function parameters
-	//printf("player pos: x %f y %f\n", data->player.curr_x, data->player.curr_y);
 	for (int x = 0; x < WIN_WIDTH; x++)
 	{
 		cast_rays(data, x);
@@ -382,7 +363,6 @@ void	start_mlx(t_data *data)
 	data->mlx = mlx_init(1280, 720, "cub3d", false);
 	if (!data->mlx)
 		clean_exit(data, (char *)mlx_strerror(mlx_errno), EXIT_FAILURE);
-	//data->resources = init_resources(data); NOTE: do later
 	data->canvas = mlx_new_image(data->mlx, 1280, 720);
 	raycaster(data, true);
 	mlx_image_to_window(data->mlx, data->canvas, 0, 0);
@@ -467,6 +447,7 @@ void	init_structs(t_data *data)
 
 	i = 0;
 	ft_bzero(data, sizeof(t_data));
+	ft_bzero(&data->raycast, sizeof(t_paths));
 	ft_bzero(&data->player, sizeof(t_player));
 	ft_bzero(&data->textures, sizeof(t_textures));
 	ft_bzero(&data->images, sizeof(t_images));
@@ -486,7 +467,6 @@ int	main(int argc, char **argv)
 
 	init_structs(&data);
 	parsing(&data, argv, argc);
-	//check_parsed_values(&data);
 	data.map = data.parsing.map;
 	data.player.curr_x = data.player.y + 0.5;
 	data.player.curr_y = data.player.x + 0.5;
