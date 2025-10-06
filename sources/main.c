@@ -17,90 +17,120 @@ uint32_t	rgba(int r, int g, int b, int a)
     return (r << 24 | g << 16 | b << 8 | a);
 }
 
-# define MS 0.05
+bool	move_forth(t_data *data)
+{
+	double		new_x;
+	double		new_y;
+	int			length;
+
+	new_x = data->player.curr_x + data->raycast.dir_x * MS;
+	new_y = data->player.curr_y + data->raycast.dir_y * MS;
+	length = ft_strlen(data->map[(int)new_y]);
+	if (new_x >= 0 && (int)new_x < length)
+		if (data->map[(int)data->player.curr_y][(int)new_x] != '1')
+			data->player.curr_x = new_x;
+	if (new_y >= 0 && (int)new_y < data->parsing.height)
+		if (data->map[(int)new_y][(int)data->player.curr_x] != '1')
+			data->player.curr_y = new_y;
+	return (true);
+}
+
+bool	move_back(t_data *data)
+{
+	double		new_x;
+	double		new_y;
+	int			length;
+
+	new_x = data->player.curr_x - data->raycast.dir_x * MS;
+	new_y = data->player.curr_y - data->raycast.dir_y * MS;
+	length = ft_strlen(data->map[(int)new_y]);
+	if (new_x >= 0 && (int)new_x < length)
+		if (data->map[(int)data->player.curr_y][(int)new_x] != '1')
+			data->player.curr_x = new_x;
+	if (new_y >= 0 && (int)new_y < data->parsing.height)
+		if (data->map[(int)new_y][(int)data->player.curr_x] != '1')
+			data->player.curr_y = new_y;
+	return (true);
+}
+
+bool	move_left(t_data *data)
+{
+	double		new_x;
+	double		new_y;
+	int			length;
+
+	new_x = data->player.curr_x - data->raycast.plane_x * MS;
+	new_y = data->player.curr_y - data->raycast.plane_y * MS;
+	length = ft_strlen(data->map[(int)new_y]);
+	if (new_x >= 0 && (int)new_x < length)
+		if (data->map[(int)data->player.curr_y][(int)new_x] != '1')
+			data->player.curr_x = new_x;
+	if (new_y >= 0 && (int)new_y < data->parsing.height)
+		if (data->map[(int)new_y][(int)data->player.curr_x] != '1')
+			data->player.curr_y = new_y;
+	return (true);
+}
+
+bool	move_right(t_data *data)
+{
+	double		new_x;
+	double		new_y;
+	int			length;
+
+	new_x = data->player.curr_x + data->raycast.plane_x * MS;
+	new_y = data->player.curr_y + data->raycast.plane_y * MS;
+	length = ft_strlen(data->map[(int)new_y]);
+	if (new_x >= 0 && (int)new_x < length)
+		if (data->map[(int)data->player.curr_y][(int)new_x] != '1')
+			data->player.curr_x = new_x;
+	if (new_y >= 0 && (int)new_y < data->parsing.height)
+		if (data->map[(int)new_y][(int)data->player.curr_x] != '1')
+			data->player.curr_y = new_y;
+	return (true);
+}
+
+void	movement(t_data *data)
+{
+	bool	keypress;
+
+	keypress = false;
+	if (mlx_is_key_down(data->mlx, MLX_KEY_W))
+	{
+		move_forth(data);
+		keypress = true;
+	}
+	if (mlx_is_key_down(data->mlx, MLX_KEY_S))
+	{
+		move_back(data);
+		keypress = true;
+	}
+	if (mlx_is_key_down(data->mlx, MLX_KEY_A))
+	{
+		move_left(data);
+		keypress = true;
+	}
+	if (mlx_is_key_down(data->mlx, MLX_KEY_D))
+	{
+		move_right(data);
+		keypress = true;
+	}
+	if (keypress)
+		raycaster(data, false);
+}
 
 void	main_hook(void *param)
 {
 	t_data		*data;
 	t_raycast	*rc;
-	bool		keypress;
 
 	data = param;
 	rc = &data->raycast;
-	keypress = false;
 	if (mlx_is_key_down(data->mlx, MLX_KEY_ESCAPE))
 	{
 		mlx_close_window(data->mlx);
 		clean_exit(data, NULL, 0);
 	}
-	if (mlx_is_key_down(data->mlx, MLX_KEY_W))
-	{
-		double	new_x = data->player.curr_x + rc->dir_x * MS;
-		double	new_y = data->player.curr_y + rc->dir_y * MS;
-
-		if (new_x >= 0 && (int)new_x < ft_strlen(data->map[(int)new_y]) &&
-			data->player.curr_y >= 0 && (int)data->player.curr_y < data->parsing.height)
-			if (data->map[(int)new_x][(int)data->player.curr_y] != '1')
-				data->player.curr_x = new_x;
-		if (data->player.curr_x >= 0 && (int)data->player.curr_x < ft_strlen(data->map[(int)new_y]) &&
-			new_y >= 0 && (int)new_y < data->parsing.height)
-			if (data->map[(int)data->player.curr_x][(int)new_y] != '1')
-				data->player.curr_y = new_y;
-		keypress = true;
-	}
-	if (mlx_is_key_down(data->mlx, MLX_KEY_A))
-	{
-		{
-			// Strafe left: perpendicular to direction vector (rotate direction 90° left)
-			double new_x = data->player.curr_x - rc->plane_x * MS;
-			double new_y = data->player.curr_y - rc->plane_y * MS;
-
-			if (new_x >= 0 && (int)new_x < ft_strlen(data->map[(int)new_y]) &&
-				data->player.curr_y >= 0 && (int)data->player.curr_y < data->parsing.height)
-				if (data->map[(int)(new_x + 0.3)][(int)(data->player.curr_y + 0.3)] != '1')
-					data->player.curr_x = new_x;
-			if (data->player.curr_x >= 0 && (int)data->player.curr_x < ft_strlen(data->map[(int)new_y]) &&
-				new_y >= 0 && (int)new_y < data->parsing.height)
-				if (data->map[(int)data->player.curr_x][(int)new_y] != '1')
-					data->player.curr_y = new_y;
-			keypress = true;
-		}
-	}
-	if (mlx_is_key_down(data->mlx, MLX_KEY_S))
-	{
-		double	new_x = data->player.curr_x - rc->dir_x * MS;
-		double	new_y = data->player.curr_y - rc->dir_y * MS;
-
-		if (new_x >= 0 && (int)new_x < ft_strlen(data->map[(int)new_y]) &&
-			data->player.curr_y >= 0 && (int)data->player.curr_y < data->parsing.height)
-			if (data->map[(int)new_x][(int)data->player.curr_y] != '1')
-				data->player.curr_x = new_x;
-		if (data->player.curr_x >= 0 && (int)data->player.curr_x < ft_strlen(data->map[(int)new_y]) &&
-			new_y >= 0 && (int)new_y < data->parsing.height)
-			if (data->map[(int)data->player.curr_x][(int)new_y] != '1')
-				data->player.curr_y = new_y;
-		keypress = true;
-	}
-	if (mlx_is_key_down(data->mlx, MLX_KEY_D))
-	{
-		// Strafe right: perpendicular to direction vector (rotate direction 90° right)
-		double new_x = data->player.curr_x + rc->plane_x * MS;
-		double new_y = data->player.curr_y + rc->plane_y * MS;
-
-		if (new_x >= 0 && (int)new_x < ft_strlen(data->map[(int)new_y]) &&
-			data->player.curr_y >= 0 && (int)data->player.curr_y < data->parsing.height)
-			if (data->map[(int)new_x][(int)data->player.curr_y] != '1')
-				data->player.curr_x = new_x;
-		if (data->player.curr_x >= 0 && (int)data->player.curr_x < ft_strlen(data->map[(int)new_y]) &&
-			new_y >= 0 && (int)new_y < data->parsing.height)
-			if (data->map[(int)data->player.curr_x][(int)new_y] != '1')
-				data->player.curr_y = new_y;
-		keypress = true;
-	}
-	if (keypress)
-	{
-		raycaster(data, false);
-	}
+	movement(data);
 }
 
 void	draw_floor(t_data *data)
@@ -265,7 +295,7 @@ void	raycaster(t_data *data, bool first_call)
 	if (first_call)
 		starting_vars(data);
 	// implement movement through function parameters
-	printf("player pos: x %f y %f\n", data->player.curr_x, data->player.curr_y);
+	//printf("player pos: x %f y %f\n", data->player.curr_x, data->player.curr_y);
 	for (int x = 0; x < WIN_WIDTH; x++)
 	{
 		cast_rays(data, x);
