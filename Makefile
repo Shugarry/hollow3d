@@ -15,7 +15,7 @@
 NAME		= cub3d
 CC			= gcc
 CFLAGS		=  -fsanitize=address -g #-O3 -ffast-math -pipe \
-			  -march=native -flto
+			   -march=native -flto
 
 SRC_DIR		= sources
 SOURCES		= $(wildcard sources/*.c) #$(addprefix $(SRC_DIR)/, main.c)
