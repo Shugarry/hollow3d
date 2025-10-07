@@ -108,19 +108,9 @@ void draw_3d_floor(t_data *data)
 
 void load_textures(t_data *data)
 {
-    data->textures.ceiling = mlx_load_png("resources/sky_texture.png");
-    data->textures.floor   = mlx_load_png("resources/stone_2.png");
-    if (!data->textures.ceiling || !data->textures.floor)
-        clean_exit(data, "Error loading textures\n", 1);
-
-    data->images.ceiling = mlx_new_image(data->mlx, WIN_WIDTH, WIN_HEIGHT / 2);
-    data->images.floor   = mlx_new_image(data->mlx, WIN_WIDTH, WIN_HEIGHT / 2);
-
-    if (!data->images.ceiling || !data->images.floor)
-        clean_exit(data, "Error creating texture images\n", 1);
-
-    draw_3d_ceiling(data);
-    draw_3d_floor(data);
+	data->images.north = mlx_texture_to_image(data->mlx, data->textures.north);
+	data->textures.north = mlx_load_png("resources/stone_2.png");
+	mlx_resize_image(data->images.north, TILE_SIZE, TILE_SIZE);
 }
 
 bool	is_map_line(char *line)

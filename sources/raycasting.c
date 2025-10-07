@@ -93,8 +93,10 @@ static void	ray_find_wall(t_data *data)
 
 static void	draw_walls(t_data *data, int x)
 {
-	t_raycast *rcast;
+	t_raycast	*rcast;
+	int			line;
 
+	line = 0;
 	rcast = &data->raycast;
 	rcast->line_height = (int)(WIN_HEIGHT / rcast->perp_wall_dist);
 	rcast->draw_start = -rcast->line_height / 2 + WIN_HEIGHT / 2;
@@ -107,12 +109,22 @@ static void	draw_walls(t_data *data, int x)
 		rcast->draw_end = 0;
 	if (rcast->draw_end >= WIN_HEIGHT)
 		rcast->draw_end = WIN_HEIGHT - 1;
-	for (int l = 0; l <= rcast->draw_start; l++)
-		mlx_put_pixel(data->canvas, x, l, rgba(0, 0, 0, 255));
-	for (int l = rcast->draw_start; l <= rcast->draw_end; l++)
-		mlx_put_pixel(data->canvas, x, l, get_color(rcast->side));
-	for (int l = rcast->draw_end; l <= WIN_HEIGHT; l++)
-		mlx_put_pixel(data->canvas, x, l, rgba(0, 0, 0, 255));
+	line = 0;
+	while (line < rcast->draw_start)
+	{
+		mlx_put_pixel(data->canvas, x, line, rgba(0, 0, 0, 255));
+		line++;
+	}
+	while (line < rcast->draw_end)
+	{
+		mlx_put_pixel(data->canvas, x, line, get_color(rcast->side));
+		line++;
+	}
+	while (line <= WIN_HEIGHT)
+	{
+		mlx_put_pixel(data->canvas, x, line, rgba(0, 0, 0, 255));
+		line++;
+	}
 }
 
 void	raycaster(t_data *data)
@@ -123,11 +135,5 @@ void	raycaster(t_data *data)
 		step_in_dir(data);
 		ray_find_wall(data);
 		draw_walls(data, x);
-		// printf("rcast->perp_wall_dist %f\n", rcast->perp_wall_dist);
-		// printf("rcast->line_height %i\n", rcast->line_height);
-		// printf("rcast->draw_start %i, rcast->draw_end %i\n", rcast->draw_start, rcast->draw_end);
-		// printf("map_x %d, map_y %d\n", rcast->map_x, rcast->map_y);
-		// printf("player_x %f, player_y %f\n", data->player.curr_x, data->player.curr_y);
-		// printf("\n");
 	}
 }
