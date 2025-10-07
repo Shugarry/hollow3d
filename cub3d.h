@@ -13,13 +13,14 @@
 # include <stdio.h>
 # include <sys/stat.h>
 # include <fcntl.h>
-#include <stdint.h>
+# include <stdint.h>
 
 # define WIN_WIDTH 1280
 # define WIN_HEIGHT 720
 # define CEILING_COLOR 0x87CEEBFF
 # define TILE_SIZE 64
-# define MS 0.05
+# define MOVE_SPEED 0.05
+# define ROTATE_SPEED 0.025
 
 typedef struct s_player
 {
@@ -164,8 +165,18 @@ int		check_map(t_data *data);
 bool	is_map_line(char *line);
 void	check_dup_element(t_data *data, char *line);
 
-// raycasting
-void	raycaster(t_data *data, bool first_call);
+// movement.c
+void	movement(t_data *data);
+
+// camera.c
+void	camera(t_data *data);
+
+// colors
 uint32_t	rgba(int r, int g, int b, int a);
+uint32_t	get_color(int side);
+
+// raycasting.c
+void	starting_vars(t_data *data);
+void	raycaster(t_data *data);
 
 #endif
