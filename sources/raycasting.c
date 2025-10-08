@@ -91,10 +91,23 @@ static void	ray_find_wall(t_data *data)
 		rcast->perp_wall_dist = (rcast->side_dist_y - rcast->delta_dist_y);
 }
 
+uint32_t	get_texture_pixel(mlx_texture_t *texture, int x, int y)
+{
+	uint8_t *pixel = texture->pixels + (y * texture->width + x) * texture->bytes_per_pixel;
+
+	uint32_t color = rgba(pixel[0], pixel[1], pixel[2], pixel[3]);
+
+	return color;
+}
+
 static void	draw_walls(t_data *data, int x)
 {
 	t_raycast	*rcast;
 	int			line;
+	double wall_x;
+	int tex_x, tex_y;
+	double tex_step, tex_pos;
+	uint32_t  col;
 
 	line = 0;
 	rcast = &data->raycast;
@@ -109,20 +122,37 @@ static void	draw_walls(t_data *data, int x)
 		rcast->draw_end = 0;
 	if (rcast->draw_end >= WIN_HEIGHT)
 		rcast->draw_end = WIN_HEIGHT - 1;
-	line = 0;
 	while (line < rcast->draw_start)
 	{
-		mlx_put_pixel(data->canvas, x, line, rgba(0, 0, 0, 255));
+		mlx_put_pixel(data->canvas, x, line, rgba(128, 0, 0, 255));
 		line++;
 	}
-	while (line < rcast->draw_end)
+	if (rcast->side == 0)
+		wall_x = data->player.curr_y + rcast->perp_wall_dist * rcast->ray_dir_y;
+	else
+		wall_x = data->player.curr_x + rcast->perp_wall_dist * rcast->ray_dir_x;
+	wall_x -= floor(wall_x);
+	tex_x = (int)(wall_x * (double)data->textures.north->width);
+	tex_step = 1.0 * data->textures.north->width / rcast->line_height;
+	tex_pos = (rcast->draw_start - WIN_HEIGHT / 2 + rcast->line_height / 2) * tex_step;
+	for (int y = rcast->draw_start; y < rcast->draw_end; y++)
 	{
-		mlx_put_pixel(data->canvas, x, line, get_color(rcast->side));
-		line++;
+		tex_y = (int)tex_pos & (data->textures.north->height - 1);
+		tex_pos += tex_step;
+		col = get_texture_pixel(data->textures.north, tex_x, tex_y);
+		//printf("col %d\n", col);
+		//printf("x %i y %i\n", x, y);
+		mlx_put_pixel(data->canvas, x, y, col);
 	}
+	// while (line < rcast->draw_end)
+	// {
+	// 	mlx_put_pixel(data->canvas, x, line, get_color(rcast->side));
+	// 	line++;
+	// }
+	line = rcast->draw_end;
 	while (line <= WIN_HEIGHT)
 	{
-		mlx_put_pixel(data->canvas, x, line, rgba(0, 0, 0, 255));
+		mlx_put_pixel(data->canvas, x, line, rgba(128, 0, 0, 255));
 		line++;
 	}
 }

@@ -42,75 +42,9 @@ void	main_hook(void *param)
 	camera(data);
 }
 
-void draw_3d_ceiling(t_data *data)
-{
-    int x;
-	int y;
-	int tex_x;
-	int tex_y;
-	int colour;
-	int *pixels;
-	int tex_width;
-	int tex_height;
-	//TODO put vars into struct
-	x = 0;
-	y = 0;
-    mlx_image_t *img   = data->images.ceiling;
-    pixels = (int *)data->textures.ceiling->pixels;
-    tex_width = data->textures.ceiling->width;
-    tex_height = data->textures.ceiling->height;
-
-    while (y < WIN_HEIGHT / 2)
-    {
-		x = 0;
-        while (x < WIN_WIDTH)
-        {
-            tex_x = (x * tex_width) / WIN_WIDTH;
-            tex_y = (y * tex_height) / (WIN_HEIGHT / 2);
-
-            colour = pixels[tex_y * tex_width + tex_x];
-            mlx_put_pixel(img, x, y, colour);
-			x++;
-        }
-		y++;
-    }
-    mlx_image_to_window(data->mlx, img, 0, 0);
-}
-
-void draw_3d_floor(t_data *data)
-{
-    int x, y, tex_x, tex_y, colour;
-    int *pixels;
-    int tex_width, tex_height;
-
-    mlx_image_t *img = data->images.floor;
-    pixels = (int *)data->textures.floor->pixels;
-    tex_width = data->textures.floor->width;
-    tex_height = data->textures.floor->height;
-
-    y = 0;
-    while (y < WIN_HEIGHT / 2)
-    {
-        x = 0;
-        while (x < WIN_WIDTH)
-        {
-            tex_x = (x * tex_width) / WIN_WIDTH;
-            tex_y = (y * tex_height) / (WIN_HEIGHT / 2);
-
-            colour = pixels[tex_y * tex_width + tex_x];
-            mlx_put_pixel(img, x, y, colour);
-            x++;
-        }
-        y++;
-    }
-    mlx_image_to_window(data->mlx, img, 0, WIN_HEIGHT / 2);
-}
-
 void load_textures(t_data *data)
 {
-	data->images.north = mlx_texture_to_image(data->mlx, data->textures.north);
 	data->textures.north = mlx_load_png("resources/stone_2.png");
-	mlx_resize_image(data->images.north, TILE_SIZE, TILE_SIZE);
 }
 
 bool	is_map_line(char *line)
@@ -190,6 +124,7 @@ void	start_mlx(t_data *data)
 	if (!data->mlx)
 		clean_exit(data, (char *)mlx_strerror(mlx_errno), EXIT_FAILURE);
 	data->canvas = mlx_new_image(data->mlx, 1280, 720);
+	load_textures(data);
 	starting_vars(data);
 	raycaster(data);
 	mlx_image_to_window(data->mlx, data->canvas, 0, 0);
