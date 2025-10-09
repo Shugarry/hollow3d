@@ -6,7 +6,7 @@
 /*   By: frey-gal <frey-gal@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 16:18:01 by frey-gal          #+#    #+#             */
-/*   Updated: 2025/10/07 16:26:21 by frey-gal         ###   ########.fr       */
+/*   Updated: 2025/10/09 17:10:36 by frey-gal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,28 +37,30 @@ static void	cast_rays(t_data *data, int x)
 
 static void	step_in_dir(t_data *data)
 {
-	t_raycast	*rcast;
+	t_raycast	*rc;
+	t_player	*player;
 
-	rcast = &data->raycast;
-	if (rcast->ray_dir_x < 0)
+	rc = &data->raycast;
+	player = &data->player;
+	if (rc->ray_dir_x < 0)
 	{
-		rcast->step_x = -1;
-		rcast->side_dist_x = (data->player.curr_x - rcast->map_x) * rcast->delta_dist_x;
+		rc->step_x = -1;
+		rc->side_dist_x = (player->curr_x - rc->map_x) * rc->delta_dist_x;
 	}
 	else
 	{
-		rcast->step_x = 1;
-		rcast->side_dist_x = (rcast->map_x + 1.0 - data->player.curr_x) * rcast->delta_dist_x;
+		rc->step_x = 1;
+		rc->side_dist_x = (rc->map_x + 1.0 - player->curr_x) * rc->delta_dist_x;
 	}
-	if (rcast->ray_dir_y < 0)
+	if (rc->ray_dir_y < 0)
 	{
-		rcast->step_y = -1;
-		rcast->side_dist_y = (data->player.curr_y - rcast->map_y) * rcast->delta_dist_y;
+		rc->step_y = -1;
+		rc->side_dist_y = (player->curr_y - rc->map_y) * rc->delta_dist_y;
 	}
 	else
 	{
-		rcast->step_y = 1;
-		rcast->side_dist_y = (rcast->map_y + 1.0 - data->player.curr_y) * rcast->delta_dist_y;
+		rc->step_y = 1;
+		rc->side_dist_y = (rc->map_y + 1.0 - player->curr_y) * rc->delta_dist_y;
 	}
 }
 
@@ -89,101 +91,6 @@ static void	ray_find_wall(t_data *data)
 		rcast->perp_wall_dist = (rcast->side_dist_x - rcast->delta_dist_x);
 	else
 		rcast->perp_wall_dist = (rcast->side_dist_y - rcast->delta_dist_y);
-}
-
-uint32_t	get_texture_pixel(mlx_texture_t *texture, int x, int y)
-{
-	uint8_t *pixel;
-	uint32_t color;
-
-	pixel = texture->pixels + ((y * texture->width + x) << 2);
-	color = rgba(pixel[0], pixel[1], pixel[2], pixel[3]);
-	return (color);
-}
-
-mlx_texture_t	*get_texture(t_data *data, double x, double y)
-{
-	mlx_texture_t	*texture;
-
-	texture = NULL;
-	if (data->raycast.side == 0)
-	{
-		if (x > 0)
-			texture = data->textures.east;
-		else
-			texture = data->textures.west;
-	}
-	else
-	{
-		if (y > 0)
-			texture = data->textures.south;
-		else
-			texture = data->textures.north;
-	}
-	return (texture);
-}
-
-void	texturize_walls(t_data *data, int x)
-{
-	t_raycast		*rcast;
-	int				line;
-	uint32_t		color;
-	mlx_texture_t	*current_texture;
-
-	rcast = &data->raycast;
-	if (rcast->side == 0)
-		rcast->wall_x = data->player.curr_y + rcast->perp_wall_dist * rcast->ray_dir_y;
-	else
-		rcast->wall_x = data->player.curr_x + rcast->perp_wall_dist * rcast->ray_dir_x;
-	current_texture = get_texture(data, rcast->ray_dir_x, rcast->ray_dir_y);
-	rcast->wall_x -= ft_floor(rcast->wall_x);
-	rcast->tex_x = (int)(rcast->wall_x * (double)current_texture->width);
-	rcast->tex_step = 1.0 * current_texture->width / rcast->line_height;
-	rcast->tex_pos = (rcast->draw_start - WIN_HEIGHT / 2 + rcast->line_height / 2) * \
-		rcast->tex_step;
-	line = rcast->draw_start;
-	while (line < rcast->draw_end)
-	{
-		rcast->tex_y = (int)rcast->tex_pos & (current_texture->height - 1);
-		rcast->tex_pos += rcast->tex_step;
-		color = get_texture_pixel(current_texture, rcast->tex_x, rcast->tex_y);
-		mlx_put_pixel(data->canvas, x, line, color);
-		line++;
-	}
-}
-
-static void	draw_walls(t_data *data, int x)
-{
-	t_raycast	*rcast;
-	int			line;
-	uint32_t		color;
-	mlx_texture_t	*current_texture;
-
-	line = 0;
-	rcast = &data->raycast;
-	rcast->line_height = (int)(WIN_HEIGHT / rcast->perp_wall_dist);
-	rcast->draw_start = -rcast->line_height / 2 + WIN_HEIGHT / 2;
-	if (rcast->draw_start < 0)
-		rcast->draw_start = 0;
-	if (rcast->draw_start >= WIN_HEIGHT)
-		rcast->draw_start = WIN_HEIGHT - 1;
-	rcast->draw_end = rcast->line_height / 2 + WIN_HEIGHT / 2;
-	if (rcast->draw_end < 0)
-		rcast->draw_end = 0;
-	if (rcast->draw_end >= WIN_HEIGHT)
-		rcast->draw_end = WIN_HEIGHT - 1;
-	while (line < rcast->draw_start)
-	{
-		mlx_put_pixel(data->canvas, x, line, data->textures.ceiling_color);
-		line++;
-	}
-	texturize_walls(data, x);
-	line = rcast->draw_end;
-	while (line <= WIN_HEIGHT)
-	{
-		mlx_put_pixel(data->canvas, x, line, data->textures.floor_color);
-		line++;
-	}
 }
 
 void	raycaster(t_data *data)

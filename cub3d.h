@@ -173,6 +173,7 @@ uint32_t	get_color(int side);
 
 // raycasting.c
 void	starting_vars(t_data *data);
+void	draw_walls(t_data *data, int x);
 void	raycaster(t_data *data);
 
 #endif
