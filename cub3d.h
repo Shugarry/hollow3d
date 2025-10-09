@@ -17,10 +17,8 @@
 
 # define WIN_WIDTH 1280
 # define WIN_HEIGHT 720
-# define CEILING_COLOR 0x87CEEBFF
-# define TILE_SIZE 64
-# define MOVE_SPEED 0.05
-# define ROTATE_SPEED 0.025
+# define MOVE_SPEED 0.1
+# define ROTATE_SPEED 0.06
 
 typedef struct s_player
 {
@@ -37,8 +35,8 @@ typedef struct s_paths
 	char	*s_tex;
 	char	*e_tex;
 	char	*w_tex;
-	int		f_colour[4];
-	int		c_colour[4];
+	int		f_color[4];
+	int		c_color[4];
 }	t_paths;
 
 typedef struct s_parsing
@@ -66,17 +64,9 @@ typedef struct s_textures
 	mlx_texture_t	*south;
 	mlx_texture_t	*east;
 	mlx_texture_t	*west;
+	uint32_t		floor_color;
+	uint32_t		ceiling_color;
 }	t_textures;
-
-typedef struct s_images
-{
-	mlx_image_t	*ceiling;
-	mlx_image_t	*floor;
-	mlx_image_t	*north;
-	mlx_image_t	*south;
-	mlx_image_t	*east;
-	mlx_image_t	*west;
-}	t_images;
 
 typedef struct s_raycast
 {
@@ -101,20 +91,25 @@ typedef struct s_raycast
 	int		line_height;
 	int		draw_start;
 	int		draw_end;
+	double	wall_x;
+	int		tex_x;
+	int		tex_y;
+	double	tex_step;
+	double	tex_pos;
 }	t_raycast;
 
 typedef struct s_data
 {
 	t_player	player;
 	t_textures	textures;
-	t_images	images;
 	t_raycast	raycast;
 	t_parsing	parsing;
 	char		**map;
 	mlx_t		*mlx;
 	mlx_image_t	*canvas;
-
 	t_list		*memlist;
+
+	mlx_texture_t	*bad;
 }	t_data;
 
 //memory.c
@@ -124,6 +119,8 @@ void	memlist_free_ptr(t_data *data, void *ptr);
 void	clean_exit(t_data *data, char *error_str, int error_num);
 
 // helpers.c
+double	ft_fabs(double x);
+double	ft_floor(double x);
 void	print_grid(char **grid);
 void	free_double_array(char **arr);
 void	check_parsed_values(t_data *data);
@@ -145,7 +142,6 @@ char	*trim_line(char *line);
 bool	is_player(char c);
 void	find_player(t_data *data, int *j);
 char	**ft_strdup_double(t_data *data, char **str);
-
 
 // textures_and_colours.c
 int		parse_values(t_data *data, char *line);
@@ -177,6 +173,7 @@ uint32_t	get_color(int side);
 
 // raycasting.c
 void	starting_vars(t_data *data);
+void	draw_walls(t_data *data, int x);
 void	raycaster(t_data *data);
 
 #endif

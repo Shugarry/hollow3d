@@ -42,87 +42,6 @@ void	main_hook(void *param)
 	camera(data);
 }
 
-void draw_3d_ceiling(t_data *data)
-{
-    int x;
-	int y;
-	int tex_x;
-	int tex_y;
-	int colour;
-	int *pixels;
-	int tex_width;
-	int tex_height;
-	//TODO put vars into struct
-	x = 0;
-	y = 0;
-    mlx_image_t *img   = data->images.ceiling;
-    pixels = (int *)data->textures.ceiling->pixels;
-    tex_width = data->textures.ceiling->width;
-    tex_height = data->textures.ceiling->height;
-
-    while (y < WIN_HEIGHT / 2)
-    {
-		x = 0;
-        while (x < WIN_WIDTH)
-        {
-            tex_x = (x * tex_width) / WIN_WIDTH;
-            tex_y = (y * tex_height) / (WIN_HEIGHT / 2);
-
-            colour = pixels[tex_y * tex_width + tex_x];
-            mlx_put_pixel(img, x, y, colour);
-			x++;
-        }
-		y++;
-    }
-    mlx_image_to_window(data->mlx, img, 0, 0);
-}
-
-void draw_3d_floor(t_data *data)
-{
-    int x, y, tex_x, tex_y, colour;
-    int *pixels;
-    int tex_width, tex_height;
-
-    mlx_image_t *img = data->images.floor;
-    pixels = (int *)data->textures.floor->pixels;
-    tex_width = data->textures.floor->width;
-    tex_height = data->textures.floor->height;
-
-    y = 0;
-    while (y < WIN_HEIGHT / 2)
-    {
-        x = 0;
-        while (x < WIN_WIDTH)
-        {
-            tex_x = (x * tex_width) / WIN_WIDTH;
-            tex_y = (y * tex_height) / (WIN_HEIGHT / 2);
-
-            colour = pixels[tex_y * tex_width + tex_x];
-            mlx_put_pixel(img, x, y, colour);
-            x++;
-        }
-        y++;
-    }
-    mlx_image_to_window(data->mlx, img, 0, WIN_HEIGHT / 2);
-}
-
-void load_textures(t_data *data)
-{
-    data->textures.ceiling = mlx_load_png("resources/sky_texture.png");
-    data->textures.floor   = mlx_load_png("resources/stone_2.png");
-    if (!data->textures.ceiling || !data->textures.floor)
-        clean_exit(data, "Error loading textures\n", 1);
-
-    data->images.ceiling = mlx_new_image(data->mlx, WIN_WIDTH, WIN_HEIGHT / 2);
-    data->images.floor   = mlx_new_image(data->mlx, WIN_WIDTH, WIN_HEIGHT / 2);
-
-    if (!data->images.ceiling || !data->images.floor)
-        clean_exit(data, "Error creating texture images\n", 1);
-
-    draw_3d_ceiling(data);
-    draw_3d_floor(data);
-}
-
 bool	is_map_line(char *line)
 {
 	int	i;
@@ -216,15 +135,35 @@ void	init_structs(t_data *data)
 	ft_bzero(&data->raycast, sizeof(t_paths));
 	ft_bzero(&data->player, sizeof(t_player));
 	ft_bzero(&data->textures, sizeof(t_textures));
-	ft_bzero(&data->images, sizeof(t_images));
 	ft_bzero(&data->parsing, sizeof(t_parsing));
 	ft_bzero(&data->parsing.paths, sizeof(t_paths));
 	while (i < 3)
 	{
-		data->parsing.paths.c_colour[i] = -1;
-		data->parsing.paths.f_colour[i] = -1;
+		data->parsing.paths.c_color[i] = -1;
+		data->parsing.paths.f_color[i] = -1;
 		i++;
 	}
+}
+
+void	get_parsed_variables(t_data *data)
+{
+	int	*tmp;
+
+	data->map = data->parsing.map;
+	data->player.curr_x = data->player.y + 0.5;
+	data->player.curr_y = data->player.x + 0.5;
+	tmp = data->parsing.paths.c_color;
+	data->textures.ceiling_color = rgba(tmp[0], tmp[1], tmp[2], 255);
+	tmp = data->parsing.paths.f_color;
+	data->textures.floor_color = rgba(tmp[0], tmp[1], tmp[2], 255);
+	data->textures.north = mlx_load_png(data->parsing.paths.n_tex);
+	data->textures.east = mlx_load_png(data->parsing.paths.e_tex);
+	data->textures.south = mlx_load_png(data->parsing.paths.s_tex);
+	data->textures.west = mlx_load_png(data->parsing.paths.w_tex);
+	data->bad = mlx_load_png("./resources/BAD.png");
+	if (!data->textures.north || !data->textures.south ||
+		!data->textures.east || !data->textures.west)
+		clean_exit(data, "Could not get textures", 1);
 }
 
 int	main(int argc, char **argv)
@@ -233,9 +172,7 @@ int	main(int argc, char **argv)
 
 	init_structs(&data);
 	parsing(&data, argv, argc);
-	data.map = data.parsing.map;
-	data.player.curr_x = data.player.y + 0.5;
-	data.player.curr_y = data.player.x + 0.5;
+	get_parsed_variables(&data);
 	start_mlx(&data);
 	clean_exit(&data, NULL, 0);
 	return (0);

@@ -23,9 +23,9 @@ int	parse_values(t_data *data, char *line)
 	else if (ft_strncmp(line, "EA", 2) == 0 && ft_isspace(line[2]))
 		parse_texture(data, line + 3, &data->parsing.paths.e_tex);
 	else if (ft_strncmp(line, "F", 1) == 0 && ft_isspace(line[1]))
-		parse_color(data, line + 2, data->parsing.paths.f_colour);
+		parse_color(data, line + 2, data->parsing.paths.f_color);
 	else if (ft_strncmp(line, "C", 1) == 0 && ft_isspace(line[1]))
-		parse_color(data, line + 2, data->parsing.paths.c_colour);
+		parse_color(data, line + 2, data->parsing.paths.c_color);
 	else if (is_map_line(line))
 		return (0);
 	else
@@ -68,10 +68,8 @@ void	check_values(t_data *data, char **split)
 void	parse_color(t_data *data, char *line, int rgb[3])
 {
 	char	**split;
-	int		i;
 	int		j;
 
-	i = 0;
 	j = 0;
 	while (ft_isspace(*line))
 		line++;
@@ -81,7 +79,7 @@ void	parse_color(t_data *data, char *line, int rgb[3])
 	if (!split)
 		clean_exit(data, "Split malloc failure", 1);
 	check_values(data, split);
-	while (j < i)
+	while (split[j])
 	{
 		rgb[j] = ft_atoi(split[j]);
 		if (rgb[j] < 0 || rgb[j] > 255)

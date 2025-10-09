@@ -14,7 +14,7 @@
 
 NAME		= cub3d
 CC			= gcc
-CFLAGS		= -fsanitize=address -g -Wall -Wextra -Werror #-O3 -ffast-math -pipe \
+CFLAGS		= -fsanitize=address -g -Wall -Wextra -Werror -O3 -ffast-math -pipe \
 			  -march=native -flto
 
 SRC_DIR		= sources
