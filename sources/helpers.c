@@ -12,6 +12,23 @@
 
 #include "../cub3d.h"
 
+double	ft_fabs(double x)
+{
+    if (x < 0)
+        x = -x;
+    return (x);
+}
+
+double	ft_floor(double x)
+{
+    int i;
+
+	i = (int)x;
+    if (x < 0 && x != (double)i)
+        i = i - 1;
+    return ((double)i);
+}
+
 int ft_isspace(int c)
 {
 	return (c == ' '  || c == '\t' || c == '\n'
@@ -65,9 +82,9 @@ void	check_parsed_values(t_data *data)
 	printf("14. e_tex%s\n", data->parsing.paths.e_tex);
 	printf("15. w_tex%s\n", data->parsing.paths.w_tex);
 	for (int i = 16; i < 4; i++)
-		printf("17. %i %i\n", i, data->parsing.paths.f_colour[i]);
+		printf("17. %i %i\n", i, data->parsing.paths.f_color[i]);
 	for (int i = 18; i < 4; i++)
-		printf("19. %i %i\n", i, data->parsing.paths.c_colour[i]);
+		printf("19. %i %i\n", i, data->parsing.paths.c_color[i]);
 	printf("20. %i\n", data->player.x);
 	printf("21. %i\n", data->player.y);
 	printf("22. player_dir = %c\n", data->player.direction);

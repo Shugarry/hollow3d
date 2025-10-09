@@ -42,11 +42,6 @@ void	main_hook(void *param)
 	camera(data);
 }
 
-void load_textures(t_data *data)
-{
-	data->textures.north = mlx_load_png("resources/stone_2.png");
-}
-
 bool	is_map_line(char *line)
 {
 	int	i;
@@ -124,7 +119,6 @@ void	start_mlx(t_data *data)
 	if (!data->mlx)
 		clean_exit(data, (char *)mlx_strerror(mlx_errno), EXIT_FAILURE);
 	data->canvas = mlx_new_image(data->mlx, 1280, 720);
-	load_textures(data);
 	starting_vars(data);
 	raycaster(data);
 	mlx_image_to_window(data->mlx, data->canvas, 0, 0);
@@ -141,15 +135,35 @@ void	init_structs(t_data *data)
 	ft_bzero(&data->raycast, sizeof(t_paths));
 	ft_bzero(&data->player, sizeof(t_player));
 	ft_bzero(&data->textures, sizeof(t_textures));
-	ft_bzero(&data->images, sizeof(t_images));
 	ft_bzero(&data->parsing, sizeof(t_parsing));
 	ft_bzero(&data->parsing.paths, sizeof(t_paths));
 	while (i < 3)
 	{
-		data->parsing.paths.c_colour[i] = -1;
-		data->parsing.paths.f_colour[i] = -1;
+		data->parsing.paths.c_color[i] = -1;
+		data->parsing.paths.f_color[i] = -1;
 		i++;
 	}
+}
+
+void	get_parsed_variables(t_data *data)
+{
+	int	*tmp;
+
+	data->map = data->parsing.map;
+	data->player.curr_x = data->player.y + 0.5;
+	data->player.curr_y = data->player.x + 0.5;
+	tmp = data->parsing.paths.c_color;
+	data->textures.ceiling_color = rgba(tmp[0], tmp[1], tmp[2], 255);
+	tmp = data->parsing.paths.f_color;
+	data->textures.floor_color = rgba(tmp[0], tmp[1], tmp[2], 255);
+	data->textures.north = mlx_load_png(data->parsing.paths.n_tex);
+	data->textures.east = mlx_load_png(data->parsing.paths.e_tex);
+	data->textures.south = mlx_load_png(data->parsing.paths.s_tex);
+	data->textures.west = mlx_load_png(data->parsing.paths.w_tex);
+	data->bad = mlx_load_png("./resources/BAD.png");
+	if (!data->textures.north || !data->textures.south ||
+		!data->textures.east || !data->textures.west)
+		clean_exit(data, "Could not get textures", 1);
 }
 
 int	main(int argc, char **argv)
@@ -158,9 +172,7 @@ int	main(int argc, char **argv)
 
 	init_structs(&data);
 	parsing(&data, argv, argc);
-	data.map = data.parsing.map;
-	data.player.curr_x = data.player.y + 0.5;
-	data.player.curr_y = data.player.x + 0.5;
+	get_parsed_variables(&data);
 	start_mlx(&data);
 	clean_exit(&data, NULL, 0);
 	return (0);
