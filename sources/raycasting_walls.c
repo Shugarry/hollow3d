@@ -58,6 +58,8 @@ static void	texturize_walls(t_data *data, int x)
 		rc->wall_x = data->player.curr_x + rc->perp_wall_dist * rc->ray_dir_x;
 	current_texture = get_texture(data, rc->ray_dir_x, rc->ray_dir_y);
 	rc->wall_x -= ft_floor(rc->wall_x);
+	if ((rc->side == 0 && rc->ray_dir_x <= 0) || (rc->ray_dir_y > 0 && rc->side == 1))
+		rc->wall_x = 1 - rc->wall_x;
 	rc->tex_x = (int)(rc->wall_x * (double)current_texture->width);
 	rc->tex_step = 1.0 * current_texture->width / rc->line_height;
 	rc->tex_pos = (rc->draw_start - WIN_HEIGHT / 2 + rc->line_height / 2) * \
