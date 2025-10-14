@@ -28,7 +28,7 @@ void draw_minimap_layout(t_data *data)
 
             if (tile == '1')
                 color = 0xFF0000FF;
-            else if (tile == '0' || tile == 'N')
+            else if (tile == '0' || tile == 'N' || tile == 'S' || tile == 'E' || tile == 'W')
                 color = 0x0000FFFF;
             //  else if (tile == 'N')
             //      color = 0x00FF00FF;
@@ -82,7 +82,6 @@ void draw_player_on_minimap(t_data *data)
 void	update_minimap(t_data *data)
 {
 	memset(data->mini->pixels, 0, data->mini->width * data->mini->height * sizeof(uint32_t));
-
 	draw_minimap_layout(data);
 	draw_minimap_player(data);
 	draw_player_on_minimap(data);
