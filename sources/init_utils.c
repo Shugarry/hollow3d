@@ -56,5 +56,4 @@ void	init_values(t_data *data)
 			break ;
 		i++;
 	}
-
 }

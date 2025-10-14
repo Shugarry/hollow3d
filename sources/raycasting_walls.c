@@ -6,7 +6,7 @@
 /*   By: frey-gal <frey-gal@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 17:10:25 by frey-gal          #+#    #+#             */
-/*   Updated: 2025/10/09 17:10:56 by frey-gal         ###   ########.fr       */
+/*   Updated: 2025/10/14 16:29:17 by frey-gal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 static uint32_t	get_texture_pixel(mlx_texture_t *texture, int x, int y)
 {
-	uint8_t *pixel;
-	uint32_t color;
+	uint8_t		*pixel;
+	uint32_t	color;
 
 	pixel = texture->pixels + ((y * texture->width + x) << 2);
 	color = rgba(pixel[0], pixel[1], pixel[2], pixel[3]);
@@ -44,6 +44,17 @@ static mlx_texture_t	*get_texture(t_data *data, double x, double y)
 	return (texture);
 }
 
+static void	get_wall_x(t_data *data)
+{
+	t_raycast	*rc;
+
+	rc = &data->raycast;
+	if (rc->side == 0)
+		rc->wall_x = data->player.curr_y + rc->perp_wall_dist * rc->ray_dir_y;
+	else
+		rc->wall_x = data->player.curr_x + rc->perp_wall_dist * rc->ray_dir_x;
+}
+
 static void	texturize_walls(t_data *data, int x)
 {
 	t_raycast		*rc;
@@ -52,13 +63,11 @@ static void	texturize_walls(t_data *data, int x)
 	mlx_texture_t	*current_texture;
 
 	rc = &data->raycast;
-	if (rc->side == 0)
-		rc->wall_x = data->player.curr_y + rc->perp_wall_dist * rc->ray_dir_y;
-	else
-		rc->wall_x = data->player.curr_x + rc->perp_wall_dist * rc->ray_dir_x;
+	get_wall_x(data);
 	current_texture = get_texture(data, rc->ray_dir_x, rc->ray_dir_y);
-	rc->wall_x -= ft_floor(rc->wall_x);
-	if ((rc->side == 0 && rc->ray_dir_x <= 0) || (rc->ray_dir_y > 0 && rc->side == 1))
+	rc->wall_x -= floor(rc->wall_x);
+	if ((rc->side == 0 && rc->ray_dir_x <= 0) || \
+		(rc->ray_dir_y > 0 && rc->side == 1))
 		rc->wall_x = 1 - rc->wall_x;
 	rc->tex_x = (int)(rc->wall_x * (double)current_texture->width);
 	rc->tex_step = 1.0 * current_texture->width / rc->line_height;
@@ -94,15 +103,9 @@ void	draw_walls(t_data *data, int x)
 	if (rcast->draw_end >= WIN_HEIGHT)
 		rcast->draw_end = WIN_HEIGHT - 1;
 	while (line < rcast->draw_start)
-	{
-		mlx_put_pixel(data->canvas, x, line, data->textures.ceiling_color);
-		line++;
-	}
+		mlx_put_pixel(data->canvas, x, line++, data->textures.ceiling_color);
 	texturize_walls(data, x);
 	line = rcast->draw_end;
 	while (line <= WIN_HEIGHT)
-	{
-		mlx_put_pixel(data->canvas, x, line, data->textures.floor_color);
-		line++;
-	}
+		mlx_put_pixel(data->canvas, x, line++, data->textures.floor_color);
 }

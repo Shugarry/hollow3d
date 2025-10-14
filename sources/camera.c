@@ -14,27 +14,36 @@
 
 static void	pan_camera_left(t_data *data)
 {
-	double old_dir_x = data->raycast.dir_x;
+	double	old_dir_x;
+	double	old_plane_x;
 
-	data->raycast.dir_x = data->raycast.dir_x * cos(-ROTATE_SPEED) - data->raycast.dir_y * sin(-ROTATE_SPEED);
-	data->raycast.dir_y = old_dir_x * sin(-ROTATE_SPEED) + data->raycast.dir_y * cos(-ROTATE_SPEED);
-
-	double old_plane_x = data->raycast.plane_x;
-	data->raycast.plane_x = data->raycast.plane_x * cos(-ROTATE_SPEED) - data->raycast.plane_y * sin(-ROTATE_SPEED);
-	data->raycast.plane_y = old_plane_x * sin(-ROTATE_SPEED) + data->raycast.plane_y * cos(-ROTATE_SPEED);
+	old_dir_x = data->raycast.dir_x;
+	old_plane_x = data->raycast.plane_x;
+	data->raycast.dir_x = data->raycast.dir_x * \
+		cos(-ROTATE_SPEED) - data->raycast.dir_y * sin(-ROTATE_SPEED);
+	data->raycast.dir_y = old_dir_x * \
+		sin(-ROTATE_SPEED) + data->raycast.dir_y * cos(-ROTATE_SPEED);
+	data->raycast.plane_x = data->raycast.plane_x * \
+		cos(-ROTATE_SPEED) - data->raycast.plane_y * sin(-ROTATE_SPEED);
+	data->raycast.plane_y = old_plane_x * \
+		sin(-ROTATE_SPEED) + data->raycast.plane_y * cos(-ROTATE_SPEED);
 }
 
 static void	pan_camera_right(t_data *data)
 {
-	double old_dir_x;
-	double old_plane_x;
+	double	old_dir_x;
+	double	old_plane_x;
 
 	old_dir_x = data->raycast.dir_x;
-	data->raycast.dir_x = data->raycast.dir_x * cos(ROTATE_SPEED) - data->raycast.dir_y * sin(ROTATE_SPEED);
-	data->raycast.dir_y = old_dir_x * sin(ROTATE_SPEED) + data->raycast.dir_y * cos(ROTATE_SPEED);
 	old_plane_x = data->raycast.plane_x;
-	data->raycast.plane_x = data->raycast.plane_x * cos(ROTATE_SPEED) - data->raycast.plane_y * sin(ROTATE_SPEED);
-	data->raycast.plane_y = old_plane_x * sin(ROTATE_SPEED) + data->raycast.plane_y * cos(ROTATE_SPEED);
+	data->raycast.dir_x = data->raycast.dir_x * \
+		cos(ROTATE_SPEED) - data->raycast.dir_y * sin(ROTATE_SPEED);
+	data->raycast.dir_y = old_dir_x * \
+		sin(ROTATE_SPEED) + data->raycast.dir_y * cos(ROTATE_SPEED);
+	data->raycast.plane_x = data->raycast.plane_x * \
+		cos(ROTATE_SPEED) - data->raycast.plane_y * sin(ROTATE_SPEED);
+	data->raycast.plane_y = old_plane_x * \
+		sin(ROTATE_SPEED) + data->raycast.plane_y * cos(ROTATE_SPEED);
 }
 
 void	camera(t_data *data)
@@ -55,4 +64,3 @@ void	camera(t_data *data)
 	if (keypress == true)
 		raycaster(data);
 }
-

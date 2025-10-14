@@ -6,27 +6,11 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 20:39:28 by joshapir          #+#    #+#             */
-/*   Updated: 2025/10/14 16:49:17 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/10/14 17:19:30 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3d.h"
-
-uint32_t	rgba(int r, int g, int b, int a)
-{
-    return (r << 24 | g << 16 | b << 8 | a);
-}
-
-uint32_t	get_color(int side)
-{
-	uint32_t color;
-
-	if (side == 1)
-		color = rgba(128, 128, 128, 128);
-	else
-		color = rgba(128, 128, 128, 255);
-	return (color);
-}
 
 void	main_hook(void *param)
 {
@@ -41,78 +25,6 @@ void	main_hook(void *param)
 	movement(data);
 	camera(data);
 	update_minimap(data);
-}
-
-bool	is_map_line(char *line)
-{
-	int	i;
-
-	i = 0;
-	while (line && line[i] == ' ')
-		i++;
-	if (line[i] == '\0')
-		return (false);
-	while (line[i])
-	{
-		if (line[i] != '0' && line[i] != '1' && \
-				line[i] != 'N' && line[i] != 'S' && \
-				line[i] != 'E' && line[i] != 'W' && \
-				line[i] != ' ')
-			return (false);
-		i++;
-	}
-	return (true);
-}
-
-void	calculate_height(t_data *data)
-{
-	int		i;
-	char	**grid;
-
-	grid = data->parsing.grid;
-	i = 0;
-	while (grid[i] && is_map_line(grid[i]))
-		i++;
-	while (grid[i])
-	{
-		if (is_map_line(grid[i]))
-			clean_exit(data, "Map must not be seperated", 1);
-		i++;
-	}
-	data->parsing.height = i;
-}
-
-int	check_map(t_data *data)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	find_elements(data);
-	remove_elements(&data->parsing.grid, i);
-	data->parsing.map = ft_strdup_double(data, data->parsing.grid);
-	calculate_height(data);
-	find_player(data, &j);
-	if (!data->parsing.player_found)
-		clean_exit(data, "Error: Player not found", 1);
-	if (!flood_fill(data, data->player.x, data->player.y))
-		clean_exit(data, "Error: Invalid map", 1);
-	return (1);
-}
-
-void	parsing(t_data *data, char **argv, int argc)
-{
-	int		fd;
-
-	fd = open(argv[1], O_RDONLY);
-	if (fd == -1 || argc != 2)
-		clean_exit(data, "Incorrect argument count", 1);
-	init_map(data, argv[1]);
-	data->parsing.map = ft_strdup_double(data, data->parsing.grid);
-	data->parsing.elements_grid = ft_strdup_double(data, data->parsing.grid);
-	check_map(data);
-	map_width(data);
 }
 
 void	start_mlx(t_data *data)
@@ -164,9 +76,8 @@ void	get_parsed_variables(t_data *data)
 	data->textures.east = mlx_load_png(data->parsing.paths.e_tex);
 	data->textures.south = mlx_load_png(data->parsing.paths.s_tex);
 	data->textures.west = mlx_load_png(data->parsing.paths.w_tex);
-	data->bad = mlx_load_png("./resources/BAD.png");
-	if (!data->textures.north || !data->textures.south ||
-		!data->textures.east || !data->textures.west)
+	if (!data->textures.north || !data->textures.south
+		|| !data->textures.east || !data->textures.west)
 		clean_exit(data, "Could not get textures", 1);
 }
 
