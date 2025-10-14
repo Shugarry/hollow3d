@@ -73,7 +73,6 @@ void	get_parsed_variables(t_data *data)
 	data->textures.east = mlx_load_png(data->parsing.paths.e_tex);
 	data->textures.south = mlx_load_png(data->parsing.paths.s_tex);
 	data->textures.west = mlx_load_png(data->parsing.paths.w_tex);
-	data->bad = mlx_load_png("./resources/BAD.png");
 	if (!data->textures.north || !data->textures.south
 		|| !data->textures.east || !data->textures.west)
 		clean_exit(data, "Could not get textures", 1);
