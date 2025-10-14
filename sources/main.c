@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 20:39:28 by joshapir          #+#    #+#             */
-/*   Updated: 2025/10/07 16:49:48 by frey-gal         ###   ########.fr       */
+/*   Updated: 2025/10/14 16:49:17 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ uint32_t	rgba(int r, int g, int b, int a)
 uint32_t	get_color(int side)
 {
 	uint32_t color;
-	
+
 	if (side == 1)
 		color = rgba(128, 128, 128, 128);
 	else
@@ -40,6 +40,7 @@ void	main_hook(void *param)
 	}
 	movement(data);
 	camera(data);
+	update_minimap(data);
 }
 
 bool	is_map_line(char *line)
@@ -111,6 +112,7 @@ void	parsing(t_data *data, char **argv, int argc)
 	data->parsing.map = ft_strdup_double(data, data->parsing.grid);
 	data->parsing.elements_grid = ft_strdup_double(data, data->parsing.grid);
 	check_map(data);
+	map_width(data);
 }
 
 void	start_mlx(t_data *data)
@@ -123,7 +125,9 @@ void	start_mlx(t_data *data)
 	raycaster(data);
 	mlx_image_to_window(data->mlx, data->canvas, 0, 0);
 	mlx_loop_hook(data->mlx, &main_hook, data);
+	init_mini(data);
 	mlx_loop(data->mlx);
+
 }
 
 void	init_structs(t_data *data)

@@ -14,11 +14,14 @@
 # include <sys/stat.h>
 # include <fcntl.h>
 # include <stdint.h>
+#include <string.h>
 
 # define WIN_WIDTH 1280
 # define WIN_HEIGHT 720
 # define MOVE_SPEED 0.1
 # define ROTATE_SPEED 0.06
+# define MINI_SIZE 200
+# define MINI_TILE_SIZE 8
 
 typedef struct s_player
 {
@@ -107,6 +110,7 @@ typedef struct s_data
 	char		**map;
 	mlx_t		*mlx;
 	mlx_image_t	*canvas;
+	mlx_image_t *mini;
 	t_list		*memlist;
 
 	mlx_texture_t	*bad;
@@ -175,5 +179,8 @@ uint32_t	get_color(int side);
 void	starting_vars(t_data *data);
 void	draw_walls(t_data *data, int x);
 void	raycaster(t_data *data);
+void	init_mini(t_data *data);
+void	map_width(t_data *data);
+void	update_minimap(t_data *data);
 
 #endif
