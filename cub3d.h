@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3d.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: frey-gal <frey-gal@student.42barcelona.co  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/14 16:32:00 by frey-gal          #+#    #+#             */
+/*   Updated: 2025/10/14 16:32:16 by frey-gal         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CUB3D_H
 # define CUB3D_H
 
@@ -108,72 +120,66 @@ typedef struct s_data
 	mlx_t		*mlx;
 	mlx_image_t	*canvas;
 	t_list		*memlist;
-
-	mlx_texture_t	*bad;
 }	t_data;
 
 //memory.c
-void	*memlist_alloc(t_data *data, size_t size);
-void	*memlist_add(t_data *data, void *ptr);
-void	memlist_free_ptr(t_data *data, void *ptr);
-void	clean_exit(t_data *data, char *error_str, int error_num);
+void		*memlist_alloc(t_data *data, size_t size);
+void		*memlist_add(t_data *data, void *ptr);
+void		memlist_free_ptr(t_data *data, void *ptr);
+void		clean_exit(t_data *data, char *error_str, int error_num);
 
 // helpers.c
-double	ft_fabs(double x);
-double	ft_floor(double x);
-void	print_grid(char **grid);
-void	free_double_array(char **arr);
-void	check_parsed_values(t_data *data);
-int		ft_isspace(int c);
+uint32_t	rgba(int r, int g, int b, int a);
+void		print_grid(char **grid);
+void		free_double_array(char **arr);
+void		check_parsed_values(t_data *data);
+int			ft_isspace(int c);
 
 // elements.c
-void	find_elements(t_data *data);
-void	check_element(t_data *data, char *line);
-void	check_if_found(t_data *data);
-void	remove_elements(char ***grid, int i);
+void		find_elements(t_data *data);
+void		check_element(t_data *data, char *line);
+void		check_if_found(t_data *data);
+void		remove_elements(char ***grid, int i);
 
 // init_utils.c
-void	init_values(t_data *data);
-int		init_map(t_data *data, char *filename);
+void		init_values(t_data *data);
+int			init_map(t_data *data, char *filename);
 
 // map_utils.c
-int		count_lines(char *filename);
-char	*trim_line(char *line);
-bool	is_player(char c);
-void	find_player(t_data *data, int *j);
-char	**ft_strdup_double(t_data *data, char **str);
+int			count_lines(char *filename);
+char		*trim_line(char *line);
+bool		is_player(char c);
+void		find_player(t_data *data, int *j);
+char		**ft_strdup_double(t_data *data, char **str);
 
 // textures_and_colours.c
-int		parse_values(t_data *data, char *line);
-int		check_if_digit(char *str);
-void	check_values(t_data *data, char **split);
-void	parse_color(t_data *data, char *line, int rgb[3]);
-void	parse_texture(t_data *data, char *line, char **dest);
+int			parse_values(t_data *data, char *line);
+int			check_if_digit(char *str);
+void		check_values(t_data *data, char **split);
+void		parse_color(t_data *data, char *line, int rgb[3]);
+void		parse_texture(t_data *data, char *line, char **dest);
 
 // flood_fill.c
-bool	is_valid(char c);
-char	set_map_char(char **map, int x, int y, int height);
-int		flood_fill(t_data *data, int x, int y);
+bool		is_valid(char c);
+char		set_map_char(char **map, int x, int y, int height);
+int			flood_fill(t_data *data, int x, int y);
 
 // parsing.c
-void	calculate_height(t_data *data);
-int		check_map(t_data *data);
-bool	is_map_line(char *line);
-void	check_dup_element(t_data *data, char *line);
+void		calculate_height(t_data *data);
+int			check_map(t_data *data);
+bool		is_map_line(char *line);
+void		check_dup_element(t_data *data, char *line);
+void		parsing(t_data *data, char **argv, int argc);
 
 // movement.c
-void	movement(t_data *data);
+void		movement(t_data *data);
 
 // camera.c
-void	camera(t_data *data);
-
-// colors
-uint32_t	rgba(int r, int g, int b, int a);
-uint32_t	get_color(int side);
+void		camera(t_data *data);
 
 // raycasting.c
-void	starting_vars(t_data *data);
-void	draw_walls(t_data *data, int x);
-void	raycaster(t_data *data);
+void		starting_vars(t_data *data);
+void		draw_walls(t_data *data, int x);
+void		raycaster(t_data *data);
 
 #endif
