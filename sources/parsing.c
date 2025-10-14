@@ -81,4 +81,5 @@ void	parsing(t_data *data, char **argv, int argc)
 	data->parsing.map = ft_strdup_double(data, data->parsing.grid);
 	data->parsing.elements_grid = ft_strdup_double(data, data->parsing.grid);
 	check_map(data);
+	map_width(data);
 }

@@ -32,7 +32,7 @@
 # define WIN_HEIGHT 720
 # define MOVE_SPEED 0.1
 # define ROTATE_SPEED 0.06
-# define MINI_SIZE 200
+# define MINI_SIZE 100
 # define MINI_TILE_SIZE 8
 
 typedef struct s_player
@@ -185,5 +185,10 @@ void		camera(t_data *data);
 void		starting_vars(t_data *data);
 void		draw_walls(t_data *data, int x);
 void		raycaster(t_data *data);
+void	init_mini(t_data *data);
+//void	init_map(t_data *data); 
+void	update_minimap(t_data *data);
+void	map_width(t_data *data);
+
 
 #endif

@@ -64,7 +64,7 @@ void	draw_minimap_player(t_data *data)
 	}
 }
 #define PLAYER_COLOR 0xFFFFFFFF
-#define PLAYER_SIZE  4
+#define PLAYER_SIZE  6
 
 void draw_player_on_minimap(t_data *data)
 {
