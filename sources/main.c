@@ -28,10 +28,10 @@ void	main_hook(void *param)
 
 void	start_mlx(t_data *data)
 {
-	data->mlx = mlx_init(1280, 720, "cub3d", false);
+	data->mlx = mlx_init(WIN_WIDTH, WIN_HEIGHT, "cub3d", false);
 	if (!data->mlx)
 		clean_exit(data, (char *)mlx_strerror(mlx_errno), EXIT_FAILURE);
-	data->canvas = mlx_new_image(data->mlx, 1280, 720);
+	data->canvas = mlx_new_image(data->mlx, WIN_WIDTH, WIN_HEIGHT);
 	starting_vars(data);
 	raycaster(data);
 	mlx_image_to_window(data->mlx, data->canvas, 0, 0);
@@ -73,6 +73,7 @@ void	get_parsed_variables(t_data *data)
 	data->textures.east = mlx_load_png(data->parsing.paths.e_tex);
 	data->textures.south = mlx_load_png(data->parsing.paths.s_tex);
 	data->textures.west = mlx_load_png(data->parsing.paths.w_tex);
+	data->textures.floor = mlx_load_png("resources/floor.png");
 	if (!data->textures.north || !data->textures.south
 		|| !data->textures.east || !data->textures.west)
 		clean_exit(data, "Could not get textures", 1);
