@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 16:32:00 by frey-gal          #+#    #+#             */
-/*   Updated: 2025/10/14 17:19:20 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/10/16 19:35:10 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,14 @@
 # include <stdint.h>
 #include <string.h>
 
-# define WIN_WIDTH 1280
-# define WIN_HEIGHT 720
+# define WIN_WIDTH 960
+# define WIN_HEIGHT 540
 # define MOVE_SPEED 0.1
 # define ROTATE_SPEED 0.06
 # define MINI_SIZE 100
 # define MINI_TILE_SIZE 8
+#define MINI_RADIUS 10
+
 
 typedef struct s_player
 {
@@ -111,6 +113,21 @@ typedef struct s_raycast
 	int		tex_y;
 	double	tex_step;
 	double	tex_pos;
+	double	ray_dir_x_left;
+	double	ray_dir_x_right;
+	double	ray_dir_y_left;
+	double	ray_dir_y_right;
+	int		pos_y;
+	double	pos_z;
+	double	row_distance;
+	double	floor_step_x;
+	double	floor_step_y;
+	double	floor_x;
+	double	floor_y;
+	int		cell_x;
+	int		cell_y;
+	int		f_tex_x;
+	int		f_tex_y;
 }	t_raycast;
 
 typedef struct s_data
@@ -182,11 +199,12 @@ void		movement(t_data *data);
 void		camera(t_data *data);
 
 // raycasting.c
+uint32_t	get_texture_pixel(mlx_texture_t *texture, int x, int y);
 void		starting_vars(t_data *data);
 void		draw_walls(t_data *data, int x);
 void		raycaster(t_data *data);
 void	init_mini(t_data *data);
-//void	init_map(t_data *data); 
+//void	init_map(t_data *data);
 void	update_minimap(t_data *data);
 void	map_width(t_data *data);
 
