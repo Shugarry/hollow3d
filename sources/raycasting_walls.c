@@ -12,13 +12,13 @@
 
 #include "../cub3d.h"
 
-uint32_t	get_texture_pixel(mlx_texture_t *texture, int x, int y)
+uint32_t	get_tex_pixel(mlx_texture_t *texture, int x, int y, int darken)
 {
 	uint8_t		*pixel;
 	uint32_t	color;
 
 	pixel = texture->pixels + ((y * texture->width + x) << 2);
-	color = rgba(pixel[0], pixel[1], pixel[2], pixel[3]);
+	color = rgba(pixel[0], pixel[1], pixel[2], (pixel[3] << darken));
 	return (color);
 }
 
@@ -78,7 +78,7 @@ static void	texturize_walls(t_data *data, int x)
 	{
 		r->tex_y = (int)r->tex_pos & (current_texture->height - 1);
 		r->tex_pos += r->tex_step;
-		color = get_texture_pixel(current_texture, r->tex_x, r->tex_y);
+		color = get_tex_pixel(current_texture, r->tex_x, r->tex_y, false);
 		mlx_put_pixel(data->canvas, x, line, color);
 		line++;
 	}
@@ -87,6 +87,7 @@ static void	texturize_walls(t_data *data, int x)
 void	draw_walls(t_data *data, int x)
 {
 	t_raycast	*r;
+
 	r = &data->raycast;
 	r->line_height = (int)(WIN_HEIGHT / r->perp_wall_dist);
 	r->draw_start = -r->line_height / 2 + WIN_HEIGHT / 2;
