@@ -27,8 +27,8 @@
 # include <fcntl.h>
 # include <stdint.h>
 
-# define WIN_WIDTH 1280
-# define WIN_HEIGHT 720
+# define WIN_WIDTH 960
+# define WIN_HEIGHT 540
 # define MOVE_SPEED 0.1
 # define ROTATE_SPEED 0.06
 
@@ -108,6 +108,21 @@ typedef struct s_raycast
 	int		tex_y;
 	double	tex_step;
 	double	tex_pos;
+	double	ray_dir_x_left;
+	double	ray_dir_x_right;
+	double	ray_dir_y_left;
+	double	ray_dir_y_right;
+	int		pos_y;
+	double	pos_z;
+	double	row_distance;
+	double	floor_step_x;
+	double	floor_step_y;
+	double	floor_x;
+	double	floor_y;
+	int		cell_x;
+	int		cell_y;
+	int		f_tex_x;
+	int		f_tex_y;
 }	t_raycast;
 
 typedef struct s_data
@@ -178,6 +193,8 @@ void		movement(t_data *data);
 void		camera(t_data *data);
 
 // raycasting.c
+void		draw_floor_ceiling(t_data *data);
+uint32_t	get_tex_pixel(mlx_texture_t *texture, int x, int y, int darken);
 void		starting_vars(t_data *data);
 void		draw_walls(t_data *data, int x);
 void		raycaster(t_data *data);
