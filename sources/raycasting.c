@@ -6,7 +6,7 @@
 /*   By: frey-gal <frey-gal@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 16:18:01 by frey-gal          #+#    #+#             */
-/*   Updated: 2025/10/09 17:10:36 by frey-gal         ###   ########.fr       */
+/*   Updated: 2025/10/17 09:40:17 by frey-gal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,56 +88,6 @@ static void	ray_find_wall(t_data *data)
 		r->perp_wall_dist = (r->side_dist_x - r->delta_dist_x);
 	else
 		r->perp_wall_dist = (r->side_dist_y - r->delta_dist_y);
-}
-
-void	draw_floor_ceiling(t_data *data)
-{
-	mlx_texture_t	*current_texture;
-	t_raycast		*r;
-	uint32_t		color;
-	int				y;
-	int				x;
-
-	y = WIN_HEIGHT - 1;
-	current_texture = data->textures.floor;
-	while (y > WIN_HEIGHT / 2)
-	{
-		r = &data->raycast;
-		r->ray_dir_x_left = r->dir_x - r->plane_x;
-		r->ray_dir_y_left = r->dir_y - r->plane_y;
-		r->ray_dir_x_right = r->dir_x + r->plane_x;
-		r->ray_dir_y_right = r->dir_y + r->plane_y;
-		r->pos_y = y - WIN_HEIGHT / 2;
-		r->pos_z = 0.5 * WIN_HEIGHT;
-		r->row_distance = r->pos_z / r->pos_y;
-		r->floor_step_x = r->row_distance * \
-			(r->ray_dir_x_right - r->ray_dir_x_left) / WIN_WIDTH;
-		r->floor_step_y = r->row_distance * \
-			(r->ray_dir_y_right - r->ray_dir_y_left) / WIN_WIDTH;
-		r->floor_x = data->player.curr_x + r->row_distance * \
-			r->ray_dir_x_left;
-		r->floor_y = data->player.curr_y + r->row_distance * \
-			r->ray_dir_y_left;
-		x = 0;
-		while (x < WIN_WIDTH)
-		{
-			r->cell_x = (int)r->floor_x;
-			r->cell_y = (int)r->floor_y;
-
-			r->f_tex_x = (int)(current_texture->width * \
-				(r->floor_x - r->cell_x)) & (current_texture->width - 1);
-			r->f_tex_y = (int)(current_texture->height * \
-				(r->floor_y - r->cell_y)) & (current_texture->height - 1);
-			r->floor_x += r->floor_step_x;
-			r->floor_y += r->floor_step_y;
-			color = get_texture_pixel(current_texture, r->f_tex_x, \
-							 r->f_tex_y);
-			mlx_put_pixel(data->canvas, x, y, color);
-			mlx_put_pixel(data->canvas, x, WIN_HEIGHT - y - 1, color);
-			++x;
-		}
-		y--;
-	}
 }
 
 void	raycaster(t_data *data)

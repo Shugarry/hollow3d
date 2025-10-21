@@ -203,7 +203,8 @@ void		movement(t_data *data);
 void		camera(t_data *data);
 
 // raycasting.c
-uint32_t	get_texture_pixel(mlx_texture_t *texture, int x, int y);
+void		draw_floor_ceiling(t_data *data);
+uint32_t	get_tex_pixel(mlx_texture_t *texture, int x, int y, int darken);
 void		starting_vars(t_data *data);
 void		draw_walls(t_data *data, int x);
 void		raycaster(t_data *data);
