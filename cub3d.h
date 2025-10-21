@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 16:32:00 by frey-gal          #+#    #+#             */
-/*   Updated: 2025/10/16 19:35:10 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/10/21 19:56:48 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,17 @@
 # include <stdint.h>
 #include <string.h>
 
+#ifndef M_PI
+# define M_PI 3.14159265358979323846
+#endif
+
 # define WIN_WIDTH 960
 # define WIN_HEIGHT 540
 # define MOVE_SPEED 0.1
 # define ROTATE_SPEED 0.06
 # define MINI_SIZE 100
 # define MINI_TILE_SIZE 8
-#define MINI_RADIUS 10
+#define MINI_RADIUS 80
 
 
 typedef struct s_player
