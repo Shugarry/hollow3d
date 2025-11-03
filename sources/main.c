@@ -88,6 +88,11 @@ int	main(int argc, char **argv)
 	t_data	data;
 
 	init_structs(&data);
+	data.textures.sword[0] = mlx_load_png("resources/sword_animation/frame_0.png");
+	data.textures.sword[1] = mlx_load_png("resources/sword_animation/frame_1.png");
+	data.textures.sword[2] = mlx_load_png("resources/sword_animation/frame_2.png");
+	data.textures.sword[3] = mlx_load_png("resources/sword_animation/frame_3.png");
+	data.textures.sword[4] = mlx_load_png("resources/sword_animation/frame_4.png");
 	parsing(&data, argv, argc);
 	get_parsed_variables(&data);
 	start_mlx(&data);

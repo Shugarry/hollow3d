@@ -85,6 +85,7 @@ typedef struct s_textures
 	mlx_texture_t	*south;
 	mlx_texture_t	*east;
 	mlx_texture_t	*west;
+	mlx_texture_t	*sword[5];
 	uint32_t		floor_color;
 	uint32_t		ceiling_color;
 }	t_textures;
