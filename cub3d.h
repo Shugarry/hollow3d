@@ -26,7 +26,8 @@
 # include <sys/stat.h>
 # include <fcntl.h>
 # include <stdint.h>
-#include <string.h>
+# include <string.h>
+# include <sys/time.h>
 
 #ifndef M_PI
 # define M_PI 3.14159265358979323846
@@ -36,9 +37,11 @@
 # define WIN_HEIGHT 540
 # define MOVE_SPEED 0.1
 # define ROTATE_SPEED 0.06
+# define SIXTY_FPS 0.0167
+# define THIRTY_FPS 0.0334
 # define MINI_SIZE 100
 # define MINI_TILE_SIZE 8
-#define MINI_RADIUS 80
+# define MINI_RADIUS 80
 
 
 typedef struct s_player
@@ -86,12 +89,17 @@ typedef struct s_textures
 	mlx_texture_t	*east;
 	mlx_texture_t	*west;
 	mlx_texture_t	*sword[5];
+	mlx_texture_t	*fps_ui;
+	mlx_image_t		*fps_image;
 	uint32_t		floor_color;
 	uint32_t		ceiling_color;
 }	t_textures;
 
 typedef struct s_raycast
 {
+	double	time;
+	double	old_time;
+	double	frame_time;
 	double	dir_x;
 	double	dir_y;
 	double	plane_x;
@@ -144,6 +152,7 @@ typedef struct s_data
 	char		**map;
 	mlx_t		*mlx;
 	mlx_image_t	*canvas;
+	mlx_image_t	*fps_image;
 	mlx_image_t *mini;
 	t_list		*memlist;
 }	t_data;
@@ -155,11 +164,12 @@ void		memlist_free_ptr(t_data *data, void *ptr);
 void		clean_exit(t_data *data, char *error_str, int error_num);
 
 // helpers.c
+double		get_time_seconds();
 uint32_t	rgba(int r, int g, int b, int a);
 void		print_grid(char **grid);
 void		free_double_array(char **arr);
-void		check_parsed_values(t_data *data);
 int			ft_isspace(int c);
+void		check_parsed_values(t_data *data);
 
 // elements.c
 void		find_elements(t_data *data);

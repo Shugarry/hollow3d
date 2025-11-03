@@ -17,6 +17,8 @@ void	main_hook(void *param)
 	t_data		*data;
 
 	data = param;
+	double	start;
+	start = get_time_seconds();
 	if (mlx_is_key_down(data->mlx, MLX_KEY_ESCAPE))
 	{
 		mlx_close_window(data->mlx);
@@ -25,6 +27,26 @@ void	main_hook(void *param)
 	movement(data);
 	camera(data);
 	update_minimap(data);
+	raycaster(data);
+	double elapsed = get_time_seconds() - start;
+	if (elapsed < THIRTY_FPS)
+		usleep((useconds_t)((THIRTY_FPS - elapsed) * 1e6));
+	data->raycast.old_time = data->raycast.time;
+	data->raycast.time = get_time_seconds();
+	data->raycast.frame_time = data->raycast.time - data->raycast.old_time ;
+	int fps = (int)(1.0 / data->raycast.frame_time);
+	char	fps_string[7];
+	fps_string[0] = 'f';
+	fps_string[1] = 'p';
+	fps_string[2] = 's';
+	fps_string[3] = ' ';
+	fps_string[4] = '0' + fps / 10;
+	fps_string[5] = '0' + fps % 10;
+	fps_string[6] = '\0';
+	mlx_delete_image(data->mlx, data->fps_image);
+	// mlx_delete_image(data->mlx, data->textures.fps_image);
+	// mlx_image_to_window(data->mlx, data->textures.fps_image, WIN_WIDTH - data->textures.fps_image->width, 0);
+	data->fps_image = mlx_put_string(data->mlx, fps_string, WIN_WIDTH - 100, 0);
 }
 
 void	start_mlx(t_data *data)
@@ -34,12 +56,14 @@ void	start_mlx(t_data *data)
 		clean_exit(data, (char *)mlx_strerror(mlx_errno), EXIT_FAILURE);
 	data->canvas = mlx_new_image(data->mlx, WIN_WIDTH, WIN_HEIGHT);
 	starting_vars(data);
-	raycaster(data);
+	data->raycast.old_time = get_time_seconds();
+	data->raycast.time = data->raycast.old_time;
 	mlx_image_to_window(data->mlx, data->canvas, 0, 0);
 	mlx_loop_hook(data->mlx, &main_hook, data);
 	init_mini(data);
+	// data->textures.fps_ui = mlx_load_png("resources/fps_ui.png");
+	// data->textures.fps_image = mlx_texture_to_image(data->mlx, data->textures.fps_ui);
 	mlx_loop(data->mlx);
-
 }
 
 void	init_structs(t_data *data)

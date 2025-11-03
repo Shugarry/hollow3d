@@ -51,6 +51,15 @@ void	print_grid(char **grid)
 		i++;
 	}
 }
+
+double	get_time_seconds()
+{
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	return ((double)tv.tv_sec + (double)tv.tv_usec / 1000000.0);
+}
+
 //
 // void	check_parsed_values(t_data *data)
 // {
