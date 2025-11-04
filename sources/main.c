@@ -11,6 +11,26 @@
 /* ************************************************************************** */
 
 #include "../cub3d.h"
+#include <stdint.h>
+
+void	img_to_window_scaled(t_data *data, mlx_texture_t *texture, double scale, int pos_x, int pos_y)
+{
+	double	newsize_x;
+	double	newsize_y;
+	double	step_x;
+	double	step_y;
+
+	newsize_x = (double)texture->width * scale;
+	newsize_y = (double)texture->height * scale;
+	step_x = (double)texture->width / newsize_x;
+	step_y = (double)texture->height / newsize_y;
+	for (int i = 0; i < newsize_y; i++) {
+		for (int j = 0; j < newsize_x; j++) {
+			uint32_t color = get_tex_pixel(texture, (int)(j * step_x), (int)(i * step_y), false);
+			mlx_put_pixel(data->canvas, pos_x + j, pos_y + i, color);
+		}
+	}
+}
 
 void	main_hook(void *param)
 {
@@ -29,8 +49,8 @@ void	main_hook(void *param)
 	update_minimap(data);
 	raycaster(data);
 	double elapsed = get_time_seconds() - start;
-	if (elapsed < THIRTY_FPS)
-		usleep((useconds_t)((THIRTY_FPS - elapsed) * 1e6));
+	if (elapsed < SIXTY_FPS)
+		usleep((useconds_t)((SIXTY_FPS - elapsed) * 1e6));
 	data->raycast.old_time = data->raycast.time;
 	data->raycast.time = get_time_seconds();
 	data->raycast.frame_time = data->raycast.time - data->raycast.old_time ;
@@ -43,10 +63,10 @@ void	main_hook(void *param)
 	fps_string[4] = '0' + fps / 10;
 	fps_string[5] = '0' + fps % 10;
 	fps_string[6] = '\0';
+	img_to_window_scaled(data, data->textures.fps_ui, 0.25, WIN_WIDTH - data->textures.fps_ui->width * 0.25 - X_MARGIN, Y_MARGIN);
+	img_to_window_scaled(data, data->textures.sword[0], data->textures.sword[0]->width / WIN_WIDTH, 0, 0);
 	mlx_delete_image(data->mlx, data->fps_image);
-	// mlx_delete_image(data->mlx, data->textures.fps_image);
-	// mlx_image_to_window(data->mlx, data->textures.fps_image, WIN_WIDTH - data->textures.fps_image->width, 0);
-	data->fps_image = mlx_put_string(data->mlx, fps_string, WIN_WIDTH - 100, 0);
+	data->fps_image = mlx_put_string(data->mlx, fps_string, WIN_WIDTH - data->textures.fps_ui->width * 0.25 * 0.8 - X_MARGIN, Y_MARGIN * 10);
 }
 
 void	start_mlx(t_data *data)
@@ -61,8 +81,6 @@ void	start_mlx(t_data *data)
 	mlx_image_to_window(data->mlx, data->canvas, 0, 0);
 	mlx_loop_hook(data->mlx, &main_hook, data);
 	init_mini(data);
-	// data->textures.fps_ui = mlx_load_png("resources/fps_ui.png");
-	// data->textures.fps_image = mlx_texture_to_image(data->mlx, data->textures.fps_ui);
 	mlx_loop(data->mlx);
 }
 
@@ -117,6 +135,7 @@ int	main(int argc, char **argv)
 	data.textures.sword[2] = mlx_load_png("resources/sword_animation/frame_2.png");
 	data.textures.sword[3] = mlx_load_png("resources/sword_animation/frame_3.png");
 	data.textures.sword[4] = mlx_load_png("resources/sword_animation/frame_4.png");
+	data.textures.fps_ui = mlx_load_png("resources/fps_ui.png");
 	parsing(&data, argv, argc);
 	get_parsed_variables(&data);
 	start_mlx(&data);

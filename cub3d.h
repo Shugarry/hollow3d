@@ -35,6 +35,8 @@
 
 # define WIN_WIDTH 960
 # define WIN_HEIGHT 540
+# define X_MARGIN WIN_WIDTH / 100
+# define Y_MARGIN WIN_HEIGHT / 100
 # define MOVE_SPEED 0.1
 # define ROTATE_SPEED 0.06
 # define SIXTY_FPS 0.0167
