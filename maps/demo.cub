@@ -1,5 +1,5 @@
-NO ./resources/test.png
-SO ./resources/test.png
+NO ./resources/sky.png
+SO ./resources/south.png
 WE ./resources/west.png
 EA ./resources/east.png
 F 79,0,45

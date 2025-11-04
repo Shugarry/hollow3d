@@ -27,7 +27,8 @@ void	img_to_window_scaled(t_data *data, mlx_texture_t *texture, double scale, in
 	for (int i = 0; i < newsize_y; i++) {
 		for (int j = 0; j < newsize_x; j++) {
 			uint32_t color = get_tex_pixel(texture, (int)(j * step_x), (int)(i * step_y), false);
-			mlx_put_pixel(data->canvas, pos_x + j, pos_y + i, color);
+			if (color)
+				mlx_put_pixel(data->canvas, pos_x + j, pos_y + i, color);
 		}
 	}
 }
