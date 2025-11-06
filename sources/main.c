@@ -33,12 +33,72 @@ void	img_to_window_scaled(t_data *data, mlx_texture_t *texture, double scale, in
 	}
 }
 
+void	fps_counter(t_data *data)
+{
+	char	fps_string[7];
+
+	int fps = (int)(1.0 / data->raycast.frame_time);
+	fps_string[0] = 'f';
+	fps_string[1] = 'p';
+	fps_string[2] = 's';
+	fps_string[3] = ' ';
+	fps_string[4] = '0' + fps / 10;
+	fps_string[5] = '0' + fps % 10;
+	fps_string[6] = '\0';
+	data->raycast.old_time = data->raycast.time;
+	data->raycast.time = get_time_seconds();
+	data->raycast.frame_time = data->raycast.time - data->raycast.old_time ;
+	img_to_window_scaled(data, data->textures.fps_ui, \
+					  0.25, WIN_WIDTH - data->textures.fps_ui->width * \
+					  0.25 - X_MARGIN, Y_MARGIN);
+	mlx_delete_image(data->mlx, data->fps_str);
+	data->fps_str = mlx_put_string(data->mlx, fps_string, \
+								  WIN_WIDTH - data->textures.fps_ui->width * \
+								  0.25 * 0.8 - X_MARGIN, Y_MARGIN * 10);
+}
+
+
+void	sword_animation(t_data *data)
+{
+
+	if (mlx_is_key_down(data->mlx, MLX_KEY_UP) && !data->animation.in_animation)
+	{
+		data->animation.in_animation = true;
+		data->animation.frame_num = 0;
+	}
+	if (data->animation.in_animation)
+	{
+		if (data->animation.frame_num >= 0 && data->animation.frame_num < 30)
+			img_to_window_scaled(data, data->animation.sword[1], \
+						data->animation.sword[1]->width / WIN_WIDTH, 0, 0);
+		if (data->animation.frame_num >= 30 && data->animation.frame_num < 50)
+			img_to_window_scaled(data, data->animation.sword[2], \
+						data->animation.sword[2]->width / WIN_WIDTH, 0, 0);
+		if (data->animation.frame_num >= 50 && data->animation.frame_num < 70)
+			img_to_window_scaled(data, data->animation.sword[3], \
+						data->animation.sword[3]->width / WIN_WIDTH, 0, 0);
+		if (data->animation.frame_num >= 70 && data->animation.frame_num < 100)
+			img_to_window_scaled(data, data->animation.sword[4], \
+						data->animation.sword[4]->width / WIN_WIDTH, 0, 0);
+		if (data->animation.frame_num >= 100)
+		{
+			data->animation.in_animation = false;
+			img_to_window_scaled(data, data->animation.sword[0], \
+						data->animation.sword[0]->width / WIN_WIDTH, 0, 0);
+		}
+	}
+	else
+		img_to_window_scaled(data, data->animation.sword[0], \
+						  data->animation.sword[0]->width / WIN_WIDTH, 0, 0);
+}
+
 void	main_hook(void *param)
 {
 	t_data		*data;
+	double		start;
+	double		elapsed;
 
 	data = param;
-	double	start;
 	start = get_time_seconds();
 	if (mlx_is_key_down(data->mlx, MLX_KEY_ESCAPE))
 	{
@@ -49,25 +109,12 @@ void	main_hook(void *param)
 	camera(data);
 	update_minimap(data);
 	raycaster(data);
-	double elapsed = get_time_seconds() - start;
+	elapsed = get_time_seconds() - start;
 	if (elapsed < SIXTY_FPS)
 		usleep((useconds_t)((SIXTY_FPS - elapsed) * 1e6));
-	data->raycast.old_time = data->raycast.time;
-	data->raycast.time = get_time_seconds();
-	data->raycast.frame_time = data->raycast.time - data->raycast.old_time ;
-	int fps = (int)(1.0 / data->raycast.frame_time);
-	char	fps_string[7];
-	fps_string[0] = 'f';
-	fps_string[1] = 'p';
-	fps_string[2] = 's';
-	fps_string[3] = ' ';
-	fps_string[4] = '0' + fps / 10;
-	fps_string[5] = '0' + fps % 10;
-	fps_string[6] = '\0';
-	img_to_window_scaled(data, data->textures.fps_ui, 0.25, WIN_WIDTH - data->textures.fps_ui->width * 0.25 - X_MARGIN, Y_MARGIN);
-	img_to_window_scaled(data, data->textures.sword[0], data->textures.sword[0]->width / WIN_WIDTH, 0, 0);
-	mlx_delete_image(data->mlx, data->fps_image);
-	data->fps_image = mlx_put_string(data->mlx, fps_string, WIN_WIDTH - data->textures.fps_ui->width * 0.25 * 0.8 - X_MARGIN, Y_MARGIN * 10);
+	fps_counter(data);
+	sword_animation(data);
+	data->animation.frame_num += 1;
 }
 
 void	start_mlx(t_data *data)
@@ -92,6 +139,7 @@ void	init_structs(t_data *data)
 	i = 0;
 	ft_bzero(data, sizeof(t_data));
 	ft_bzero(&data->raycast, sizeof(t_paths));
+	ft_bzero(&data->animation, sizeof(t_paths));
 	ft_bzero(&data->player, sizeof(t_player));
 	ft_bzero(&data->textures, sizeof(t_textures));
 	ft_bzero(&data->parsing, sizeof(t_parsing));
@@ -131,11 +179,11 @@ int	main(int argc, char **argv)
 	t_data	data;
 
 	init_structs(&data);
-	data.textures.sword[0] = mlx_load_png("resources/sword_animation/frame_0.png");
-	data.textures.sword[1] = mlx_load_png("resources/sword_animation/frame_1.png");
-	data.textures.sword[2] = mlx_load_png("resources/sword_animation/frame_2.png");
-	data.textures.sword[3] = mlx_load_png("resources/sword_animation/frame_3.png");
-	data.textures.sword[4] = mlx_load_png("resources/sword_animation/frame_4.png");
+	data.animation.sword[0] = mlx_load_png("resources/sword_animation/frame_0.png");
+	data.animation.sword[1] = mlx_load_png("resources/sword_animation/frame_1.png");
+	data.animation.sword[2] = mlx_load_png("resources/sword_animation/frame_2.png");
+	data.animation.sword[3] = mlx_load_png("resources/sword_animation/frame_3.png");
+	data.animation.sword[4] = mlx_load_png("resources/sword_animation/frame_4.png");
 	data.textures.fps_ui = mlx_load_png("resources/fps_ui.png");
 	parsing(&data, argv, argc);
 	get_parsed_variables(&data);

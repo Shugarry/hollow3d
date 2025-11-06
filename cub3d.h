@@ -90,9 +90,7 @@ typedef struct s_textures
 	mlx_texture_t	*south;
 	mlx_texture_t	*east;
 	mlx_texture_t	*west;
-	mlx_texture_t	*sword[5];
 	mlx_texture_t	*fps_ui;
-	mlx_image_t		*fps_image;
 	uint32_t		floor_color;
 	uint32_t		ceiling_color;
 }	t_textures;
@@ -145,16 +143,25 @@ typedef struct s_raycast
 	int		f_tex_y;
 }	t_raycast;
 
+
+typedef struct s_animation
+{
+	bool			in_animation;
+	int				frame_num;
+	mlx_texture_t	*sword[5];
+}	t_animation;
+
 typedef struct s_data
 {
 	t_player	player;
 	t_textures	textures;
 	t_raycast	raycast;
 	t_parsing	parsing;
+	t_animation	animation;
 	char		**map;
 	mlx_t		*mlx;
 	mlx_image_t	*canvas;
-	mlx_image_t	*fps_image;
+	mlx_image_t	*fps_str;
 	mlx_image_t *mini;
 	t_list		*memlist;
 }	t_data;
