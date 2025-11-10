@@ -6,7 +6,7 @@
 #    By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/23 17:17:45 by frey-gal          #+#    #+#              #
-#    Updated: 2025/10/21 20:38:07 by joshapir         ###   ########.fr        #
+#    Updated: 2025/11/10 19:32:26 by joshapir         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@
 NAME		= cub3d
 CC			= gcc
 CFLAGS		= -fsanitize=address -g -Wall -Wextra -Werror -O3 -ffast-math -pipe \
-			  -march=native -flto -funroll-loops -pg
+			  -march=native -flto -funroll-loops
 
 SRC_DIR		= sources
 SOURCES		= $(wildcard sources/*.c) #$(addprefix $(SRC_DIR)/, main.c)
