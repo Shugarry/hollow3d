@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frey-gal <frey-gal@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 16:18:01 by frey-gal          #+#    #+#             */
-/*   Updated: 2025/10/17 09:40:17 by frey-gal         ###   ########.fr       */
+/*   Updated: 2025/11/10 20:58:29 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ void	raycaster(t_data *data)
 		cast_rays(data, x);
 		step_in_dir(data);
 		ray_find_wall(data);
+		data->wall_distances[x] = data->raycast.perp_wall_dist;
 		draw_walls(data, x);
 		x++;
 	}
