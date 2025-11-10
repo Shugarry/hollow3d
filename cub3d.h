@@ -158,6 +158,7 @@ typedef struct s_data
 	t_raycast	raycast;
 	t_parsing	parsing;
 	t_animation	animation;
+	double		scale;
 	char		**map;
 	mlx_t		*mlx;
 	mlx_image_t	*canvas;
@@ -234,7 +235,7 @@ void	update_minimap(t_data *data);
 void	map_width(t_data *data);
 
 // fps.c
-void	img_to_window_scaled(t_data *data, mlx_texture_t *texture, double scale, int pos_x, int pos_y);
+void	img_to_window_scaled(t_data *data, mlx_texture_t *texture, int pos_x, int pos_y);
 void	fps_counter(t_data *data);
 
 // sword_animation.c

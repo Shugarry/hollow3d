@@ -13,7 +13,7 @@
 #include "../cub3d.h"
 
 void	img_to_window_scaled(t_data *data, mlx_texture_t *texture, \
-					double scale, int pos_x, int pos_y)
+						int pos_x, int pos_y)
 {
 	uint32_t	color;
 	int			i;
@@ -21,13 +21,13 @@ void	img_to_window_scaled(t_data *data, mlx_texture_t *texture, \
 	double		step_x;
 	double		step_y;
 
-	step_x = (double)texture->width / (double)(texture->width * scale);
-	step_y = (double)texture->height / (double)(texture->height * scale);
+	step_x = (double)texture->width / (double)(texture->width * data->scale);
+	step_y = (double)texture->height / (double)(texture->height * data->scale);
 	i = 0;
-	while (i < (texture->height * scale))
+	while (i < (texture->height * data->scale))
 	{
 		j = 0;
-		while (j < (texture->width * scale))
+		while (j < (texture->width * data->scale))
 		{
 			color = get_tex_pixel(texture, (int)(j * step_x), \
 					(int)(i * step_y), false);
@@ -55,8 +55,9 @@ void	fps_counter(t_data *data)
 	data->raycast.old_time = data->raycast.time;
 	data->raycast.time = get_time_seconds();
 	data->raycast.frame_time = data->raycast.time - data->raycast.old_time ;
+	data->scale = 0.25;
 	img_to_window_scaled(data, data->textures.fps_ui, \
-					0.25, WIN_WIDTH - data->textures.fps_ui->width * \
+					WIN_WIDTH - data->textures.fps_ui->width * \
 					0.25 - X_MARGIN, Y_MARGIN);
 	mlx_delete_image(data->mlx, data->fps_str);
 	data->fps_str = mlx_put_string(data->mlx, fps_string, \
