@@ -102,6 +102,7 @@ void	raycaster(t_data *data)
 		step_in_dir(data);
 		ray_find_wall(data);
 		draw_walls(data, x);
+		data->wall_distances[x] = data->raycast.perp_wall_dist;
 		x++;
 	}
 }

@@ -82,12 +82,29 @@ static void	move_right(t_data *data)
 
 void	movement(t_data *data)
 {
+	bool	keypress;
+
+	keypress = false;
 	if (mlx_is_key_down(data->mlx, MLX_KEY_W))
+	{
 		move_forth(data);
+		keypress = true;
+	}
 	if (mlx_is_key_down(data->mlx, MLX_KEY_S))
+	{
 		move_back(data);
+		keypress = true;
+	}
 	if (mlx_is_key_down(data->mlx, MLX_KEY_A))
+	{
 		move_left(data);
+		keypress = true;
+	}
 	if (mlx_is_key_down(data->mlx, MLX_KEY_D))
+	{
 		move_right(data);
+		keypress = true;
+	}
+	if (keypress)
+		raycaster(data);
 }

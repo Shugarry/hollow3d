@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 16:32:00 by frey-gal          #+#    #+#             */
-/*   Updated: 2025/11/10 11:22:10 by frey-gal         ###   ########.fr       */
+/*   Updated: 2025/10/16 19:35:10 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,24 +26,15 @@
 # include <sys/stat.h>
 # include <fcntl.h>
 # include <stdint.h>
-# include <string.h>
-# include <sys/time.h>
-
-#ifndef M_PI
-# define M_PI 3.14159265358979323846
-#endif
+#include <string.h>
 
 # define WIN_WIDTH 960
 # define WIN_HEIGHT 540
-# define X_MARGIN WIN_WIDTH / 100
-# define Y_MARGIN WIN_HEIGHT / 100
 # define MOVE_SPEED 0.1
 # define ROTATE_SPEED 0.06
-# define SIXTY_FPS 0.0167
-# define THIRTY_FPS 0.0334
 # define MINI_SIZE 100
 # define MINI_TILE_SIZE 8
-# define MINI_RADIUS 80
+#define MINI_RADIUS 10
 
 
 typedef struct s_player
@@ -90,16 +81,12 @@ typedef struct s_textures
 	mlx_texture_t	*south;
 	mlx_texture_t	*east;
 	mlx_texture_t	*west;
-	mlx_texture_t	*fps_ui;
 	uint32_t		floor_color;
 	uint32_t		ceiling_color;
 }	t_textures;
 
 typedef struct s_raycast
 {
-	double	time;
-	double	old_time;
-	double	frame_time;
 	double	dir_x;
 	double	dir_y;
 	double	plane_x;
@@ -143,13 +130,24 @@ typedef struct s_raycast
 	int		f_tex_y;
 }	t_raycast;
 
-
-typedef struct s_animation
+typedef struct s_enemy
 {
-	bool			in_animation;
-	int				frame_num;
-	mlx_texture_t	*sword[5];
-}	t_animation;
+    double      x;
+    double      y;
+    double      distance;
+    mlx_texture_t *texture;
+    bool        alive;
+}   t_enemy;
+
+typedef struct s_enemy_vars
+{
+	double		dx;
+	double		dy;
+	double		move_speed;
+	double		new_x;
+	double		new_y;
+	int			can_move;
+} t_enemy_vars;
 
 typedef struct s_data
 {
@@ -157,15 +155,28 @@ typedef struct s_data
 	t_textures	textures;
 	t_raycast	raycast;
 	t_parsing	parsing;
-	t_animation	animation;
-	double		scale;
 	char		**map;
 	mlx_t		*mlx;
 	mlx_image_t	*canvas;
-	mlx_image_t	*fps_str;
 	mlx_image_t *mini;
 	t_list		*memlist;
+	t_enemy     *enemies;    
+	t_enemy_vars enemy_vars;   
+    int         enemy_count;    
+    double      *wall_distances;
 }	t_data;
+
+typedef struct s_sprite_data
+{
+    int sprite_screen_x;
+    int sprite_width;
+    int sprite_height;
+    int draw_start_y;
+    int draw_end_y;
+    double transform_y;
+}   t_sprite_data;
+
+
 
 //memory.c
 void		*memlist_alloc(t_data *data, size_t size);
@@ -174,12 +185,11 @@ void		memlist_free_ptr(t_data *data, void *ptr);
 void		clean_exit(t_data *data, char *error_str, int error_num);
 
 // helpers.c
-double		get_time_seconds(void);
 uint32_t	rgba(int r, int g, int b, int a);
 void		print_grid(char **grid);
 void		free_double_array(char **arr);
-int			ft_isspace(int c);
 void		check_parsed_values(t_data *data);
+int			ft_isspace(int c);
 
 // elements.c
 void		find_elements(t_data *data);
@@ -224,8 +234,7 @@ void		movement(t_data *data);
 void		camera(t_data *data);
 
 // raycasting.c
-void		draw_floor_ceiling(t_data *data);
-uint32_t	get_tex_pixel(mlx_texture_t *texture, int x, int y, int darken);
+uint32_t	get_texture_pixel(mlx_texture_t *texture, int x, int y);
 void		starting_vars(t_data *data);
 void		draw_walls(t_data *data, int x);
 void		raycaster(t_data *data);
@@ -233,12 +242,12 @@ void	init_mini(t_data *data);
 //void	init_map(t_data *data);
 void	update_minimap(t_data *data);
 void	map_width(t_data *data);
-
-// fps.c
-void	img_to_window_scaled(t_data *data, mlx_texture_t *texture, int pos_x, int pos_y);
-void	fps_counter(t_data *data);
-
-// sword_animation.c
-void	sword_animation(t_data *data);
+void init_enemies(t_data *data);
+void update_enemies(t_data *data);
+void sort_enemies(t_data *data);
+void draw_enemy(t_data *data, t_enemy *enemy);
+uint32_t	get_tex_pixel(mlx_texture_t *texture, int x, int y, int darken);
+void	draw_floor_ceiling(t_data *data);
+void draw_enemies_on_minimap(t_data *data);
 
 #endif

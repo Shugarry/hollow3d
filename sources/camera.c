@@ -48,8 +48,19 @@ static void	pan_camera_right(t_data *data)
 
 void	camera(t_data *data)
 {
+	bool	keypress;
+
+	keypress = false;
 	if (mlx_is_key_down(data->mlx, MLX_KEY_LEFT))
+	{
 		pan_camera_left(data);
+		keypress = true;
+	}
 	if (mlx_is_key_down(data->mlx, MLX_KEY_RIGHT))
+	{
 		pan_camera_right(data);
+		keypress = true;
+	}
+	if (keypress == true)
+		raycaster(data);
 }
