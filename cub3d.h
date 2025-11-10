@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 16:32:00 by frey-gal          #+#    #+#             */
-/*   Updated: 2025/10/21 19:56:48 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/11/10 11:22:10 by frey-gal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,7 +173,7 @@ void		memlist_free_ptr(t_data *data, void *ptr);
 void		clean_exit(t_data *data, char *error_str, int error_num);
 
 // helpers.c
-double		get_time_seconds();
+double		get_time_seconds(void);
 uint32_t	rgba(int r, int g, int b, int a);
 void		print_grid(char **grid);
 void		free_double_array(char **arr);
@@ -233,5 +233,11 @@ void	init_mini(t_data *data);
 void	update_minimap(t_data *data);
 void	map_width(t_data *data);
 
+// fps.c
+void	img_to_window_scaled(t_data *data, mlx_texture_t *texture, double scale, int pos_x, int pos_y);
+void	fps_counter(t_data *data);
+
+// sword_animation.c
+void	sword_animation(t_data *data);
 
 #endif

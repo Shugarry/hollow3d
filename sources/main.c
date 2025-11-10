@@ -6,91 +6,11 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 20:39:28 by joshapir          #+#    #+#             */
-/*   Updated: 2025/10/21 20:42:35 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/11/10 11:16:12 by frey-gal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3d.h"
-#include <stdint.h>
-
-void	img_to_window_scaled(t_data *data, mlx_texture_t *texture, double scale, int pos_x, int pos_y)
-{
-	double	newsize_x;
-	double	newsize_y;
-	double	step_x;
-	double	step_y;
-
-	newsize_x = (double)texture->width * scale;
-	newsize_y = (double)texture->height * scale;
-	step_x = (double)texture->width / newsize_x;
-	step_y = (double)texture->height / newsize_y;
-	for (int i = 0; i < newsize_y; i++) {
-		for (int j = 0; j < newsize_x; j++) {
-			uint32_t color = get_tex_pixel(texture, (int)(j * step_x), (int)(i * step_y), false);
-			if (color)
-				mlx_put_pixel(data->canvas, pos_x + j, pos_y + i, color);
-		}
-	}
-}
-
-void	fps_counter(t_data *data)
-{
-	char	fps_string[7];
-
-	int fps = (int)(1.0 / data->raycast.frame_time);
-	fps_string[0] = 'f';
-	fps_string[1] = 'p';
-	fps_string[2] = 's';
-	fps_string[3] = ' ';
-	fps_string[4] = '0' + fps / 10;
-	fps_string[5] = '0' + fps % 10;
-	fps_string[6] = '\0';
-	data->raycast.old_time = data->raycast.time;
-	data->raycast.time = get_time_seconds();
-	data->raycast.frame_time = data->raycast.time - data->raycast.old_time ;
-	img_to_window_scaled(data, data->textures.fps_ui, \
-					  0.25, WIN_WIDTH - data->textures.fps_ui->width * \
-					  0.25 - X_MARGIN, Y_MARGIN);
-	mlx_delete_image(data->mlx, data->fps_str);
-	data->fps_str = mlx_put_string(data->mlx, fps_string, \
-								  WIN_WIDTH - data->textures.fps_ui->width * \
-								  0.25 * 0.8 - X_MARGIN, Y_MARGIN * 10);
-}
-
-
-void	sword_animation(t_data *data)
-{
-
-	if (mlx_is_key_down(data->mlx, MLX_KEY_UP) && !data->animation.in_animation)
-	{
-		data->animation.in_animation = true;
-		data->animation.frame_num = 0;
-	}
-	if (data->animation.in_animation)
-	{
-		if (data->animation.frame_num >= 0 && data->animation.frame_num < 30)
-			img_to_window_scaled(data, data->animation.sword[1], \
-						data->animation.sword[1]->width / WIN_WIDTH, 0, 0);
-		if (data->animation.frame_num >= 30 && data->animation.frame_num < 50)
-			img_to_window_scaled(data, data->animation.sword[2], \
-						data->animation.sword[2]->width / WIN_WIDTH, 0, 0);
-		if (data->animation.frame_num >= 50 && data->animation.frame_num < 70)
-			img_to_window_scaled(data, data->animation.sword[3], \
-						data->animation.sword[3]->width / WIN_WIDTH, 0, 0);
-		if (data->animation.frame_num >= 70 && data->animation.frame_num < 100)
-			img_to_window_scaled(data, data->animation.sword[4], \
-						data->animation.sword[4]->width / WIN_WIDTH, 0, 0);
-		if (data->animation.frame_num >= 100)
-		{
-			data->animation.in_animation = false;
-			img_to_window_scaled(data, data->animation.sword[0], \
-						data->animation.sword[0]->width / WIN_WIDTH, 0, 0);
-		}
-	}
-	else
-		img_to_window_scaled(data, data->animation.sword[0], \
-						  data->animation.sword[0]->width / WIN_WIDTH, 0, 0);
-}
 
 void	main_hook(void *param)
 {
