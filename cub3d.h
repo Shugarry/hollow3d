@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 16:32:00 by frey-gal          #+#    #+#             */
-/*   Updated: 2025/11/10 19:55:50 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/11/10 21:28:43 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,6 +158,7 @@ typedef struct s_enemy
     double      distance;
     mlx_texture_t *texture;
     bool        alive;
+	int			in_range;
 }   t_enemy;
 
 typedef struct s_enemy_vars
@@ -187,6 +188,7 @@ typedef struct s_data
 	t_enemy     *enemies;
 	t_enemy_vars enemy_vars;
     int         enemy_count;
+	int			sword_hit;
     double      *wall_distances;
 }	t_data;
 
@@ -282,5 +284,6 @@ void draw_enemy(t_data *data, t_enemy *enemy);
 uint32_t	get_tex_pixel(mlx_texture_t *texture, int x, int y, int darken);
 void	draw_floor_ceiling(t_data *data);
 void draw_enemies_on_minimap(t_data *data);
+void check_if_dead(t_data *data);
 
 #endif

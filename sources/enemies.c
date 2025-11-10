@@ -79,6 +79,7 @@ void update_enemies(t_data *data)
             vars->move_speed = 0.05;
             if (data->enemies[i].distance > 2.0)
             {
+                data->enemies[i].in_range == 0;
                 check_if_can_move(data, i, vars);
 
                 if (vars->can_move)
@@ -87,6 +88,13 @@ void update_enemies(t_data *data)
                     data->enemies[i].y = vars->new_y;
                 }
             }
+            else
+            {
+                data->enemies[i].in_range = 1;
+                printf("in range\n");
+            }
+            printf("enemy[i] alive = %d\n", data->enemies[i].alive);
+            printf("sword hit = %d\n", data->sword_hit);
         }
         i++;
     }
