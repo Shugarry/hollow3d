@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 16:32:00 by frey-gal          #+#    #+#             */
-/*   Updated: 2025/11/10 11:22:10 by frey-gal         ###   ########.fr       */
+/*   Updated: 2025/11/10 19:55:50 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,6 +151,25 @@ typedef struct s_animation
 	mlx_texture_t	*sword[5];
 }	t_animation;
 
+typedef struct s_enemy
+{
+    double      x;
+    double      y;
+    double      distance;
+    mlx_texture_t *texture;
+    bool        alive;
+}   t_enemy;
+
+typedef struct s_enemy_vars
+{
+	double		dx;
+	double		dy;
+	double		move_speed;
+	double		new_x;
+	double		new_y;
+	int			can_move;
+} t_enemy_vars;
+
 typedef struct s_data
 {
 	t_player	player;
@@ -165,7 +184,21 @@ typedef struct s_data
 	mlx_image_t	*fps_str;
 	mlx_image_t *mini;
 	t_list		*memlist;
+	t_enemy     *enemies;
+	t_enemy_vars enemy_vars;
+    int         enemy_count;
+    double      *wall_distances;
 }	t_data;
+
+typedef struct s_sprite_data
+{
+    int sprite_screen_x;
+    int sprite_width;
+    int sprite_height;
+    int draw_start_y;
+    int draw_end_y;
+    double transform_y;
+}   t_sprite_data;
 
 //memory.c
 void		*memlist_alloc(t_data *data, size_t size);
@@ -240,5 +273,14 @@ void	fps_counter(t_data *data);
 
 // sword_animation.c
 void	sword_animation(t_data *data);
+
+// enemies.c
+void init_enemies(t_data *data);
+void update_enemies(t_data *data);
+void sort_enemies(t_data *data);
+void draw_enemy(t_data *data, t_enemy *enemy);
+uint32_t	get_tex_pixel(mlx_texture_t *texture, int x, int y, int darken);
+void	draw_floor_ceiling(t_data *data);
+void draw_enemies_on_minimap(t_data *data);
 
 #endif

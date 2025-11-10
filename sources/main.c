@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 20:39:28 by joshapir          #+#    #+#             */
-/*   Updated: 2025/11/10 11:16:12 by frey-gal         ###   ########.fr       */
+/*   Updated: 2025/11/10 20:13:41 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,21 @@ void	main_hook(void *param)
 	}
 	movement(data);
 	camera(data);
-	update_minimap(data);
+
 	raycaster(data);
+	update_enemies(data);
+	sort_enemies(data);
+	int i = 0;
+	while (i < data->enemy_count)
+    {
+        if (data->enemies[i].alive)
+            draw_enemy(data, &data->enemies[i]);
+        i++;
+    }
 	elapsed = get_time_seconds() - start;
 	if (elapsed < SIXTY_FPS)
 		usleep((useconds_t)((SIXTY_FPS - elapsed) * 1e6));
+	update_minimap(data);
 	fps_counter(data);
 	sword_animation(data);
 	data->animation.frame_num += 1;
@@ -43,11 +53,15 @@ void	start_mlx(t_data *data)
 	if (!data->mlx)
 		clean_exit(data, (char *)mlx_strerror(mlx_errno), EXIT_FAILURE);
 	data->canvas = mlx_new_image(data->mlx, WIN_WIDTH, WIN_HEIGHT);
+	data->wall_distances = malloc(sizeof(double) * WIN_WIDTH);
+	if (!data->wall_distances)
+		exit(1);
 	starting_vars(data);
 	data->raycast.old_time = get_time_seconds();
 	data->raycast.time = data->raycast.old_time;
 	mlx_image_to_window(data->mlx, data->canvas, 0, 0);
 	mlx_loop_hook(data->mlx, &main_hook, data);
+	init_enemies(data);
 	init_mini(data);
 	mlx_loop(data->mlx);
 }
@@ -64,6 +78,7 @@ void	init_structs(t_data *data)
 	ft_bzero(&data->textures, sizeof(t_textures));
 	ft_bzero(&data->parsing, sizeof(t_parsing));
 	ft_bzero(&data->parsing.paths, sizeof(t_paths));
+	ft_bzero(&data->enemy_vars, sizeof(t_enemy_vars));
 	while (i < 3)
 	{
 		data->parsing.paths.c_color[i] = -1;

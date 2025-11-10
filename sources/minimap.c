@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minimap.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joshapir <joshapir@student.42barcelon      +#+  +:+       +#+        */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 20:30:08 by joshapir          #+#    #+#             */
-/*   Updated: 2025/10/21 20:30:50 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/11/10 19:48:47 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -240,6 +240,28 @@ void draw_minimap_background(t_data *data)
 	}
 }
 
+void draw_enemies_on_minimap(t_data *data)
+{
+    int i;
+    int enemy_screen_x;
+    int enemy_screen_y;
+
+    i = 0;
+    while (i < data->enemy_count)
+    {
+        if (data->enemies[i].alive)
+        {
+            // Calculate enemy position relative to player (centered on minimap)
+            enemy_screen_x = MINIMAP_CENTER_X + (data->enemies[i].x - data->player.curr_x) * MINI_TILE_SIZE;
+            enemy_screen_y = MINIMAP_CENTER_Y + (data->enemies[i].y - data->player.curr_y) * MINI_TILE_SIZE;
+
+            // Draw enemy as a small red circle (radius 3 pixels)
+            draw_minimap_circle(data->mini, enemy_screen_x, enemy_screen_y, 3, 0xFF0000FF);
+        }
+        i++;
+    }
+}
+
 void update_minimap(t_data *data)
 {
 	memset(data->mini->pixels, 0, data->mini->width * data->mini->height * sizeof(uint32_t));
@@ -247,6 +269,7 @@ void update_minimap(t_data *data)
 	draw_minimap_layout(data);
 	draw_player_on_minimap(data);
 	draw_minimap_circle_border(data);
+	draw_enemies_on_minimap(data);
 }
 
 void init_mini(t_data *data)
