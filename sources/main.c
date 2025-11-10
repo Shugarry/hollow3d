@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 20:39:28 by joshapir          #+#    #+#             */
-/*   Updated: 2025/10/21 20:42:35 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/11/10 11:16:12 by frey-gal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,11 @@
 void	main_hook(void *param)
 {
 	t_data		*data;
+	double		start;
+	double		elapsed;
 
 	data = param;
+	start = get_time_seconds();
 	if (mlx_is_key_down(data->mlx, MLX_KEY_ESCAPE))
 	{
 		mlx_close_window(data->mlx);
@@ -25,6 +28,13 @@ void	main_hook(void *param)
 	movement(data);
 	camera(data);
 	update_minimap(data);
+	raycaster(data);
+	elapsed = get_time_seconds() - start;
+	if (elapsed < SIXTY_FPS)
+		usleep((useconds_t)((SIXTY_FPS - elapsed) * 1e6));
+	fps_counter(data);
+	sword_animation(data);
+	data->animation.frame_num += 1;
 }
 
 void	start_mlx(t_data *data)
@@ -34,12 +44,12 @@ void	start_mlx(t_data *data)
 		clean_exit(data, (char *)mlx_strerror(mlx_errno), EXIT_FAILURE);
 	data->canvas = mlx_new_image(data->mlx, WIN_WIDTH, WIN_HEIGHT);
 	starting_vars(data);
-	raycaster(data);
+	data->raycast.old_time = get_time_seconds();
+	data->raycast.time = data->raycast.old_time;
 	mlx_image_to_window(data->mlx, data->canvas, 0, 0);
 	mlx_loop_hook(data->mlx, &main_hook, data);
 	init_mini(data);
 	mlx_loop(data->mlx);
-
 }
 
 void	init_structs(t_data *data)
@@ -49,6 +59,7 @@ void	init_structs(t_data *data)
 	i = 0;
 	ft_bzero(data, sizeof(t_data));
 	ft_bzero(&data->raycast, sizeof(t_paths));
+	ft_bzero(&data->animation, sizeof(t_paths));
 	ft_bzero(&data->player, sizeof(t_player));
 	ft_bzero(&data->textures, sizeof(t_textures));
 	ft_bzero(&data->parsing, sizeof(t_parsing));
@@ -88,6 +99,12 @@ int	main(int argc, char **argv)
 	t_data	data;
 
 	init_structs(&data);
+	data.animation.sword[0] = mlx_load_png("resources/sword_animation/frame_0.png");
+	data.animation.sword[1] = mlx_load_png("resources/sword_animation/frame_1.png");
+	data.animation.sword[2] = mlx_load_png("resources/sword_animation/frame_2.png");
+	data.animation.sword[3] = mlx_load_png("resources/sword_animation/frame_3.png");
+	data.animation.sword[4] = mlx_load_png("resources/sword_animation/frame_4.png");
+	data.textures.fps_ui = mlx_load_png("resources/fps_ui.png");
 	parsing(&data, argv, argc);
 	get_parsed_variables(&data);
 	start_mlx(&data);

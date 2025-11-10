@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 18:06:50 by joshapir          #+#    #+#             */
-/*   Updated: 2025/10/14 16:15:59 by frey-gal         ###   ########.fr       */
+/*   Updated: 2025/11/10 11:22:00 by frey-gal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,15 @@ void	print_grid(char **grid)
 		i++;
 	}
 }
+
+double	get_time_seconds(void)
+{
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	return ((double)tv.tv_sec + (double)tv.tv_usec / 1000000.0);
+}
+
 //
 // void	check_parsed_values(t_data *data)
 // {

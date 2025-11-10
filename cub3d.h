@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 16:32:00 by frey-gal          #+#    #+#             */
-/*   Updated: 2025/10/21 19:56:48 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/11/10 11:22:10 by frey-gal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@
 # include <sys/stat.h>
 # include <fcntl.h>
 # include <stdint.h>
-#include <string.h>
+# include <string.h>
+# include <sys/time.h>
 
 #ifndef M_PI
 # define M_PI 3.14159265358979323846
@@ -34,11 +35,15 @@
 
 # define WIN_WIDTH 960
 # define WIN_HEIGHT 540
+# define X_MARGIN WIN_WIDTH / 100
+# define Y_MARGIN WIN_HEIGHT / 100
 # define MOVE_SPEED 0.1
 # define ROTATE_SPEED 0.06
+# define SIXTY_FPS 0.0167
+# define THIRTY_FPS 0.0334
 # define MINI_SIZE 100
 # define MINI_TILE_SIZE 8
-#define MINI_RADIUS 80
+# define MINI_RADIUS 80
 
 
 typedef struct s_player
@@ -85,12 +90,16 @@ typedef struct s_textures
 	mlx_texture_t	*south;
 	mlx_texture_t	*east;
 	mlx_texture_t	*west;
+	mlx_texture_t	*fps_ui;
 	uint32_t		floor_color;
 	uint32_t		ceiling_color;
 }	t_textures;
 
 typedef struct s_raycast
 {
+	double	time;
+	double	old_time;
+	double	frame_time;
 	double	dir_x;
 	double	dir_y;
 	double	plane_x;
@@ -134,15 +143,25 @@ typedef struct s_raycast
 	int		f_tex_y;
 }	t_raycast;
 
+
+typedef struct s_animation
+{
+	bool			in_animation;
+	int				frame_num;
+	mlx_texture_t	*sword[5];
+}	t_animation;
+
 typedef struct s_data
 {
 	t_player	player;
 	t_textures	textures;
 	t_raycast	raycast;
 	t_parsing	parsing;
+	t_animation	animation;
 	char		**map;
 	mlx_t		*mlx;
 	mlx_image_t	*canvas;
+	mlx_image_t	*fps_str;
 	mlx_image_t *mini;
 	t_list		*memlist;
 }	t_data;
@@ -154,11 +173,12 @@ void		memlist_free_ptr(t_data *data, void *ptr);
 void		clean_exit(t_data *data, char *error_str, int error_num);
 
 // helpers.c
+double		get_time_seconds(void);
 uint32_t	rgba(int r, int g, int b, int a);
 void		print_grid(char **grid);
 void		free_double_array(char **arr);
-void		check_parsed_values(t_data *data);
 int			ft_isspace(int c);
+void		check_parsed_values(t_data *data);
 
 // elements.c
 void		find_elements(t_data *data);
@@ -213,5 +233,11 @@ void	init_mini(t_data *data);
 void	update_minimap(t_data *data);
 void	map_width(t_data *data);
 
+// fps.c
+void	img_to_window_scaled(t_data *data, mlx_texture_t *texture, double scale, int pos_x, int pos_y);
+void	fps_counter(t_data *data);
+
+// sword_animation.c
+void	sword_animation(t_data *data);
 
 #endif
