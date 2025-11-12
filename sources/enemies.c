@@ -162,19 +162,21 @@ void get_draw_bounds_y(int sprite_size, int *start_y, int *end_y)
 
 void draw_sprite_pixel(t_data *data, t_enemy *enemy, int tex_x, int tex_y, int stripe, int y)
 {
-    uint32_t *pixels;
+    uint8_t *pixel;
     uint32_t color;
 
     if (tex_x >= 0 && tex_x < (int)enemy->texture->width &&
         tex_y >= 0 && tex_y < (int)enemy->texture->height)
     {
-        pixels = (uint32_t *)enemy->texture->pixels;
-        color = pixels[tex_y * enemy->texture->width + tex_x];
-        if ((color & 0x000000FF) != 0)
-            mlx_put_pixel(data->canvas, stripe, y, color);
+        pixel = enemy->texture->pixels + ((tex_y * enemy->texture->width + tex_x) << 2);
+
+        if (pixel[3] == 0)
+            return;
+
+        color = rgba(pixel[0], pixel[1], pixel[2], pixel[3]);
+        mlx_put_pixel(data->canvas, stripe, y, color);
     }
 }
-
 void draw_sprite_column(t_data *data, t_enemy *enemy, int stripe, t_sprite_data *sp)
 {
     int tex_x;
