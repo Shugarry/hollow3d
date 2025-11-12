@@ -1,4 +1,4 @@
-NO ./resources/sky.png
+NO ./resources/ceiling2.png
 SO ./resources/south.png
 WE ./resources/west.png
 EA ./resources/east.png

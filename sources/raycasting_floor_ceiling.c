@@ -47,14 +47,19 @@ static	void	draw_f_c_loop(t_data *data, int x, int y)
 	r->cell_x = (int)r->floor_x;
 	r->cell_y = (int)r->floor_y;
 	r->f_tex_x = (int)(floor->width * \
-		(r->floor_x - r->cell_x)) & (floor->width - 1);
+		(r->floor_x - r->cell_x) / 32) & (floor->width - 1);
 	r->f_tex_y = (int)(floor->height * \
-		(r->floor_y - r->cell_y)) & (floor->height - 1);
+		(r->floor_y - r->cell_y) / 32) & (floor->height - 1);
 	r->floor_x += r->floor_step_x;
 	r->floor_y += r->floor_step_y;
 	color = get_tex_pixel(floor, r->f_tex_x, r->f_tex_y, 0);
 	mlx_put_pixel(data->canvas, x, y, color);
 	color = get_tex_pixel(ceiling, r->f_tex_x, r->f_tex_y, 0);
+	mlx_put_pixel(data->canvas, x, WIN_HEIGHT - y - 1, color);
+	// int ceiling_tex_x = (int)((float)x / WIN_WIDTH * ceiling->width);
+	// int ceiling_tex_y = (int)((float)(WIN_HEIGHT - y - 1) / (WIN_HEIGHT / 2) * ceiling->height);
+	//
+	// color = get_tex_pixel(ceiling, ceiling_tex_x, ceiling_tex_y, 0);
 	mlx_put_pixel(data->canvas, x, WIN_HEIGHT - y - 1, color);
 }
 

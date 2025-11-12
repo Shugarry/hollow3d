@@ -70,7 +70,7 @@ static void	texturize_walls(t_data *data, int x)
 		(r->ray_dir_y > 0 && r->side == 1))
 		r->wall_x = 1 - r->wall_x;
 	r->tex_x = (int)(r->wall_x * (double)current_texture->width);
-	r->tex_step = 1.0 * current_texture->width / r->line_height;
+	r->tex_step = 1.0 * current_texture->height / r->line_height;
 	r->tex_pos = (r->draw_start - WIN_HEIGHT / 2 + r->line_height / 2) * \
 		r->tex_step;
 	line = r->draw_start;
