@@ -62,10 +62,38 @@ static void	step_in_dir(t_data *data)
 	}
 }
 
+bool check_door(t_data *data)
+{
+    t_raycast	*r;
+	double		intersection;
+
+	r = &data->raycast;
+	if (r->side == 0) // vert wall
+	{
+		intersection = r->side_dist_x - 0.5;
+		if (intersection < r->side_dist_y)
+		{
+			r->perp_wall_dist = intersection;
+			return true;
+		}
+	}
+	else // horiz wall
+	{
+		intersection = r->side_dist_y - 0.5;
+		if (intersection < r->side_dist_x)
+		{
+			r->perp_wall_dist = intersection;
+			return true;
+		}
+	}
+	return false;
+}
+
 static void	ray_find_wall(t_data *data)
 {
 	t_raycast	*r;
 
+	bool flag = false;
 	r = &data->raycast;
 	while (r->hit == false)
 	{
@@ -83,11 +111,22 @@ static void	ray_find_wall(t_data *data)
 		}
 		if (data->map[r->map_y][r->map_x] == '1')
 			r->hit = true;
+		if (data->map[r->map_y][r->map_x] == 'D')
+		{
+			if (check_door(data) == true)
+			{
+				flag = true;
+				r->hit = true;
+			}
+		}
 	}
-	if (r->side == 0)
-		r->perp_wall_dist = (r->side_dist_x - r->delta_dist_x);
-	else
-		r->perp_wall_dist = (r->side_dist_y - r->delta_dist_y);
+	if (!flag)
+	{
+		if (r->side == 0)
+			r->perp_wall_dist = (r->side_dist_x - r->delta_dist_x);
+		else
+			r->perp_wall_dist = (r->side_dist_y - r->delta_dist_y);
+	}
 }
 
 void	raycaster(t_data *data)

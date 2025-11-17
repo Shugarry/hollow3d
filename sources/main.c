@@ -29,15 +29,15 @@ void	main_hook(void *param)
 	camera(data);
 
 	raycaster(data);
-	update_enemies(data);
-	sort_enemies(data);
-	int i = 0;
-	while (i < data->enemy_count)
-    {
-        if (data->enemies[i].alive)
-            draw_enemy(data, &data->enemies[i]);
-        i++;
-    }
+	// update_enemies(data);
+	// sort_enemies(data);
+	// int i = 0;
+	// while (i < data->enemy_count)
+ //    {
+ //        if (data->enemies[i].alive)
+ //            draw_enemy(data, &data->enemies[i]);
+ //        i++;
+ //    }
 	elapsed = get_time_seconds() - start;
 	if (elapsed < SIXTY_FPS)
 		usleep((useconds_t)((SIXTY_FPS - elapsed) * 1e6));
