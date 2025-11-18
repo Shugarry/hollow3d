@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 20:39:28 by joshapir          #+#    #+#             */
-/*   Updated: 2025/11/10 20:58:46 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/11/18 18:10:59 by frey-gal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ void	main_hook(void *param)
 	fps_counter(data);
 	sword_animation(data);
 	data->animation.frame_num += 1;
+	data->doors.frame_num += 1;
 }
 
 void	start_mlx(t_data *data)
@@ -73,6 +74,7 @@ void	init_structs(t_data *data)
 	i = 0;
 	ft_bzero(data, sizeof(t_data));
 	ft_bzero(&data->raycast, sizeof(t_paths));
+	ft_bzero(&data->doors, sizeof(t_paths));
 	ft_bzero(&data->animation, sizeof(t_paths));
 	ft_bzero(&data->player, sizeof(t_player));
 	ft_bzero(&data->textures, sizeof(t_textures));
@@ -120,6 +122,13 @@ int	main(int argc, char **argv)
 	data.animation.sword[3] = mlx_load_png("resources/sword_animation/frame_3.png");
 	data.animation.sword[4] = mlx_load_png("resources/sword_animation/frame_4.png");
 	data.textures.fps_ui = mlx_load_png("resources/fps_ui.png");
+	data.doors.texture[0] = mlx_load_png("resources/doors/door_0.png");
+	data.doors.texture[1] = mlx_load_png("resources/doors/door_1.png");
+	data.doors.texture[2] = mlx_load_png("resources/doors/door_2.png");
+	data.doors.texture[3] = mlx_load_png("resources/doors/door_3.png");
+	data.doors.texture[4] = mlx_load_png("resources/doors/door_4.png");
+	data.doors.texture[5] = mlx_load_png("resources/doors/door_5.png");
+	data.doors.texture[6] = mlx_load_png("resources/doors/door_6.png");
 	parsing(&data, argv, argc);
 	get_parsed_variables(&data);
 	start_mlx(&data);

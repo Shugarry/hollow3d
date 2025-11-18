@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 16:32:00 by frey-gal          #+#    #+#             */
-/*   Updated: 2025/11/10 19:55:50 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/11/18 18:13:49 by frey-gal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,6 +151,21 @@ typedef struct s_animation
 	mlx_texture_t	*sword[5];
 }	t_animation;
 
+typedef struct s_doors
+{
+	bool			open;
+	int				frame_num;
+	int				draw_start;
+	int				draw_end;
+	int				line_height;
+	bool			door_found;
+	bool			in_animation;
+	double			ray_distance;
+	mlx_texture_t	*texture[7];
+
+	double			door_x;
+}	t_doors;
+
 typedef struct s_enemy
 {
     double      x;
@@ -177,6 +192,7 @@ typedef struct s_data
 	t_raycast	raycast;
 	t_parsing	parsing;
 	t_animation	animation;
+	t_doors		doors;
 	double		scale;
 	char		**map;
 	mlx_t		*mlx;
@@ -283,4 +299,5 @@ uint32_t	get_tex_pixel(mlx_texture_t *texture, int x, int y, int darken);
 void	draw_floor_ceiling(t_data *data);
 void draw_enemies_on_minimap(t_data *data);
 
+void	draw_door(t_data *data, int x);
 #endif

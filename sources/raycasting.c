@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 16:18:01 by frey-gal          #+#    #+#             */
-/*   Updated: 2025/11/10 20:58:29 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/11/18 18:09:49 by frey-gal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static void	step_in_dir(t_data *data)
 	}
 }
 
-bool check_door(t_data *data)
+void check_door(t_data *data)
 {
     t_raycast	*r;
 	double		intersection;
@@ -73,8 +73,9 @@ bool check_door(t_data *data)
 		intersection = r->side_dist_x - 0.5;
 		if (intersection < r->side_dist_y)
 		{
-			r->perp_wall_dist = intersection;
-			return true;
+			data->doors.ray_distance = intersection;
+			data->doors.door_found = true;
+			return ;
 		}
 	}
 	else // horiz wall
@@ -82,18 +83,18 @@ bool check_door(t_data *data)
 		intersection = r->side_dist_y - 0.5;
 		if (intersection < r->side_dist_x)
 		{
-			r->perp_wall_dist = intersection;
-			return true;
+			data->doors.ray_distance = intersection;
+			data->doors.door_found = true;
+			return ;
 		}
 	}
-	return false;
+	data->doors.door_found = false;
 }
 
 static void	ray_find_wall(t_data *data)
 {
 	t_raycast	*r;
 
-	bool flag = false;
 	r = &data->raycast;
 	while (r->hit == false)
 	{
@@ -112,21 +113,12 @@ static void	ray_find_wall(t_data *data)
 		if (data->map[r->map_y][r->map_x] == '1')
 			r->hit = true;
 		if (data->map[r->map_y][r->map_x] == 'D')
-		{
-			if (check_door(data) == true)
-			{
-				flag = true;
-				r->hit = true;
-			}
-		}
+			check_door(data);
 	}
-	if (!flag)
-	{
-		if (r->side == 0)
-			r->perp_wall_dist = (r->side_dist_x - r->delta_dist_x);
-		else
-			r->perp_wall_dist = (r->side_dist_y - r->delta_dist_y);
-	}
+	if (r->side == 0)
+		r->perp_wall_dist = (r->side_dist_x - r->delta_dist_x);
+	else
+		r->perp_wall_dist = (r->side_dist_y - r->delta_dist_y);
 }
 
 void	raycaster(t_data *data)
@@ -142,6 +134,8 @@ void	raycaster(t_data *data)
 		ray_find_wall(data);
 		data->wall_distances[x] = data->raycast.perp_wall_dist;
 		draw_walls(data, x);
+		if (data->doors.door_found)
+			draw_door(data, x);
 		x++;
 	}
 }

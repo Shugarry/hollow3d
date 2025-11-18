@@ -6,7 +6,7 @@
 /*   By: frey-gal <frey-gal@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 17:10:25 by frey-gal          #+#    #+#             */
-/*   Updated: 2025/10/14 16:29:17 by frey-gal         ###   ########.fr       */
+/*   Updated: 2025/11/18 18:05:36 by frey-gal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,8 @@ static void	texturize_walls(t_data *data, int x)
 		r->tex_y = (int)r->tex_pos & (current_texture->height - 1);
 		r->tex_pos += r->tex_step;
 		color = get_tex_pixel(current_texture, r->tex_x, r->tex_y, false);
-		mlx_put_pixel(data->canvas, x, line, color);
+		if (color)
+			mlx_put_pixel(data->canvas, x, line, color);
 		line++;
 	}
 }
