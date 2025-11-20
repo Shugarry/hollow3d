@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 16:32:00 by frey-gal          #+#    #+#             */
-/*   Updated: 2025/11/10 21:28:43 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/11/20 20:57:46 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,6 +149,7 @@ typedef struct s_animation
 	bool			in_animation;
 	int				frame_num;
 	mlx_texture_t	*sword[5];
+	int				sword_killed;
 }	t_animation;
 
 typedef struct s_enemy
@@ -190,6 +191,7 @@ typedef struct s_data
     int         enemy_count;
 	int			sword_hit;
     double      *wall_distances;
+	int			s_animation;
 }	t_data;
 
 typedef struct s_sprite_data
