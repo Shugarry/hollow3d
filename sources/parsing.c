@@ -27,7 +27,7 @@ bool	is_map_line(char *line)
 				line[i] != 'N' && line[i] != 'S' && \
 				line[i] != 'E' && line[i] != 'W' && \
 				line[i] != ' ' && \
-				line[i] != 'D')
+				line[i] != 'D' && line[i] != 'B')
 			return (false);
 		i++;
 	}

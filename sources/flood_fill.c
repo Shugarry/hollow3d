@@ -16,7 +16,7 @@ bool	is_valid(char c)
 {
 	if (c == '1' || c == '0' || c == ' ' \
 		|| c == 'v' || c == 'N' || c == 'S' \
-		|| c == 'E' || c == 'W' || c == 'D')
+		|| c == 'E' || c == 'W' || c == 'D' || c == 'B')
 		return (true);
 	return (false);
 }

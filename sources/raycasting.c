@@ -135,7 +135,10 @@ void	raycaster(t_data *data)
 		data->wall_distances[x] = data->raycast.perp_wall_dist;
 		draw_walls(data, x);
 		if (data->doors.door_found)
+		{
 			draw_door(data, x);
+			data->doors.door_found = false;
+		}
 		x++;
 	}
 }
