@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   enemies.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joshapir <joshapir@student.42barcelon      +#+  +:+       +#+        */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 14:05:31 by joshapir          #+#    #+#             */
-/*   Updated: 2025/11/25 14:05:36 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/11/25 14:06:55 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,9 @@ void init_enemies(t_data *data)
     data->enemies[0].x = data->player.curr_x + 3.0;
     data->enemies[0].y = data->player.curr_y;
     data->enemies[0].alive = true;
-
     data->enemies[1].x = data->player.curr_x + 2.0;
     data->enemies[1].y = data->player.curr_y;
     data->enemies[1].alive = true;
-
     data->enemies[2].x = data->player.curr_x - 3.0;
     data->enemies[2].y = data->player.curr_y;
     data->enemies[2].alive = true;

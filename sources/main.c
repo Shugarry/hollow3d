@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 20:39:28 by joshapir          #+#    #+#             */
-/*   Updated: 2025/11/25 13:52:13 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/11/25 14:06:30 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ void	main_hook(void *param)
 	}
 	movement(data);
 	camera(data);
-
 	raycaster(data);
 	update_enemies(data);
 	sort_enemies(data);
@@ -44,15 +43,6 @@ void	main_hook(void *param)
 	update_minimap(data);
 	fps_counter(data);
 	sword_animation(data);
-
-	i = 0;
-	// while (i < data->enemy_count)
-    // {
-    //     if (data->enemies[i].alive && data->sword_hit && data->enemies[i].in_range)
-	// 		data->enemies[i].alive = false;
-    //     i++;
-    // }
-
 	data->animation.frame_num += 1;
 }
 
