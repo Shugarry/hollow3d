@@ -124,6 +124,9 @@ static void	ray_find_wall(t_data *data)
 void	raycaster(t_data *data)
 {
 	int	x;
+	double	z_buffer[WIN_WIDTH];
+	int	sprite_order[1];
+	double	sprite_distance[1];
 
 	x = 0;
 	draw_floor_ceiling(data);
@@ -133,12 +136,11 @@ void	raycaster(t_data *data)
 		step_in_dir(data);
 		ray_find_wall(data);
 		data->wall_distances[x] = data->raycast.perp_wall_dist;
+		z_buffer[x] = data->raycast.perp_wall_dist;
 		draw_walls(data, x);
 		if (data->doors.door_found)
-		{
 			draw_door(data, x);
-			data->doors.door_found = false;
-		}
+		data->doors.door_found = false;
 		x++;
 	}
 }

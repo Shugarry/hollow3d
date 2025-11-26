@@ -185,6 +185,13 @@ typedef struct s_enemy_vars
 	int			can_move;
 } t_enemy_vars;
 
+typedef struct s_sprites
+{
+	double	x;
+	double	y;
+	mlx_texture_t *texture;
+}	t_sprites;
+
 typedef struct s_data
 {
 	t_player	player;
@@ -193,6 +200,8 @@ typedef struct s_data
 	t_parsing	parsing;
 	t_animation	animation;
 	t_doors		doors;
+	t_sprites	*sprites;
+	int			sprites_num;
 	double		scale;
 	char		**map;
 	mlx_t		*mlx;

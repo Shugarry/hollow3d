@@ -111,6 +111,52 @@ void	get_parsed_variables(t_data *data)
 		clean_exit(data, "Could not get textures", 1);
 }
 
+void	count_sprites(t_data *data)
+{
+	int	x;
+	int	y;
+
+	y = 0;
+	while (data->map[y])
+	{
+		x = 0;
+		while (data->map[y][x])
+		{
+			if (data->map[y][x] == 'B')
+				data->sprites_num += 1;
+			x++;
+		}
+		y++;
+	}
+}
+
+void	process_sprites(t_data *data)
+{
+	int	x;
+	int	y;
+	int	i;
+	t_sprites	*sprites;
+
+	y = 0;
+	i = 0;
+	sprites = memlist_alloc(data, sizeof(t_sprites) * data->sprites_num);
+	while (data->map[y])
+	{
+		x = 0;
+		while (data->map[y][x])
+		{
+			if (data->map[y][x] == 'E')
+			{
+				sprites[i].x = x + 0.5;
+				sprites[i].y = y + 0.5;
+				i++;
+			}
+			x++;
+		}
+		y++;
+	}
+}
+
 int	main(int argc, char **argv)
 {
 	t_data	data;
@@ -131,6 +177,8 @@ int	main(int argc, char **argv)
 	data.doors.texture[6] = mlx_load_png("resources/doors/door_6.png");
 	parsing(&data, argv, argc);
 	get_parsed_variables(&data);
+	count_sprites(&data);
+	process_sprites(&data);
 	start_mlx(&data);
 	clean_exit(&data, NULL, 0);
 	return (0);
