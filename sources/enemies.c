@@ -1,29 +1,73 @@
 #include "../cub3d.h"
 
+int count_enemies(t_data *data)
+{
+    int count;
+    int y;
+    int x;
+
+    count = 0;
+    y = 0;
+    while (y < data->parsing.height)
+    {
+        x = 0;
+        while (data->map[y][x])
+        {
+            if (data->map[y][x] == 'e')
+                count++;
+            x++;
+        }
+        y++;
+    }
+    return (count);
+}
+
+void place_enemies(t_data *data)
+{
+    int y;
+    int x;
+    int enemy_index;
+
+    enemy_index = 0;
+    y = 0;
+    while (y < data->parsing.height)
+    {
+        x = 0;
+        while (data->map[y][x])
+        {
+            if (data->map[y][x] == 'e')
+            {
+                data->enemies[enemy_index].x = x + 0.5;
+                data->enemies[enemy_index].y = y + 0.5;
+                data->enemies[enemy_index].alive = true;
+                enemy_index++;
+            }
+            x++;
+        }
+        y++;
+    }
+}
+
 void init_enemies(t_data *data)
 {
     int i;
-
+    mlx_texture_t *enemy_tex;
+    
     i = 0;
-    data->enemy_count = 3;
+    data->enemy_count = count_enemies(data);
+    
+    if (data->enemy_count == 0)
+    {
+        data->enemies = NULL;
+        return ;
+    }
     data->enemies = malloc(sizeof(t_enemy) * data->enemy_count);
-    
-    printf("Player starting at: (%.2f, %.2f)\n", data->player.curr_x, data->player.curr_y);
-    
-
-    data->enemies[0].x = data->player.curr_x + 3.0;
-    data->enemies[0].y = data->player.curr_y;
-    data->enemies[0].alive = true;
-    
-    data->enemies[1].x = data->player.curr_x + 2.0;
-    data->enemies[1].y = data->player.curr_y;
-    data->enemies[1].alive = true;
-
-    data->enemies[2].x = data->player.curr_x - 3.0;
-    data->enemies[2].y = data->player.curr_y;
-    data->enemies[2].alive = true;
-    
-    mlx_texture_t *enemy_tex = mlx_load_png("resources/skeleton_w.png");
+    if (!data->enemies)
+        exit(1);
+    place_enemies(data);
+    enemy_tex = mlx_load_png("resources/skeleton_w.png");
+    if (!enemy_tex)
+        clean_exit(data, "Could not lead enemy texture", 1);
     while (i < data->enemy_count)
         data->enemies[i++].texture = enemy_tex;
 }
@@ -173,14 +217,10 @@ void draw_sprite_column(t_data *data, t_enemy *enemy, int stripe, t_sprite_data 
     int y;
     int d;
     int tex_y;
-    double stripe_offset;
-    double actual_distance;
-    
+
     tex_x = (int)((stripe - (-sp->sprite_width / 2 + sp->sprite_screen_x)) *
                   enemy->texture->width / sp->sprite_width);
-    stripe_offset = (stripe - sp->sprite_screen_x) / (double)WIN_WIDTH;
-    actual_distance = sp->transform_y / cos(atan(stripe_offset));
-    if (actual_distance >= data->wall_distances[stripe])
+    if (sp->transform_y >= data->wall_distances[stripe])
         return;
     y = sp->draw_start_y;
     while (y < sp->draw_end_y)
