@@ -236,20 +236,17 @@ void draw_sprite_pixel(t_data *data, t_enemy *enemy, int tex_x, int tex_y, int s
         mlx_put_pixel(data->canvas, stripe, y, color);
     }
 }
+
 void draw_sprite_column(t_data *data, t_enemy *enemy, int stripe, t_sprite_data *sp)
 {
     int tex_x;
     int y;
     int d;
     int tex_y;
-    double stripe_offset;
-    double actual_distance;
 
     tex_x = (int)((stripe - (-sp->sprite_width / 2 + sp->sprite_screen_x)) *
                   enemy->texture->width / sp->sprite_width);
-    stripe_offset = (stripe - sp->sprite_screen_x) / (double)WIN_WIDTH;
-    actual_distance = sp->transform_y / cos(atan(stripe_offset));
-    if (actual_distance >= data->wall_distances[stripe])
+    if (sp->transform_y >= data->wall_distances[stripe])
         return;
     y = sp->draw_start_y;
     while (y < sp->draw_end_y)
@@ -283,7 +280,6 @@ void draw_enemy(t_data *data, t_enemy *enemy)
         stripe++;
     }
 }
-
 
 void    check_if_dead(t_data *data)
 {
