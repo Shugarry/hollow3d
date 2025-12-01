@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 14:05:31 by joshapir          #+#    #+#             */
-/*   Updated: 2025/11/25 14:06:55 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/12/01 18:10:53 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,10 @@ void init_enemies(t_data *data)
 {
     int i;
     mlx_texture_t *enemy_tex;
-    
+
     i = 0;
     data->enemy_count = count_enemies(data);
-    
+
     if (data->enemy_count == 0)
     {
         data->enemies = NULL;
@@ -147,7 +147,9 @@ void update_enemies(t_data *data)
             else if (data->enemies[i].distance < 2.0)
             {
                 data->enemies[i].in_range = 1;
-                printf("in range\n");
+                data->player.dead = 1;
+                if (data->enemies[i].distance < 0.5)
+                    clean_exit(data, "player died\n", 1);
             }
             if (data->enemies[i].distance > 2.0)
                 data->enemies[i].in_range = 0;

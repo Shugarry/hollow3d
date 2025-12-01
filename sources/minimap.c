@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 20:30:08 by joshapir          #+#    #+#             */
-/*   Updated: 2025/11/10 19:48:47 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/12/01 18:19:23 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -242,21 +242,19 @@ void draw_minimap_background(t_data *data)
 
 void draw_enemies_on_minimap(t_data *data)
 {
-    int i;
-    int enemy_screen_x;
-    int enemy_screen_y;
+    int	i;
+    int	enemy_screen_x;
+    int	enemy_screen_y;
 
     i = 0;
     while (i < data->enemy_count)
     {
         if (data->enemies[i].alive)
         {
-            // Calculate enemy position relative to player (centered on minimap)
             enemy_screen_x = MINIMAP_CENTER_X + (data->enemies[i].x - data->player.curr_x) * MINI_TILE_SIZE;
             enemy_screen_y = MINIMAP_CENTER_Y + (data->enemies[i].y - data->player.curr_y) * MINI_TILE_SIZE;
-
-            // Draw enemy as a small red circle (radius 3 pixels)
-            draw_minimap_circle(data->mini, enemy_screen_x, enemy_screen_y, 3, 0xFF0000FF);
+			if (is_in_circle(enemy_screen_x, enemy_screen_y, MINIMAP_CENTER_X, MINIMAP_CENTER_Y, MINIMAP_RADIUS))
+            	draw_minimap_circle(data->mini, enemy_screen_x, enemy_screen_y, 3, 0xFF0000FF);
         }
         i++;
     }

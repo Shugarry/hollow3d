@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 16:32:00 by frey-gal          #+#    #+#             */
-/*   Updated: 2025/11/25 14:03:49 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/12/01 18:03:15 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ typedef struct s_player
 	double	curr_x;
 	double	curr_y;
 	char	direction;
+	int		dead;
 }	t_player;
 
 typedef struct s_paths
