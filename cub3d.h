@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 16:32:00 by frey-gal          #+#    #+#             */
-/*   Updated: 2025/12/10 22:40:45 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/12/10 23:06:54 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -354,5 +354,46 @@ void	draw_floor_ceiling(t_data *data);
 void	draw_enemies_on_minimap(t_data *data);
 void	check_if_dead(t_data *data);
 void	check_if_dead(t_data *data);
+void	calculate_enemy_distance(t_data *data, int i, t_enemy_vars *vars);
+void	check_if_can_move(t_data *data, int i, t_enemy_vars *vars);
+void	update_enemy_pos(t_data *data, int i, t_enemy_vars *vars);
+void	update_enemies(t_data *data);
+void	sort_enemies(t_data *data);
+void	get_sprite_transform(t_data *data, t_enemy *enemy, double *transform_x, \
+double *transform_y);
+void	get_sprite_dimensions(double transform_x, \
+		double transform_y, int *screen_x, int *height);
+void	draw_enemy(t_data *data, t_enemy *enemy);
+void	get_draw_bounds(int sprite_screen_x, int sprite_size, \
+		int *start_x, int *end_x);
+void	get_draw_bounds_y(int sprite_size, int *start_y, int *end_y);
+void	draw_sprite_pixel(t_data *data, t_enemy *enemy, int stripe, int y);
+void	draw_sprite_column(t_data *data, t_enemy *enemy, int stripe, \
+		t_sprite_data *sp);
+
+//minimap.c
+void	draw_enemies_on_minimap(t_data *data);
+void	draw_minimap_background(t_data *data);
+void	draw_minimap_circle_border(t_data *data);
+void	draw_player_on_minimap(t_data *data);
+void	draw_minimap_player(t_data *data);
+void	update_enemy_pos(t_data *data, int i, t_enemy_vars *vars);
+void	update_enemies(t_data *data);
+void	sort_enemies(t_data *data);
+void	get_sprite_transform(t_data *data, t_enemy *enemy, double *transform_x, \
+double *transform_y);
+void	get_sprite_dimensions(double transform_x, \
+		double transform_y, int *screen_x, int *height);
+void	draw_minimap_circle(mlx_image_t *img, t_data *data, \
+		int radius, uint32_t color);
+void	draw_minimap_layout(t_data *data);
+void	draw_tile_on_minimap(t_data *data, int x, int y, uint32_t colour);
+void	draw_square(mlx_image_t *img, int start_x, int start_y, int size);
+int	is_in_circle(int x, int y, int radius);
+void	draw_line(mlx_image_t *img, t_data *data, int x1, int y1);
+
+
+
+
 
 #endif
