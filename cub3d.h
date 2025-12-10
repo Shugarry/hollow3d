@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 16:32:00 by frey-gal          #+#    #+#             */
-/*   Updated: 2025/12/01 18:03:15 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/12/10 22:40:45 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,14 @@
 # define MINI_SIZE 100
 # define MINI_TILE_SIZE 8
 # define MINI_RADIUS 80
+
+#define PLAYER_COLOR 0xFFFFFFFF
+#define PLAYER_DIR_COLOR 0xFF00FFFF
+#define PLAYER_SIZE 4
+#define MINIMAP_RADIUS 80
+#define MINIMAP_VIEW_RADIUS 8
+#define MINIMAP_CENTER_X (MINIMAP_RADIUS)
+#define MINIMAP_CENTER_Y (MINIMAP_RADIUS)
 
 
 typedef struct s_player
@@ -94,6 +102,8 @@ typedef struct s_textures
 	mlx_texture_t	*fps_ui;
 	uint32_t		floor_color;
 	uint32_t		ceiling_color;
+	int				tex_x;
+	int				tex_y;
 }	t_textures;
 
 typedef struct s_raycast
@@ -163,6 +173,37 @@ typedef struct s_enemy
 	int			in_range;
 }   t_enemy;
 
+typedef struct s_circle {
+    int center_x;
+    int center_y;
+    int radius;
+    uint32_t color;
+} t_circle;
+
+typedef struct t_mini
+{
+	int	px;
+	int	py;
+	int	radius;
+	int player_tile_x;
+	int player_tile_y;
+	int	tile_x;
+	int tile_y;
+	int dx;
+	int x1;
+	int y1;
+	int dy;
+	int steps;
+	int angle;
+	int dir_x;
+	int dir_y;
+	int screen_x;
+	int screen_y;
+	float x_inc;
+	float y_inc;
+
+}   t_mini;
+
 typedef struct s_enemy_vars
 {
 	double		dx;
@@ -174,7 +215,25 @@ typedef struct s_enemy_vars
 	int			closest_enemy;
     double		closest_distance;
 	double		res;
+	//new
+	double			transform_x;
+	double			transform_y;
+	int				draw_start_x;
+	int				draw_end_x;
+	int				stripe;
 } t_enemy_vars;
+
+typedef struct s_line
+{
+	int dx;
+	int dy;
+	int steps;
+	float x_inc;
+	float y_inc;
+	float x;
+	float y;
+	int i;
+} t_line;
 
 typedef struct s_data
 {
@@ -192,6 +251,9 @@ typedef struct s_data
 	t_list		*memlist;
 	t_enemy     *enemies;
 	t_enemy_vars enemy_vars;
+	t_mini		mini_m;
+	t_circle	circle;
+	t_line		line;
     int         enemy_count;
 	int			sword_hit;
     double      *wall_distances;

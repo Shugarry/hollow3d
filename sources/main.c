@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 20:39:28 by joshapir          #+#    #+#             */
-/*   Updated: 2025/11/25 14:06:30 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/12/10 21:03:40 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,9 @@ void	init_structs(t_data *data)
 	ft_bzero(&data->parsing, sizeof(t_parsing));
 	ft_bzero(&data->parsing.paths, sizeof(t_paths));
 	ft_bzero(&data->enemy_vars, sizeof(t_enemy_vars));
+	ft_bzero(&data->mini_m, sizeof(t_mini));
+	ft_bzero(&data->circle, sizeof(t_circle));
+	ft_bzero(&data->line, sizeof(t_line));
 	while (i < 3)
 	{
 		data->parsing.paths.c_color[i] = -1;

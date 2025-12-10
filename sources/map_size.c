@@ -6,25 +6,24 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 16:28:52 by joshapir          #+#    #+#             */
-/*   Updated: 2025/10/14 16:40:22 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/12/10 22:42:46 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "cub3d.h"
+#include "cub3d.h"
 
 void	map_width(t_data *data)
 {
-	int len;
+	int	len;
 
 	data->parsing.height = 0;
 	data->parsing.width = 0;
 	while (data->parsing.grid[data->parsing.height])
 	{
 		len = ft_strlen(data->parsing.grid[data->parsing.height]);
-    	if (len > data->parsing.width)
-        	data->parsing.width = len;
-	data->parsing.height ++;
+		if (len > data->parsing.width)
+			data->parsing.width = len;
+		data->parsing.height ++;
 	}
 	printf("width = %d\n", data->parsing.width);
 }
-
