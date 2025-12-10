@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 16:28:52 by joshapir          #+#    #+#             */
-/*   Updated: 2025/12/10 22:42:46 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/12/10 23:12:15 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,4 @@ void	map_width(t_data *data)
 			data->parsing.width = len;
 		data->parsing.height ++;
 	}
-	printf("width = %d\n", data->parsing.width);
 }
