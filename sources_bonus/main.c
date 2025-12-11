@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 20:39:28 by joshapir          #+#    #+#             */
-/*   Updated: 2025/12/11 22:02:32 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/12/11 21:26:55 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,27 @@
 void	main_hook(void *param)
 {
 	t_data		*data;
+	double		start;
+	double		elapsed;
 
 	data = param;
+	start = get_time_seconds();
 	if (mlx_is_key_down(data->mlx, MLX_KEY_ESCAPE))
-	{
 		mlx_close_window(data->mlx);
-		clean_exit(data, NULL, 0);
-	}
 	movement(data);
 	camera(data);
+	raycaster(data);
+	update_enemies(data);
+	sort_enemies(data);
+	enemy_loop(data);
+	elapsed = get_time_seconds() - start;
+	if (elapsed < SIXTY_FPS)
+		usleep((useconds_t)((SIXTY_FPS - elapsed) * 1e6));
+	update_minimap(data);
+	fps_counter(data);
+	sword_animation(data);
+	data->animation.frame_num += 1;
+	data->doors.frame_num += 1;
 }
 
 void	start_mlx(t_data *data)
@@ -31,11 +43,17 @@ void	start_mlx(t_data *data)
 	data->mlx = mlx_init(WIN_WIDTH, WIN_HEIGHT, "cub3d", false);
 	if (!data->mlx)
 		clean_exit(data, (char *)mlx_strerror(mlx_errno), EXIT_FAILURE);
-	data->canvas = mlx_new_image(data->mlx, 1280, 720);
+	data->canvas = mlx_new_image(data->mlx, WIN_WIDTH, WIN_HEIGHT);
+	data->wall_distances = malloc(sizeof(double) * WIN_WIDTH);
+	if (!data->wall_distances)
+		exit(1);
 	starting_vars(data);
-	raycaster(data);
+	data->raycast.old_time = get_time_seconds();
+	data->raycast.time = data->raycast.old_time;
 	mlx_image_to_window(data->mlx, data->canvas, 0, 0);
 	mlx_loop_hook(data->mlx, &main_hook, data);
+	init_enemies(data);
+	init_mini(data);
 	mlx_loop(data->mlx);
 }
 
@@ -46,10 +64,16 @@ void	init_structs(t_data *data)
 	i = 0;
 	ft_bzero(data, sizeof(t_data));
 	ft_bzero(&data->raycast, sizeof(t_paths));
+	ft_bzero(&data->doors, sizeof(t_paths));
+	ft_bzero(&data->animation, sizeof(t_paths));
 	ft_bzero(&data->player, sizeof(t_player));
 	ft_bzero(&data->textures, sizeof(t_textures));
 	ft_bzero(&data->parsing, sizeof(t_parsing));
 	ft_bzero(&data->parsing.paths, sizeof(t_paths));
+	ft_bzero(&data->enemy_vars, sizeof(t_enemy_vars));
+	ft_bzero(&data->mini_m, sizeof(t_mini));
+	ft_bzero(&data->circle, sizeof(t_circle));
+	ft_bzero(&data->line, sizeof(t_line));
 	while (i < 3)
 	{
 		data->parsing.paths.c_color[i] = -1;
@@ -73,18 +97,44 @@ void	get_parsed_variables(t_data *data)
 	data->textures.east = mlx_load_png(data->parsing.paths.e_tex);
 	data->textures.south = mlx_load_png(data->parsing.paths.s_tex);
 	data->textures.west = mlx_load_png(data->parsing.paths.w_tex);
-	if (!data->textures.north || !data->textures.south
-		|| !data->textures.east || !data->textures.west)
+	data->textures.floor = mlx_load_png("resources/ds_textures/floor.png");
+	data->textures.ceiling = mlx_load_png("resources/ds_textures/ceiling.png");
+	data->animation.sword[0] = mlx_load_png("resources/sword/frame_0.png");
+	data->animation.sword[1] = mlx_load_png("resources/sword/frame_1.png");
+	data->animation.sword[2] = mlx_load_png("resources/sword/frame_2.png");
+	data->animation.sword[3] = mlx_load_png("resources/sword/frame_3.png");
+	data->animation.sword[4] = mlx_load_png("resources/sword/frame_4.png");
+	data->textures.fps_ui = mlx_load_png("resources/fps_ui.png");
+	if (!data->textures.north || !data->textures.south || !data->textures.east
+		|| !data->textures.west || !data->textures.floor
+		|| !data->textures.ceiling || !data->textures.fps_ui)
 		clean_exit(data, "Could not get textures", 1);
 }
 
 int	main(int argc, char **argv)
 {
 	t_data	data;
+	int		i;
 
 	init_structs(&data);
+	data.doors.texture[0] = mlx_load_png("resources/doors/door_0.png");
+	data.doors.texture[1] = mlx_load_png("resources/doors/door_1.png");
+	data.doors.texture[2] = mlx_load_png("resources/doors/door_2.png");
+	data.doors.texture[3] = mlx_load_png("resources/doors/door_3.png");
+	data.doors.texture[4] = mlx_load_png("resources/doors/door_4.png");
+	data.doors.texture[5] = mlx_load_png("resources/doors/door_5.png");
+	data.doors.texture[6] = mlx_load_png("resources/doors/door_6.png");
 	parsing(&data, argv, argc);
 	get_parsed_variables(&data);
+	i = -1;
+	while (++i <= 6)
+	{
+		if (i < 4)
+			if (!data.animation.sword[i])
+				clean_exit(&data, "Could not load textures", 1);
+		if (!data.doors.texture[i])
+			clean_exit(&data, "Could not load textures", 1);
+	}
 	start_mlx(&data);
 	clean_exit(&data, NULL, 0);
 	return (0);
