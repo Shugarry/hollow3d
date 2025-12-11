@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 14:05:31 by joshapir          #+#    #+#             */
-/*   Updated: 2025/12/10 22:52:48 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/12/11 15:35:17 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	init_enemies(t_data *data)
 	place_enemies(data);
 	enemy_tex = mlx_load_png("resources/skeleton_w.png");
 	if (!enemy_tex)
-		clean_exit(data, "Could not lead enemy texture", 1);
+		clean_exit(data, "Could not load enemy texture", 1);
 	while (i < data->enemy_count)
 		data->enemies[i++].texture = enemy_tex;
 }
