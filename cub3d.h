@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 16:32:00 by frey-gal          #+#    #+#             */
-/*   Updated: 2025/12/11 18:50:28 by frey-gal         ###   ########.fr       */
+/*   Updated: 2025/12/11 19:45:57 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,14 @@
 # define MINI_TILE_SIZE 8
 # define MINI_RADIUS 80
 
+#define PLAYER_COLOR 0xFFFFFFFF
+#define PLAYER_DIR_COLOR 0xFF00FFFF
+#define PLAYER_SIZE 4
+#define MINIMAP_RADIUS 80
+#define MINIMAP_VIEW_RADIUS 8
+#define MINIMAP_CENTER_X (MINIMAP_RADIUS)
+#define MINIMAP_CENTER_Y (MINIMAP_RADIUS)
+
 
 typedef struct s_player
 {
@@ -53,6 +61,7 @@ typedef struct s_player
 	double	curr_x;
 	double	curr_y;
 	char	direction;
+	int		dead;
 }	t_player;
 
 typedef struct s_paths
@@ -93,6 +102,8 @@ typedef struct s_textures
 	mlx_texture_t	*fps_ui;
 	uint32_t		floor_color;
 	uint32_t		ceiling_color;
+	int				tex_x;
+	int				tex_y;
 }	t_textures;
 
 typedef struct s_raycast
@@ -149,6 +160,7 @@ typedef struct s_animation
 	bool			in_animation;
 	int				frame_num;
 	mlx_texture_t	*sword[5];
+	int				sword_killed;
 }	t_animation;
 
 typedef struct s_doors
@@ -173,7 +185,39 @@ typedef struct s_enemy
     double      distance;
     mlx_texture_t *texture;
     bool        alive;
+	int			in_range;
 }   t_enemy;
+
+typedef struct s_circle {
+    int center_x;
+    int center_y;
+    int radius;
+    uint32_t color;
+} t_circle;
+
+typedef struct t_mini
+{
+	int	px;
+	int	py;
+	int	radius;
+	int player_tile_x;
+	int player_tile_y;
+	int	tile_x;
+	int tile_y;
+	int dx;
+	int x1;
+	int y1;
+	int dy;
+	int steps;
+	int angle;
+	int dir_x;
+	int dir_y;
+	int screen_x;
+	int screen_y;
+	float x_inc;
+	float y_inc;
+
+}   t_mini;
 
 typedef struct s_enemy_vars
 {
@@ -183,7 +227,27 @@ typedef struct s_enemy_vars
 	double		new_x;
 	double		new_y;
 	int			can_move;
+	int			closest_enemy;
+    double		closest_distance;
+	double		res;
+	double			transform_x;
+	double			transform_y;
+	int				draw_start_x;
+	int				draw_end_x;
+	int				stripe;
 } t_enemy_vars;
+
+typedef struct s_line
+{
+	int dx;
+	int dy;
+	int steps;
+	float x_inc;
+	float y_inc;
+	float x;
+	float y;
+	int i;
+} t_line;
 
 typedef struct s_data
 {
@@ -202,8 +266,13 @@ typedef struct s_data
 	t_list		*memlist;
 	t_enemy     *enemies;
 	t_enemy_vars enemy_vars;
+	t_mini		mini_m;
+	t_circle	circle;
+	t_line		line;
     int         enemy_count;
+	int			sword_hit;
     double      *wall_distances;
+	int			s_animation;
 }	t_data;
 
 typedef struct s_sprite_data
@@ -291,13 +360,56 @@ void	fps_counter(t_data *data);
 void	sword_animation(t_data *data);
 
 // enemies.c
-void init_enemies(t_data *data);
-void update_enemies(t_data *data);
-void sort_enemies(t_data *data);
-void draw_enemy(t_data *data, t_enemy *enemy);
+void	init_enemies(t_data *data);
+void	update_enemies(t_data *data);
+void	sort_enemies(t_data *data);
+void	draw_enemy(t_data *data, t_enemy *enemy);
 uint32_t	get_tex_pixel(mlx_texture_t *texture, int x, int y, int darken);
 void	draw_floor_ceiling(t_data *data);
-void draw_enemies_on_minimap(t_data *data);
+void	draw_enemies_on_minimap(t_data *data);
+void	check_if_dead(t_data *data);
+void	check_if_dead(t_data *data);
+void	calculate_enemy_distance(t_data *data, int i, t_enemy_vars *vars);
+void	check_if_can_move(t_data *data, int i, t_enemy_vars *vars);
+void	update_enemy_pos(t_data *data, int i, t_enemy_vars *vars);
+void	update_enemies(t_data *data);
+void	sort_enemies(t_data *data);
+void	get_sprite_transform(t_data *data, t_enemy *enemy, double *transform_x, \
+double *transform_y);
+void	get_sprite_dimensions(double transform_x, \
+		double transform_y, int *screen_x, int *height);
+void	draw_enemy(t_data *data, t_enemy *enemy);
+void	get_draw_bounds(int sprite_screen_x, int sprite_size, \
+		int *start_x, int *end_x);
+void	get_draw_bounds_y(int sprite_size, int *start_y, int *end_y);
+void	draw_sprite_pixel(t_data *data, t_enemy *enemy, int stripe, int y);
+void	draw_sprite_column(t_data *data, t_enemy *enemy, int stripe, \
+		t_sprite_data *sp);
+
+//minimap.c
+void	draw_enemies_on_minimap(t_data *data);
+void	draw_minimap_background(t_data *data);
+void	draw_minimap_circle_border(t_data *data);
+void	draw_player_on_minimap(t_data *data);
+void	draw_minimap_player(t_data *data);
+void	update_enemy_pos(t_data *data, int i, t_enemy_vars *vars);
+void	update_enemies(t_data *data);
+void	sort_enemies(t_data *data);
+void	get_sprite_transform(t_data *data, t_enemy *enemy, double *transform_x, \
+double *transform_y);
+void	get_sprite_dimensions(double transform_x, \
+		double transform_y, int *screen_x, int *height);
+void	draw_minimap_circle(mlx_image_t *img, t_data *data, \
+		int radius, uint32_t color);
+void	draw_minimap_layout(t_data *data);
+void	draw_tile_on_minimap(t_data *data, int x, int y, uint32_t colour);
+void	draw_square(mlx_image_t *img, int start_x, int start_y, int size);
+int	is_in_circle(int x, int y, int radius);
+void	draw_line(mlx_image_t *img, t_data *data, int x1, int y1);
+
+
+
+
 
 void	draw_door(t_data *data, int x);
 mlx_texture_t	*draw_frames_opening(t_data *data, int frame);

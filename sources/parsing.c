@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frey-gal <frey-gal@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 16:15:21 by frey-gal          #+#    #+#             */
-/*   Updated: 2025/10/14 16:15:35 by frey-gal         ###   ########.fr       */
+/*   Updated: 2025/12/11 19:23:03 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ bool	is_map_line(char *line)
 				line[i] != 'N' && line[i] != 'S' && \
 				line[i] != 'E' && line[i] != 'W' && \
 				line[i] != ' ' && \
-				line[i] != 'D' && line[i] != 'B')
+				line[i] != 'D' && line[i] != 'e')
 			return (false);
 		i++;
 	}
@@ -71,13 +71,27 @@ int	check_map(t_data *data)
 	return (1);
 }
 
+int	check_filename(char *filename)
+{
+	int	len;
+
+	len = ft_strlen(filename);
+	if (len < 5)
+		return (0);
+	if (ft_strncmp(filename + (len - 4), ".cub", 4) != 0)
+		return (0);
+	return (1);
+}
+
 void	parsing(t_data *data, char **argv, int argc)
 {
-	int		fd;
+	int	fd;
 
 	fd = open(argv[1], O_RDONLY);
 	if (fd == -1 || argc != 2)
-		clean_exit(data, "Incorrect argument count", 1);
+		clean_exit(data, "Incorrect argument", 1);
+	if (!check_filename(argv[1]))
+		clean_exit(data, "Error: File isnt of type .cub", 1);
 	init_map(data, argv[1]);
 	data->parsing.map = ft_strdup_double(data, data->parsing.grid);
 	data->parsing.elements_grid = ft_strdup_double(data, data->parsing.grid);

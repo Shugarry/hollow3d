@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 20:39:28 by joshapir          #+#    #+#             */
-/*   Updated: 2025/12/11 19:14:17 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/12/11 19:26:20 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,17 +27,16 @@ void	main_hook(void *param)
 	}
 	movement(data);
 	camera(data);
-
 	raycaster(data);
-	// update_enemies(data);
-	// sort_enemies(data);
-	// int i = 0;
-	// while (i < data->enemy_count)
- //    {
- //        if (data->enemies[i].alive)
- //            draw_enemy(data, &data->enemies[i]);
- //        i++;
- //    }
+	update_enemies(data);
+	sort_enemies(data);
+	int i = 0;
+	while (i < data->enemy_count)
+    {
+        if (data->enemies[i].alive)
+            draw_enemy(data, &data->enemies[i]);
+        i++;
+    }
 	elapsed = get_time_seconds() - start;
 	if (elapsed < SIXTY_FPS)
 		usleep((useconds_t)((SIXTY_FPS - elapsed) * 1e6));
@@ -81,6 +80,9 @@ void	init_structs(t_data *data)
 	ft_bzero(&data->parsing, sizeof(t_parsing));
 	ft_bzero(&data->parsing.paths, sizeof(t_paths));
 	ft_bzero(&data->enemy_vars, sizeof(t_enemy_vars));
+	ft_bzero(&data->mini_m, sizeof(t_mini));
+	ft_bzero(&data->circle, sizeof(t_circle));
+	ft_bzero(&data->line, sizeof(t_line));
 	while (i < 3)
 	{
 		data->parsing.paths.c_color[i] = -1;

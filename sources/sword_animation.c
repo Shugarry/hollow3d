@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sword_animation.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frey-gal <frey-gal@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 11:16:04 by frey-gal          #+#    #+#             */
-/*   Updated: 2025/11/10 11:23:19 by frey-gal         ###   ########.fr       */
+/*   Updated: 2025/12/11 19:30:05 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,24 @@
 
 void	draw_sword_frames(t_data *data)
 {
-	if (data->animation.frame_num >= 0 && data->animation.frame_num < 30)
+	if (data->animation.frame_num >= 0 && data->animation.frame_num < 15)
 		img_to_window_scaled(data, data->animation.sword[1], 0, 0);
-	if (data->animation.frame_num >= 30 && data->animation.frame_num < 50)
+	if (data->animation.frame_num >= 15 && data->animation.frame_num < 25)
+	{
 		img_to_window_scaled(data, data->animation.sword[2], 0, 0);
-	if (data->animation.frame_num >= 50 && data->animation.frame_num < 70)
+        check_if_dead(data);
+	}
+	if (data->animation.frame_num >= 25 && data->animation.frame_num < 35)
 		img_to_window_scaled(data, data->animation.sword[3], 0, 0);
-	if (data->animation.frame_num >= 70 && data->animation.frame_num < 100)
+	if (data->animation.frame_num >= 35 && data->animation.frame_num < 50)
 		img_to_window_scaled(data, data->animation.sword[4], 0, 0);
-	if (data->animation.frame_num >= 100)
+	if (data->animation.frame_num >= 50)
 	{
 		data->animation.in_animation = false;
 		img_to_window_scaled(data, data->animation.sword[0], 0, 0);
+        data->sword_hit = 0;
 	}
+	data->s_animation = 0;
 }
 
 void	sword_animation(t_data *data)
