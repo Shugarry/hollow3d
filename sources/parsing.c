@@ -6,7 +6,7 @@
 /*   By: frey-gal <frey-gal@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 16:15:21 by frey-gal          #+#    #+#             */
-/*   Updated: 2025/10/14 16:15:35 by frey-gal         ###   ########.fr       */
+/*   Updated: 2025/12/11 15:13:16 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,17 +71,16 @@ int	check_map(t_data *data)
 	return (1);
 }
 
-
-int check_filename(char *filename)
+int	check_filename(char *filename)
 {
-    int len;
-    
-    len = ft_strlen(filename);
-    if (len < 5)
-        return (0);
-    if (ft_strncmp(filename + (len - 4), ".cub", 4) != 0)
-        return (0);
-    return (1);
+	int	len;
+
+	len = ft_strlen(filename);
+	if (len < 5)
+		return (0);
+	if (ft_strncmp(filename + (len - 4), ".cub", 4) != 0)
+		return (0);
+	return (1);
 }
 
 void	parsing(t_data *data, char **argv, int argc)

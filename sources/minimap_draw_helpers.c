@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minimap_draw_helpers.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joshapir <joshapir@student.42barcelon      +#+  +:+       +#+        */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 23:08:38 by joshapir          #+#    #+#             */
-/*   Updated: 2025/12/10 23:09:31 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/12/11 15:16:19 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	layout_loop(int colour, int x, int y, t_data *data)
 			if (tile == '1')
 				colour = 0xFF0000FF;
 			else if (tile == '0' || tile == 'N' || tile == 'S' \
-					|| tile == 'E' || tile == 'W')
+					|| tile == 'E' || tile == 'W' || tile == 'e' || tile == 'W')
 				colour = 0x0000FFFF;
 			else
 				colour = 0;
