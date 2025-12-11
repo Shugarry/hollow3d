@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 16:18:01 by frey-gal          #+#    #+#             */
-/*   Updated: 2025/11/18 18:09:49 by frey-gal         ###   ########.fr       */
+/*   Updated: 2025/12/11 18:54:48 by frey-gal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,33 +62,23 @@ static void	step_in_dir(t_data *data)
 	}
 }
 
-void check_door(t_data *data)
+static void	ray_find_well_helper(t_data *data)
 {
-    t_raycast	*r;
-	double		intersection;
+	t_raycast	*r;
 
 	r = &data->raycast;
-	if (r->side == 0) // vert wall
+	if (r->side_dist_x < r->side_dist_y)
 	{
-		intersection = r->side_dist_x - 0.5;
-		if (intersection < r->side_dist_y)
-		{
-			data->doors.ray_distance = intersection;
-			data->doors.door_found = true;
-			return ;
-		}
+		r->side_dist_x += r->delta_dist_x;
+		r->map_x += r->step_x;
+		r->side = 0;
 	}
-	else // horiz wall
+	else
 	{
-		intersection = r->side_dist_y - 0.5;
-		if (intersection < r->side_dist_x)
-		{
-			data->doors.ray_distance = intersection;
-			data->doors.door_found = true;
-			return ;
-		}
+		r->side_dist_y += r->delta_dist_y;
+		r->map_y += r->step_y;
+		r->side = 1;
 	}
-	data->doors.door_found = false;
 }
 
 static void	ray_find_wall(t_data *data)
@@ -98,18 +88,6 @@ static void	ray_find_wall(t_data *data)
 	r = &data->raycast;
 	while (r->hit == false)
 	{
-		if (r->side_dist_x < r->side_dist_y)
-		{
-			r->side_dist_x += r->delta_dist_x;
-			r->map_x += r->step_x;
-			r->side = 0;
-		}
-		else
-		{
-			r->side_dist_y += r->delta_dist_y;
-			r->map_y += r->step_y;
-			r->side = 1;
-		}
 		if (data->map[r->map_y][r->map_x] == '1')
 			r->hit = true;
 		if (data->map[r->map_y][r->map_x] == 'D')

@@ -73,15 +73,14 @@ static void	texturize_walls(t_data *data, int x)
 	r->tex_step = 1.0 * current_texture->width / r->line_height;
 	r->tex_pos = (r->draw_start - WIN_HEIGHT / 2 + r->line_height / 2) * \
 		r->tex_step;
-	line = r->draw_start;
-	while (line < r->draw_end)
+	line = r->draw_start - 1;
+	while (++line < r->draw_end)
 	{
 		r->tex_y = (int)r->tex_pos & (current_texture->height - 1);
 		r->tex_pos += r->tex_step;
 		color = get_tex_pixel(current_texture, r->tex_x, r->tex_y, false);
 		if (color)
 			mlx_put_pixel(data->canvas, x, line, color);
-		line++;
 	}
 }
 

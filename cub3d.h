@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 16:32:00 by frey-gal          #+#    #+#             */
-/*   Updated: 2025/11/18 18:13:49 by frey-gal         ###   ########.fr       */
+/*   Updated: 2025/12/11 18:50:28 by frey-gal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -300,4 +300,12 @@ void	draw_floor_ceiling(t_data *data);
 void draw_enemies_on_minimap(t_data *data);
 
 void	draw_door(t_data *data, int x);
+mlx_texture_t	*draw_frames_opening(t_data *data, int frame);
+mlx_texture_t	*draw_frames_closing(t_data *data, int frame);
+void	get_door_texture_helper(t_doors *doors);
+void	texturize_doors_helper(t_data *data, t_raycast *r, t_doors *d,
+								mlx_texture_t *current_texture);
+void	get_door_x(t_data *data);
+void check_door(t_data *data);
+
 #endif
