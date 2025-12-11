@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   enemy_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joshapir <joshapir@student.42barcelon      +#+  +:+       +#+        */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 23:08:26 by joshapir          #+#    #+#             */
-/*   Updated: 2025/12/10 23:08:27 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/12/11 21:12:37 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,5 +46,18 @@ void	check_if_can_move(t_data *data, int i, t_enemy_vars *vars)
 				vars->can_move = 0;
 		}
 		j++;
+	}
+}
+
+void	enemy_loop(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->enemy_count)
+	{
+		if (data->enemies[i].alive)
+			draw_enemy(data, &data->enemies[i]);
+		i++;
 	}
 }

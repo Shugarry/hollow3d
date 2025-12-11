@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting_doors.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frey-gal <frey-gal@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 17:39:13 by frey-gal          #+#    #+#             */
-/*   Updated: 2025/12/11 18:53:34 by frey-gal         ###   ########.fr       */
+/*   Updated: 2025/12/11 21:06:32 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,11 @@ static void	texturize_walls(t_data *data, int x)
 	r = &data->raycast;
 	get_door_x(data);
 	current_texture = get_door_texture(data, &data->doors);
-	d->door_x -= floor(d->door_x);
+	texturize_doors_helper(data, r, d);
+	r->tex_x = (int)(d->door_x * (double)current_texture->width);
+	r->tex_step = 1.0 * current_texture->width / d->line_height;
+	r->tex_pos = (d->draw_start - WIN_HEIGHT / 2 + d->line_height / 2) * \
+		r->tex_step;
 	line = d->draw_start;
 	while (line < d->draw_end)
 	{

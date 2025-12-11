@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 11:16:04 by frey-gal          #+#    #+#             */
-/*   Updated: 2025/12/11 19:30:05 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/12/11 21:09:40 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	draw_sword_frames(t_data *data)
 	if (data->animation.frame_num >= 15 && data->animation.frame_num < 25)
 	{
 		img_to_window_scaled(data, data->animation.sword[2], 0, 0);
-        check_if_dead(data);
+		check_if_dead(data);
 	}
 	if (data->animation.frame_num >= 25 && data->animation.frame_num < 35)
 		img_to_window_scaled(data, data->animation.sword[3], 0, 0);
@@ -29,7 +29,7 @@ void	draw_sword_frames(t_data *data)
 	{
 		data->animation.in_animation = false;
 		img_to_window_scaled(data, data->animation.sword[0], 0, 0);
-        data->sword_hit = 0;
+		data->sword_hit = 0;
 	}
 	data->s_animation = 0;
 }

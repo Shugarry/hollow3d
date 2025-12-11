@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting_doors_helpers.c                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frey-gal <frey-gal@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 18:43:13 by frey-gal          #+#    #+#             */
-/*   Updated: 2025/12/11 18:52:51 by frey-gal         ###   ########.fr       */
+/*   Updated: 2025/12/11 21:06:24 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,14 +76,10 @@ void	get_door_x(t_data *data)
 			data->raycast.ray_dir_x;
 }
 
-void	texturize_doors_helper(t_data *data, t_raycast *r, t_doors *d,
-								mlx_texture_t *current_texture)
+void	texturize_doors_helper(t_data *data, t_raycast *r, t_doors *d)
 {
+	d->door_x -= floor(d->door_x);
 	if ((r->side == 0 && r->ray_dir_x <= 0) || \
 		(r->ray_dir_y > 0 && r->side == 1))
 		d->door_x = 1 - d->door_x;
-	r->tex_x = (int)(d->door_x * (double)current_texture->width);
-	r->tex_step = 1.0 * current_texture->width / d->line_height;
-	r->tex_pos = (d->draw_start - WIN_HEIGHT / 2 + d->line_height / 2) * \
-		r->tex_step;
 }

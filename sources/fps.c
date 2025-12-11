@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 11:10:35 by frey-gal          #+#    #+#             */
-/*   Updated: 2025/12/11 19:53:57 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/12/11 21:48:39 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,9 @@ void	fps_counter(t_data *data)
 	data->scale = 0.25;
 	img_to_window_scaled(data, data->textures.fps_ui, \
 					WIN_WIDTH - data->textures.fps_ui->width * \
-					0.25 - X_MARGIN, Y_MARGIN);
+					0.25 - (WIN_WIDTH / 100), (WIN_HEIGHT / 100));
 	mlx_delete_image(data->mlx, data->fps_str);
 	data->fps_str = mlx_put_string(data->mlx, fps_string, \
 					WIN_WIDTH - data->textures.fps_ui->width * \
-					0.25 * 0.8 - X_MARGIN, Y_MARGIN * 10);
+					0.25 * 0.8 - (WIN_WIDTH / 100), (WIN_HEIGHT / 100) * 10);
 }
