@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 16:18:01 by frey-gal          #+#    #+#             */
-/*   Updated: 2025/12/11 18:54:48 by frey-gal         ###   ########.fr       */
+/*   Updated: 2025/12/11 19:18:02 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ static void	ray_find_wall(t_data *data)
 	r = &data->raycast;
 	while (r->hit == false)
 	{
+		ray_find_well_helper(data);
 		if (data->map[r->map_y][r->map_x] == '1')
 			r->hit = true;
 		if (data->map[r->map_y][r->map_x] == 'D')

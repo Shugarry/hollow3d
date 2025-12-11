@@ -1,7 +1,7 @@
-NO ./resources/north.png
-SO ./resources/south.png
-WE ./resources/west.png
-EA ./resources/east.png
+NO ./resources/ds_textures/wall.png
+SO ./resources/ds_textures/wall.png
+WE ./resources/ds_textures/wall.png
+EA ./resources/ds_textures/wall.png
 F 79,0,45
 C 45,250,0
 

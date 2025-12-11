@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 20:39:28 by joshapir          #+#    #+#             */
-/*   Updated: 2025/11/18 18:10:59 by frey-gal         ###   ########.fr       */
+/*   Updated: 2025/12/11 19:14:17 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,8 +104,8 @@ void	get_parsed_variables(t_data *data)
 	data->textures.east = mlx_load_png(data->parsing.paths.e_tex);
 	data->textures.south = mlx_load_png(data->parsing.paths.s_tex);
 	data->textures.west = mlx_load_png(data->parsing.paths.w_tex);
-	data->textures.floor = mlx_load_png("resources/floor.png");
-	data->textures.ceiling = mlx_load_png("resources/ceiling.png");
+	data->textures.floor = mlx_load_png("resources/ds_textures/floor.png");
+	data->textures.ceiling = mlx_load_png("resources/ds_textures/ceiling.png");
 	if (!data->textures.north || !data->textures.south
 		|| !data->textures.east || !data->textures.west)
 		clean_exit(data, "Could not get textures", 1);
