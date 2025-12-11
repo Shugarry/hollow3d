@@ -14,7 +14,7 @@
 
 NAME		= cub3d
 CC			= gcc
-CFLAGS		= -fsanitize=address -g  -O3 -ffast-math -pipe \
+CFLAGS		= -g  -O3 -ffast-math -pipe \
 			  -march=native -flto -funroll-loops# -pg
 
 SRC_DIR		= sources
