@@ -6,7 +6,20 @@
 #    By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/23 17:17:45 by frey-gal          #+#    #+#              #
-#    Updated: 2025/12/11 22:13:02 by joshapir         ###   ########.fr        #
+#    Updated: 2025/12/12 15:06:26 by joshapir         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+# ================================== VARS ==================================== #
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2025/09/23 17:17:45 by frey-gal          #+#    #+#              #
+#    Updated: 2025/12/11 21:16:46 by joshapir         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,34 +57,34 @@ OBJECTS     = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SOURCES))
 
 SRC_DIR_B   = sources_bonus
 SOURCES_B   = $(addprefix $(SRC_DIR_B)/, \
-                camera.c \
-                draw_enemy_helpers.c \
-                draw_enemy_utils.c \
-                elements.c \
-                enemies.c \
-                enemy_utils.c \
-                flood_fill.c \
-                fps.c \
-                helpers.c \
-                init_utils.c \
-                main.c \
-                map_size.c \
-                map_utils.c \
-                mem_manager.c \
-                minimap.c \
-                minimap_draw_helpers.c \
-                minimap_draw_utils.c \
-                minimap_utils.c \
-                movement.c \
-                parsing.c \
-                raycasting.c \
-                raycasting_doors.c \
-                raycasting_doors_helpers.c \
-                raycasting_floor_ceiling.c \
-                raycasting_helpers.c \
-                raycasting_walls.c \
-                sword_animation.c \
-                textures_and_colors.c)
+                camera_bonus.c \
+                draw_enemy_helpers_bonus.c \
+                draw_enemy_utils_bonus.c \
+                elements_bonus.c \
+                enemies_bonus.c \
+                enemy_utils_bonus.c \
+                flood_fill_bonus.c \
+                fps_bonus.c \
+                helpers_bonus.c \
+                init_utils_bonus.c \
+                main_bonus.c \
+                map_size_bonus.c \
+                map_utils_bonus.c \
+                mem_manager_bonus.c \
+                minimap_bonus.c \
+                minimap_draw_helpers_bonus.c \
+                minimap_draw_utils_bonus.c \
+                minimap_utils_bonus.c \
+                movement_bonus.c \
+                parsing_bonus.c \
+                raycasting_bonus.c \
+                raycasting_doors_bonus.c \
+                raycasting_doors_helpers_bonus.c \
+                raycasting_floor_ceiling_bonus.c \
+                raycasting_helpers_bonus.c \
+                raycasting_walls_bonus.c \
+                sword_animation_bonus.c \
+                textures_and_colors_bonus.c)
 
 OBJ_DIR_B   = objects_bonus
 OBJECTS_B   = $(patsubst $(SRC_DIR_B)/%.c,$(OBJ_DIR_B)/%.o,$(SOURCES_B))

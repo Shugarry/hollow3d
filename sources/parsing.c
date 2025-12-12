@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 16:15:21 by frey-gal          #+#    #+#             */
-/*   Updated: 2025/12/11 22:01:11 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/12/12 15:14:38 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,7 @@ bool	is_map_line(char *line)
 		if (line[i] != '0' && line[i] != '1' && \
 				line[i] != 'N' && line[i] != 'S' && \
 				line[i] != 'E' && line[i] != 'W' && \
-				line[i] != ' ' && \
-				line[i] != 'D' && line[i] != 'e')
+				line[i] != ' ')
 			return (false);
 		i++;
 	}
